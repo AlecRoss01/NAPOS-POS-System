@@ -49,16 +49,15 @@ class _POSHomePage extends State<POSHomePage> {
   // This method is rerun every time setState is called.
   @override
   Widget build(BuildContext context) {
-    //return const Text("Hello World");
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Center(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          mainAxisAlignment: MainAxisAlignment.center, // Align buttons to center of the row
+          children: <Widget>[
+            // Sized boxes wrap buttons so they can be sized
             // First Button, for POS page
             SizedBox(
               height: 100,
@@ -75,7 +74,7 @@ class _POSHomePage extends State<POSHomePage> {
               height: 100,
               width: 200,
               child: TextButton(
-                onPressed: null,
+                onPressed: null, // Disabled for now
                 child: Text("Analytics Hub", style:CustomTextStyle.homeButtons),
               ),
             ),

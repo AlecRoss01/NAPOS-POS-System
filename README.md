@@ -30,3 +30,12 @@ samples, guidance on mobile development, and a full API reference.
 Changing project name and icons:
 Windows Desktop: https://stackoverflow.com/questions/64800455/how-to-change-app-icon-and-app-name-for-flutter-desktop-application
 Android: https://stackoverflow.com/questions/51419998/how-can-i-run-a-different-dart-file-in-flutter
+
+## References (For Development)
+
+- [Dart material library](https://api.flutter.dev/flutter/material/material-library.html)
+- [Flutter layout widgets](https://docs.flutter.dev/development/ui/widgets/layout)
+
+- [Multiple children solution](https://stackoverflow.com/questions/69841525/multiple-child-in-flutter)
+- [Text Buttons (And another multiple children solution)](https://api.flutter.dev/flutter/material/TextButton-class.html)
+- [Space elements](https://stackoverflow.com/questions/53141752/set-the-space-between-elements-in-row-flutter)
