@@ -21,22 +21,25 @@ class AnalyticsHub extends StatelessWidget {
       ),
       body: Row(
         children: <Widget>[
+
           // Container for the Historical Orders list.
           SizedBox(
             width: contextWidth/2,
             child: Column(
               children: [
+                // Header for the order list.
                 Container(
                   padding: const EdgeInsets.all(8.0),
                   alignment: Alignment.topLeft,
                   child: const Text("Historical Orders", style: CustomTextStyle.homeButtons),
                 ),
 
+                // Order List
                 Expanded(
                   child: ListView(
                     children: [
                       // InkWell makes it a clickable thing.
-                      // Will bring user to a new page with order details.
+                      // (In future) Will bring user to a new page with order details.
                       InkWell(
                         child: Card(
                             child: Padding(
@@ -81,16 +84,18 @@ class AnalyticsHub extends StatelessWidget {
               width: contextWidth/2,
               child: Column(
                 children: [
+                  // Header for the inventory list.
                   Container(
                     padding: const EdgeInsets.all(8.0),
                     alignment: Alignment.topLeft,
                     child: const Text("Inventory", style: CustomTextStyle.homeButtons),
                   ),
 
+                  // Inventory list
                   Expanded(
                       child: ListView(
                         children: [
-                          Card(child: ListTile(title: Text("Test 3"))),
+                          Card(child: ListTile(title: Text("Inventory Item"))),
                         ],
                       )
                   )
