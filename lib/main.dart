@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'styles.dart';
 import 'command_hub.dart';
+import 'analytics_hub.dart';
 
 // Runs the app.
 void main() {
@@ -11,7 +12,7 @@ void main() {
 class NaposPOS extends StatelessWidget {
   const NaposPOS({super.key});
 
-  // This widget is the root of your application.
+  // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -67,14 +68,19 @@ class _POSHomePage extends State<POSHomePage> {
               ),
             ),
             // Space between buttons
-            const SizedBox(width: 50,),
+            SizedBox(width: 50,),
             // Second Button, for Analytics Hub page
-            const SizedBox(
+            SizedBox(
               height: 100,
               width: 200,
               child: TextButton(
-                onPressed: null, // Disabled for now
-                child: Text("Analytics Hub", style:CustomTextStyle.homeButtons),
+                child: const Text("Analytics Hub", style:CustomTextStyle.homeButtons),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AnalyticsHub())
+                  );
+                },
               ),
             ),
           ],
