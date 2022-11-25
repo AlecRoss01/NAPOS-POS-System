@@ -17,12 +17,6 @@ class Order {
 
   final orderItems = <MenuItem>[]; // Growable list of menu items
 
-  /*
-  Order() {
-    orderID = 0; // Need unique numbering system.
-  }
-  */
-
   // Initialization takes an ID for now.
   Order(String orderID) {
     this.orderID = int.tryParse(orderID) ?? 0; // Tries to parse, otherwise sets to 0

@@ -1,10 +1,11 @@
 class MenuItem {
 
   String name = "";
-  double price = 0.0;
+  int id = 0;
+  //double price = 0.0;
 
   // Sets members with parameter data.
-  MenuItem(this.name, this.price);
+  MenuItem(this.id, this.name);
 
   // toString will return the string order ID.
   @override
