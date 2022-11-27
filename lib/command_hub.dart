@@ -3,6 +3,7 @@ import 'styles.dart';
 import 'hardcoded_pos_data.dart';
 import 'client.dart';
 import 'menu_item.dart' as menu_item;
+import 'order.dart';
 
 class CommandHub extends StatefulWidget {
   const CommandHub({super.key});
@@ -12,7 +13,6 @@ class CommandHub extends StatefulWidget {
 }
 
 class _CommandHub extends State<CommandHub> {
-  //const CommandHub({super.key});
   //final menu = buildMenu();
   final menu = recvMenu();
   final categories = buildCat();
@@ -173,7 +173,17 @@ class _CommandHub extends State<CommandHub> {
                             TextButton(
                               style: CustomTextStyle.commandHubCommands,
                               child: const Text("Send"),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  // TEMPORARY, ONLY SENDS FIRST ITEM IN ORDER
+                                  if (order.isNotEmpty) {
+                                    //print(Order(0, order[0].toString()));
+                                    //print(Order(0, order[0].toString()).orderItem());
+                                    sendOrder(Order(0, order[0].toString()));
+                                    order.clear();
+                                  }
+                                });
+                              },
                             ),
                             TextButton(
                               style: CustomTextStyle.commandHubCommands,

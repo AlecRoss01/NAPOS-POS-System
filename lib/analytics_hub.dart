@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'styles.dart';
+import 'hardcoded_pos_data.dart';
+import 'client.dart';
 
 // Card widget: https://www.geeksforgeeks.org/flutter-card-widget/
 // Using InkWell for onTap: https://stackoverflow.com/questions/44317188/flutter-ontap-method-for-containers
 // ListView Class: https://api.flutter.dev/flutter/widgets/ListView-class.html
 // Dynamic List (For future): https://stackoverflow.com/questions/47826776/how-to-build-a-dynamic-list-in-flutter
 
-class AnalyticsHub extends StatelessWidget {
+class AnalyticsHub extends StatefulWidget {
   const AnalyticsHub({super.key});
+
+  @override
+  State<AnalyticsHub> createState() => _AnalyticsHub();
+}
+
+class _AnalyticsHub extends State<AnalyticsHub> {
+  //final histOrders = buildHistOrders();
+  final histOrders = recvOrders();
 
   @override
   Widget build(BuildContext context) {
@@ -37,44 +47,25 @@ class AnalyticsHub extends StatelessWidget {
                 // Order List
                 Expanded(
                   child: ListView(
-                    children: [
-                      // InkWell makes it a clickable thing.
-                      // (In future) Will bring user to a new page with order details.
-                      InkWell(
+                    children: List.generate(histOrders.length, (index) {
+                      return InkWell(
                         child: Card(
-                            child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("Order Number"),
-                                    const Text("Relevant Details")
-                                  ],
-                                )
-                            )
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('ID: ${histOrders[index]}'),
+                                Text(histOrders[index].orderItem()),
+                              ],
+                            ),
+                          ),
                         ),
                         onTap: () {},
-                      ),
-                      // Second sample order
-                      InkWell(
-                        child: Card(
-                            child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("Order Number"),
-                                    const Text("Relevant Details")
-                                  ],
-                                )
-                            )
-                        ),
-                        onTap: () {},
-                      )
-                    ],
+                      );
+                    })
                   ),
                 )
-
               ],
             )
           ),
@@ -102,7 +93,6 @@ class AnalyticsHub extends StatelessWidget {
                 ],
               )
           )
-
         ],
       ),
     );

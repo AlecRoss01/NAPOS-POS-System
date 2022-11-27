@@ -12,13 +12,21 @@ class Order {
 
   // Order ID
   String orderIDNullChar = '0';
-  int orderIDLength = 10;
+  int orderIDLength = 5;
   int orderID = 0;
+
+  //In the future this will be a list of menuItems
+  String itemName = '';
 
   final orderItems = <MenuItem>[]; // Growable list of menu items
 
   // Initialization takes an ID for now.
-  Order(this.orderID, this.orderIDNullChar);
+  Order(this.orderID, this.itemName);
+
+  // Temporary method for prototype.
+  String orderItem() {
+    return itemName;
+  }
 
   // Returns string of order ID.
   String strOrderID() {
