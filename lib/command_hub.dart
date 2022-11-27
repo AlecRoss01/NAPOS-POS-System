@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'styles.dart';
 import 'hardcoded_pos_data.dart';
+import 'client.dart';
 import 'menu_item.dart' as menu_item;
 
 class CommandHub extends StatefulWidget {
@@ -12,7 +13,8 @@ class CommandHub extends StatefulWidget {
 
 class _CommandHub extends State<CommandHub> {
   //const CommandHub({super.key});
-  final menu = buildMenu();
+  //final menu = buildMenu();
+  final menu = recvMenu();
   final categories = buildCat();
   final order = <menu_item.MenuItem>[];
 

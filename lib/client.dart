@@ -6,7 +6,6 @@ import 'order.dart';
 
 
 //https://stackoverflow.com/questions/54481818/how-to-connect-flutter-app-to-tcp-socket-server
-
 main() async {
   //var menu = await recvMenu();
   //print(menu);
@@ -48,6 +47,7 @@ Future<int> sendOrder(Order order) async {
     socket.close();
     return 0;
 }
+
 
 recvOrders() async {
   // returns all orders in the order db
