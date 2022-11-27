@@ -16,9 +16,9 @@ main() async {
 
 
 // https://stackoverflow.com/questions/63323038/dart-return-data-from-a-stream-subscription-block
-Future<List> recvMenu() async {
+Future<List<MenuItem>> recvMenu() async {
   // returns the menu as a list of strings
-  var menuList = [];
+  var menuList = <MenuItem>[];
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
   socket.add(utf8.encode('GETMENU\n'));
