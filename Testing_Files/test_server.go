@@ -55,17 +55,21 @@ func tcpHandler(portNum string) {
 			fmt.Println("Exiting TCP server!")
 			return
 		} else if strings.TrimSpace(string(netData)) == "GETMENU" {
-			itemArray := [3]string{"pizza", "pasta", "fish"}
-			for i := 0; i < len(itemArray); i++ {
-				c.Write([]byte(itemArray[i] + " "))
-			}
+			//itemArray := [3]string{"pizza", "pasta", "fish"}
+			itemArray := "pizza pasta fish"
+			//for i := 0; i < len(itemArray); i++ {
+			//c.Write([]byte(itemArray[i] + " "))
+			c.Write([]byte(itemArray))
+			//}
 			c.Close()
 			return
 		} else if strings.TrimSpace(string(netData)) == "GETORDERS" {
-			itemArray := [3]string{"pasta", "fish", "pizza"}
-			for i := 0; i < len(itemArray); i++ {
-				c.Write([]byte(itemArray[i] + " "))
-			}
+			//itemArray := [3]string{"pasta", "fish", "pizza"}
+			itemArray := "pasta fish pizza"
+			//for i := 0; i < len(itemArray); i++ {
+			//c.Write([]byte(itemArray[i] + " "))
+			c.Write([]byte(itemArray))
+			//}
 			c.Close()
 			return
 		} else if strings.TrimSpace(string(netData)) == "SENDORDER" {
