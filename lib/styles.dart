@@ -8,6 +8,18 @@ Text color: https://flutterdesk.com/how-to-change-text-color-in-flutter-app/
 class CustomTextStyle {
   static const TextStyle homeButtons = TextStyle(
     fontSize: 24,
-    color: Colors.black54
+    color: Colors.black54,
+  );
+  /*
+  static const TextStyle commandHubCommands = TextStyle(
+    fontSize: 10,
+    color: Colors.white,
+    backgroundColor: Colors.red,
+  );
+  */
+
+  static ButtonStyle commandHubCommands = TextButton.styleFrom(
+    foregroundColor: Colors.white,
+    backgroundColor: Colors.red,
   );
 }

@@ -1,167 +1,202 @@
 import 'package:flutter/material.dart';
+import 'styles.dart';
+import 'hardcoded_pos_data.dart';
+import 'menu_item.dart' as menu_item;
 
-class CommandHub extends StatelessWidget {
+class CommandHub extends StatefulWidget {
   const CommandHub({super.key});
 
   @override
+  State<CommandHub> createState() => _CommandHub();
+}
+
+class _CommandHub extends State<CommandHub> {
+  //const CommandHub({super.key});
+  final menu = buildMenu();
+  final categories = buildCat();
+  final order = <menu_item.MenuItem>[];
+
+  @override
   Widget build(BuildContext context) {
+    // Dimensions of app
+    double contextWidth = MediaQuery.of(context).size.width;
+    double contextHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Command Hub'),
       ),
-      body: Row(
-        children: <Widget>[
-          //1st section, section that holds buttons for each of the categories on the menu
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 10
-                )
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  TextButton(
-                    onPressed: () {},
-                    child: Text("Food")
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text("Drinks")
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text("Merch")
-                  )
-                ]
-              )
-            )
-          ),
-          //2nd section, section that holds item buttons according to whichever button was pressed in 1st section
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 10
-                  )
-              ),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Row(
-                      children: <Widget>[
-                        TextButton(
-                          onPressed: () {},
-                          child: Text("Item 1")
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text("Item 2")
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text("Item 3")
-                        )
-                      ]
-                    )
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: <Widget>[
-                        TextButton(
-                          onPressed: () {},
-                          child: Text("Item 4")
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text("Item 5")
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text("Item 6")
-                        )
-                      ]
-                    )
-                  ) 
-                ]
-              )
-            )
-          ),
-          //3rd section, section that contains order information and buttons that apply to order
-          Expanded(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 10
-                      )
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+            children: <Widget>[
+
+              // 1st section, section that holds buttons for each of the categories on the menu.
+              // Uses categories list.
+              SizedBox(
+                width: 150, // Fixed width of 150 px
+                child: Column(
+                  children: [
+                    //Header for the Categories
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      alignment: Alignment.topLeft,
+                      child: const Text("Categories", style: CustomTextStyle.homeButtons),
                     ),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            children: <Widget>[
-                              Text("Order info goes here.")
-                            ]
-                          )
+
+                    // Expanded is needed to define the width of the cards. Column doesn't restrict it so render error occurs.
+                    Expanded(
+                        child:ListView(
+                            children: List.generate(categories.length, (index) {
+                              return InkWell(
+                                child: Card(
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Text(categories[index])
+                                  ),
+                                ),
+                                onTap: () {},
+                              );
+                            })
                         )
-                      ]
                     )
-                  )
+                  ],
                 ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 10
-                      )
+              ),
+
+              // 2nd section, section that holds item buttons according to whichever button was pressed in 1st section.
+              // Uses menu list.
+              //width: contextWidth * 0.6, // <-- Old
+              Expanded(
+                child: Column(
+                  children: [
+                    // Header for the MenuItems grid
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      alignment: Alignment.topLeft,
+                      child: const Text("Items", style: CustomTextStyle.homeButtons),
                     ),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              TextButton(
-                                onPressed: () {},
-                                child: Text("Send")
+
+                    // Being an expanded lets it take up all available space between categories and curr order columns.
+                    Expanded(
+                      // Gridview method: https://codesinsider.com/flutter-gridview-example/
+                      // Gridview.count method: https://www.geeksforgeeks.org/flutter-gridview/
+                      child: GridView(
+                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 150,
+                            mainAxisExtent: 100,
+                          ),
+                          padding: const EdgeInsets.only(left:10.0, right:10),
+                          shrinkWrap: true,
+                          // Generates the cards for GridView from 'menu'
+                          children: List.generate(menu.length, (index) {
+                            return InkWell(
+                              child: Card(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(menu[index].toString()),
+                                      const Text('1.0')
+                                    ],
+                                  )
                               ),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text("Pay")
-                              )
-                            ]
-                          )
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              TextButton(
-                                onPressed: () {},
-                                child: Text("Print Receipt")
-                              ),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text("Edit")
-                              )
-                            ]
-                          )
-                        )
-                      ]
+                              // On click it adds the corresponding menu item to the order.
+                              onTap: () {
+                                setState(() {
+                                  order.add(menu[index]);
+                                });
+                              },
+                            );
+                          })
+                      ),
                     )
-                  )
-                )
-              ]
-            )
-          )
-        ]
-      ),
+                  ],
+                ),
+              ),
+
+              // 3rd section, section that contains order information and buttons that apply to order.
+              SizedBox(
+                width: 200,
+                child: Column(
+                    children: [
+                      // Header for the MenuItems grid.
+                      Container(
+                        padding: const EdgeInsets.all(8.0),
+                        alignment: Alignment.topLeft,
+                        child: const Text("Current Order", style: CustomTextStyle.homeButtons),
+                      ),
+
+                      // Current order details.
+                      Expanded(
+                          //height: 300,
+                          child: ListView(
+                              children: List.generate(order.length, (index) {
+                                return InkWell(
+                                  child: Card(
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(order[index].toString())
+                                          ],
+                                        )
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      order.removeAt(index);
+                                    });
+                                  },
+                                );
+                              })
+                          )
+                      ),
+
+                      // Spacer between list of order items and command buttons.
+                      const SizedBox( height: 10,),
+
+                      // Command buttons (pay, receipt, etc).
+                      SizedBox(
+                        height: 105,
+                        child: GridView(
+                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 100,
+                            mainAxisExtent: 50,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 5,
+                          ),
+                          shrinkWrap: true,
+                          children: [
+                            TextButton(
+                              style: CustomTextStyle.commandHubCommands,
+                              child: const Text("Send"),
+                              onPressed: () {},
+                            ),
+                            TextButton(
+                              style: CustomTextStyle.commandHubCommands,
+                              child: const Text("Pay"),
+                              onPressed: () {},
+                            ),
+                            TextButton(
+                              style: CustomTextStyle.commandHubCommands,
+                              child: const Text("Receipt"),
+                              onPressed: () {},
+                            ),
+                            TextButton(
+                              style: CustomTextStyle.commandHubCommands,
+                              child: const Text("Edit"),
+                              onPressed: () {},
+                            )
+                          ],
+                        ),
+                      )
+                    ]
+                ),
+              )
+            ]
+        ),
+      )
     );
   }
 }
