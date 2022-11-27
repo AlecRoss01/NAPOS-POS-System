@@ -16,7 +16,7 @@ main() async {
 
 
 // https://stackoverflow.com/questions/63323038/dart-return-data-from-a-stream-subscription-block
-recvMenu() async {
+Future<List> recvMenu() async {
   // returns the menu as a list of strings
   var menuList = [];
   Socket socket = await Socket.connect('127.0.0.1', 30000);
@@ -49,15 +49,15 @@ Future<int> sendOrder(Order order) async {
 }
 
 
-recvOrders() async {
+Future<List<Order>> recvOrders() async {
   // returns all orders in the order db
-  var ordersList = [];
+  var ordersList = <Order>[];
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
   socket.add(utf8.encode('GETORDERS\n'));
   await for (var data in socket){
-      //print(utf8.decode(data));
-      ordersList.add(Order(0, utf8.decode(data)));
+      print("${utf8.decode(data)}\n");
+      ordersList.add(Order(1, utf8.decode(data)));
   }
   socket.close();
   return ordersList;
