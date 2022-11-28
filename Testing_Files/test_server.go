@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net"
 	"strings"
-	"time"
 )
 
 //var db *sql.DB
@@ -38,13 +37,12 @@ func tcpHandler(portNum string) {
 	}
 	defer l.Close()
 
-	c, err := l.Accept()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
 	for {
+		c, err := l.Accept()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		netData, err := bufio.NewReader(c).ReadString('\n')
 		if err != nil {
 			fmt.Print("error: ")
@@ -62,7 +60,6 @@ func tcpHandler(portNum string) {
 			c.Write([]byte(itemArray))
 			//}
 			c.Close()
-			return
 		} else if strings.TrimSpace(string(netData)) == "GETORDERS" {
 			//itemArray := [3]string{"pasta", "fish", "pizza"}
 			itemArray := "pasta fish pizza"
@@ -71,25 +68,22 @@ func tcpHandler(portNum string) {
 			c.Write([]byte(itemArray))
 			//}
 			c.Close()
-			return
 		} else if strings.TrimSpace(string(netData)) == "SENDORDER" {
 			netData, err := bufio.NewReader(c).ReadString('\n')
 			if err != nil {
 				fmt.Print("error: ")
 				fmt.Println(err)
-				return
 			}
 			order := strings.TrimSpace(string(netData))
 			print(order)
 			c.Write([]byte("finish"))
 			c.Close()
-			return
 		}
-
-		fmt.Print("-> ", string(netData))
-		t := time.Now()
-		myTime := t.Format(time.RFC3339) + "\n"
-		c.Write([]byte(myTime))
+		c.Close()
+		//fmt.Print("-> ", string(netData))
+		//t := time.Now()
+		//myTime := t.Format(time.RFC3339) + "\n"
+		//c.Write([]byte(myTime))
 	}
 }
 
