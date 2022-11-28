@@ -28,8 +28,8 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 Changing project name and icons:
-Windows Desktop: https://stackoverflow.com/questions/64800455/how-to-change-app-icon-and-app-name-for-flutter-desktop-application
-Android: https://stackoverflow.com/questions/51419998/how-can-i-run-a-different-dart-file-in-flutter
+- Windows Desktop: https://stackoverflow.com/questions/64800455/how-to-change-app-icon-and-app-name-for-flutter-desktop-application
+- Android: https://stackoverflow.com/questions/51419998/how-can-i-run-a-different-dart-file-in-flutter
 
 ## References (For Development)
 
