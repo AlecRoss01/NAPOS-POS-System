@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'order.dart';
 import 'styles.dart';
-import 'hardcoded_pos_data.dart';
 import 'client.dart';
 
 // Card widget: https://www.geeksforgeeks.org/flutter-card-widget/
@@ -16,8 +16,6 @@ class AnalyticsHub extends StatefulWidget {
 }
 
 class _AnalyticsHub extends State<AnalyticsHub> {
-  //final histOrders = buildHistOrders();
-  final histOrders = recvOrders();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +44,42 @@ class _AnalyticsHub extends State<AnalyticsHub> {
 
                 // Order List
                 Expanded(
+                  // Future Builder makes it empty initially. Then when recvOrders returns, it builds.
+                  child: FutureBuilder<List<Order>>(
+                    future: recvOrders(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return
+
+                          ListView(
+                              children: List.generate(snapshot.data!.length, (index) {
+                                return InkWell(
+                                  child: Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('ID: ${snapshot.data![index]}'),
+                                          Text(snapshot.data![index].orderItem()),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () {},
+                                );
+                              })
+                          );
+                        
+                      }
+                      else {
+                        return ListView();
+                      }
+                    }
+                  )
+
+                  // Old way
+                  /*
                   child: ListView(
                     children: List.generate(histOrders.length, (index) {
                       return InkWell(
@@ -65,6 +99,7 @@ class _AnalyticsHub extends State<AnalyticsHub> {
                       );
                     })
                   ),
+                  */
                 )
               ],
             )

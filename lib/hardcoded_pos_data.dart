@@ -1,5 +1,4 @@
 import 'package:napos/order.dart';
-
 import 'menu_item.dart';
 
 // Hardcoded menu

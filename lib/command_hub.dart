@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'styles.dart';
-import 'hardcoded_pos_data.dart';
 import 'client.dart';
 import 'menu_item.dart' as menu_item;
 import 'order.dart';
@@ -13,9 +12,6 @@ class CommandHub extends StatefulWidget {
 }
 
 class _CommandHub extends State<CommandHub> {
-  //final menu = buildMenu();
-  final menu = recvMenu();
-  final categories = buildCat();
   final order = <menu_item.MenuItem>[];
 
   @override
@@ -48,18 +44,31 @@ class _CommandHub extends State<CommandHub> {
 
                     // Expanded is needed to define the width of the cards. Column doesn't restrict it so render error occurs.
                     Expanded(
-                        child:ListView(
-                            children: List.generate(categories.length, (index) {
-                              return InkWell(
-                                child: Card(
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(20.0),
-                                      child: Text(categories[index])
-                                  ),
-                                ),
-                                onTap: () {},
-                              );
-                            })
+                        // Future Builder makes it empty initially. Then when recvCats returns, it builds.
+                        child: FutureBuilder<List<String>>(
+                          future: recvCats(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return
+                                ListView(
+                                    // snapshot.data! assures dart it will be defined.
+                                    children: List.generate(snapshot.data!.length, (index) {
+                                      return InkWell(
+                                        child: Card(
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(20.0),
+                                              child: Text(snapshot.data![index])
+                                          ),
+                                        ),
+                                        onTap: () {},
+                                      );
+                                    })
+                                );
+                            }
+                            else {
+                              return ListView();
+                            }
+                          },
                         )
                     )
                   ],
@@ -83,34 +92,45 @@ class _CommandHub extends State<CommandHub> {
                     Expanded(
                       // Gridview method: https://codesinsider.com/flutter-gridview-example/
                       // Gridview.count method: https://www.geeksforgeeks.org/flutter-gridview/
-                      child: GridView(
-                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 150,
-                            mainAxisExtent: 100,
-                          ),
-                          padding: const EdgeInsets.only(left:10.0, right:10),
-                          shrinkWrap: true,
-                          // Generates the cards for GridView from 'menu'
-                          children: List.generate(menu.length, (index) {
-                            return InkWell(
-                              child: Card(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(menu[index].toString()),
-                                      const Text('1.0')
-                                    ],
-                                  )
-                              ),
-                              // On click it adds the corresponding menu item to the order.
-                              onTap: () {
-                                setState(() {
-                                  order.add(menu[index]);
-                                });
-                              },
-                            );
-                          })
-                      ),
+                      child: FutureBuilder<List<menu_item.MenuItem>>(
+                        future: recvMenu(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return
+                              GridView(
+                                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 150,
+                                    mainAxisExtent: 100,
+                                  ),
+                                  padding: const EdgeInsets.only(left:10.0, right:10),
+                                  shrinkWrap: true,
+                                  // Generates the cards for GridView from 'menu'
+                                  children: List.generate(snapshot.data!.length, (index) {
+                                    return InkWell(
+                                      child: Card(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(snapshot.data![index].toString()),
+                                              const Text('1.0')
+                                            ],
+                                          )
+                                      ),
+                                      // On click it adds the corresponding menu item to the order.
+                                      onTap: () {
+                                        setState(() {
+                                          order.add(snapshot.data![index]);
+                                        });
+                                      },
+                                    );
+                                  })
+                              );
+                          }
+                          else {
+                            return GridView.count(crossAxisCount: 2);
+                          }
+                        },
+                      )
                     )
                   ],
                 ),
