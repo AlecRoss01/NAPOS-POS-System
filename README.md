@@ -33,12 +33,12 @@ Android: https://stackoverflow.com/questions/51419998/how-can-i-run-a-different-
 
 ## References (For Development)
 
-[Importing packages into project](https://docs.flutter.dev/development/packages-and-plugins/using-packages)
+- [Importing packages into project](https://docs.flutter.dev/development/packages-and-plugins/using-packages)
 
-[Dart material library](https://api.flutter.dev/flutter/material/material-library.html)
-[Flutter layout widgets](https://docs.flutter.dev/development/ui/widgets/layout)
+- [Dart material library](https://api.flutter.dev/flutter/material/material-library.html)
+- [Flutter layout widgets](https://docs.flutter.dev/development/ui/widgets/layout)
 
-[Multiple children solution](https://stackoverflow.com/questions/69841525/multiple-child-in-flutter)
-[Text Buttons (And another multiple children solution)](https://api.flutter.dev/flutter/material/TextButton-class.html)
-[Spacing elements](https://stackoverflow.com/questions/53141752/set-the-space-between-elements-in-row-flutter)
-[How Expanded Works](https://www.flutterbeads.com/listview-inside-column-in-flutter/#1-using-expanded-recommended)
+- [Multiple children solution](https://stackoverflow.com/questions/69841525/multiple-child-in-flutter)
+- [Text Buttons (And another multiple children solution)](https://api.flutter.dev/flutter/material/TextButton-class.html)
+- [Spacing elements](https://stackoverflow.com/questions/53141752/set-the-space-between-elements-in-row-flutter)
+- [How Expanded Works](https://www.flutterbeads.com/listview-inside-column-in-flutter/#1-using-expanded-recommended)
