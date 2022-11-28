@@ -77,29 +77,6 @@ class _AnalyticsHub extends State<AnalyticsHub> {
                       }
                     }
                   )
-
-                  // Old way
-                  /*
-                  child: ListView(
-                    children: List.generate(histOrders.length, (index) {
-                      return InkWell(
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('ID: ${histOrders[index]}'),
-                                Text(histOrders[index].orderItem()),
-                              ],
-                            ),
-                          ),
-                        ),
-                        onTap: () {},
-                      );
-                    })
-                  ),
-                  */
                 )
               ],
             )
