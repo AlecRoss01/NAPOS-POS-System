@@ -9,12 +9,12 @@ Ensure you have Flutter and dart installed on your machine.
 
 To use Flutter commands outside of a Flutter terminal, you will have to add the full path to the Flutter SDK in you path environment variable.
 
-Use `> flutter doctor` to ensure your Flutter setup is working
-Use `> flutter devices` to see the devices currently connected to your machine. This will include browsers.
-Using `> flutter run` will run the project on the default machine.
-You can specify which device you want to run it on with `> flutter run -d [device name]`
-You can specify which file to run as an entry point with `> flutter run -t lib/[file name]`
-Once the program is running, pressing 'r' while focused on the terminal will hot reload the app, meaning you don't have to build it from scratch again. Variables stay the same value since the program is not restarted.
+- Use `> flutter doctor` to ensure your Flutter setup is working
+- Use `> flutter devices` to see the devices currently connected to your machine. This will include browsers.
+- Using `> flutter run` will run the project on the default machine.
+- You can specify which device you want to run it on with `> flutter run -d [device name]`
+- You can specify which file to run as an entry point with `> flutter run -t lib/[file name]`
+- Once the program is running, pressing 'r' while focused on the terminal will hot reload the app, meaning you don't have to build it from scratch again. Variables stay the same value since the program is not restarted.
 
 ## Development Help
 
