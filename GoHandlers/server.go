@@ -32,9 +32,10 @@ func dbHandlerMenu() []MenuItem {
 	// Capture connection properties.
 	// https://stackoverflow.com/questions/70757210/how-do-i-connect-to-a-mysql-instance-without-using-the-password
 	// need to reconsider this at some point
+	// password has been removed for obvious reasons
 	cfg := mysql.Config{
 		User:                 "root",
-		Passwd:               "EvilDuck666!!",
+		Passwd:               "",
 		Net:                  "tcp",
 		Addr:                 "127.0.0.1:3306",
 		DBName:               "naposdatabase",
