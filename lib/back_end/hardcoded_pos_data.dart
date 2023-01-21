@@ -1,5 +1,5 @@
-import 'package:napos/order.dart';
-import 'menu_item.dart';
+import 'package:napos/classes/order.dart';
+import '../classes/menu_item.dart';
 
 // Hardcoded menu
 buildMenu() {

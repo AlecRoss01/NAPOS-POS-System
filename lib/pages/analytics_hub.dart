@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'order.dart';
-import 'styles.dart';
-import 'client.dart';
+import '../classes/order.dart';
+import '../styles/styles.dart';
+import '../back_end/client.dart';
 
 // Card widget: https://www.geeksforgeeks.org/flutter-card-widget/
 // Using InkWell for onTap: https://stackoverflow.com/questions/44317188/flutter-ontap-method-for-containers

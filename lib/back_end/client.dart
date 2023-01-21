@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
-import 'menu_item.dart';
-import 'order.dart';
+import '../classes/menu_item.dart';
+import '../classes/order.dart';
 import 'hardcoded_pos_data.dart';
 
 const bool TESTING = true;

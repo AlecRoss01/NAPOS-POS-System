@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'styles.dart';
-import 'client.dart';
-import 'menu_item.dart' as menu_item;
-import 'order.dart';
+import '../styles/styles.dart';
+import '../back_end/client.dart';
+import '../classes/menu_item.dart' as menu_item;
+import '../classes/order.dart';
 
 class CommandHub extends StatefulWidget {
   const CommandHub({super.key});

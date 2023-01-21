@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'styles.dart';
-import 'command_hub.dart';
-import 'analytics_hub.dart';
+import 'styles/styles.dart';
+import 'pages/command_hub.dart';
+import 'pages/analytics_hub.dart';
 
 // Runs the app.
 void main() {
