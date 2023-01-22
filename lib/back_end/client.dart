@@ -66,7 +66,7 @@ Future<int> sendOrder(Order order) async {
   Socket socket = await Socket.connect('127.0.0.1', 30000);
     print('connected');
     socket.add(utf8.encode('SENDORDER\n'));
-    socket.add(utf8.encode(order.orderIDNullChar + '\n'));
+    socket.add(utf8.encode(order.toString() + '\n'));
     await for (var data in socket){
         //print(utf8.decode(data));
         if (utf8.decode(data) == "finish") {
@@ -84,6 +84,7 @@ Future<List<Order>> recvOrders() async {
 
   // Use hardcoded values.
   if (TESTING) {
+    //List<Order> myhistOrders = [Order(1, [MenuItem(1, "Test")])];
     return buildHistOrders();
   }
 
@@ -99,7 +100,9 @@ Future<List<Order>> recvOrders() async {
   }
   var dataList = output.split(' ');
   for(var i = 0 ; i < dataList.length ; i++ ){
-      ordersList.add(Order(0, dataList[i]));
+    Order cur_order = Order(i);
+    cur_order.addItemToOrder(MenuItem(0, dataList[i]));
+    ordersList.add(cur_order);
   }
   socket.close();
   return ordersList;

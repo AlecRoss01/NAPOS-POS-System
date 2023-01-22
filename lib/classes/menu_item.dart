@@ -1,11 +1,29 @@
 class MenuItem {
+  /*
+  Represents one item on the menu.
+  */
 
-  String name = "";
+  // MEMBERS
+
   int id = 0;
-  //double price = 0.0;
+  String name = "";
+  List catTags = <String>[];
+  double price = 0.0;
 
-  // Sets members with parameter data.
-  MenuItem(this.id, this.name);
+
+  // Initializer; Sets members with parameter data.
+  MenuItem(this.id, this.name,
+      // Optional parameters.
+      [
+        this.price = 0,
+        this.catTags = const <String>[]
+      ]);
+
+  // METHODS
+
+  double getPrice() {
+    return price;
+  }
 
   // toString will return the string order ID.
   @override

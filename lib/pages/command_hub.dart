@@ -112,7 +112,7 @@ class _CommandHub extends State<CommandHub> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(snapshot.data![index].toString()),
-                                              const Text('1.0')
+                                              Text(snapshot.data![index].price.toString())
                                             ],
                                           )
                                       ),
@@ -199,7 +199,9 @@ class _CommandHub extends State<CommandHub> {
                                   if (order.isNotEmpty) {
                                     //print(Order(0, order[0].toString()));
                                     //print(Order(0, order[0].toString()).orderItem());
-                                    sendOrder(Order(0, order[0].toString()));
+                                    Order myOrder = Order(1);
+                                    myOrder.addItemToOrder(order[0]);
+                                    sendOrder(myOrder);
                                     order.clear();
                                   }
                                 });

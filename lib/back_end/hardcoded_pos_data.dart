@@ -4,7 +4,7 @@ import '../classes/menu_item.dart';
 // Hardcoded menu
 buildMenu() {
   final menu = <MenuItem>[];
-  menu.add(MenuItem(1, "Hot Dog"));
+  menu.add(MenuItem(1, "Hot Dog", 1.2));
   menu.add(MenuItem(2, "Pizza"));
   menu.add(MenuItem(3, "Soup"));
   menu.add(MenuItem(4, "Cheeseburger"));
@@ -25,10 +25,14 @@ buildCat() {
 }
 
 // Hardcoded historical orders
-buildHistOrders() {
-  final histOrders = <Order>[];
-  histOrders.add(Order(1, "Maruchan Ramen Noodles"));
-  histOrders.add(Order(2, "Beesechurger"));
-  histOrders.add(Order(3, "Pizzap"));
+List<Order> buildHistOrders() {
+  final myMenu = buildMenu();
+  List<Order> histOrders = <Order>[];
+
+  Order order1 = Order(1);
+  order1.addItemToOrder(myMenu[0]);
+  order1.addItemToOrder(myMenu[1]);
+  histOrders.add(order1);
+
   return histOrders;
 }
