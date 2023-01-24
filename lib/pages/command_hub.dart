@@ -4,6 +4,61 @@ import '../back_end/client.dart';
 import '../classes/menu_item.dart' as menu_item;
 import '../classes/order.dart';
 
+class CategorySection extends StatefulWidget{
+  const CategorySection({super.key});
+
+  @override
+  State<CategorySection> createState() => _CategorySelectionState();
+}
+
+class _CategorySelectionState extends State<CategorySection> {
+  @override
+  Widget build(BuildContext context){
+    return SizedBox(
+      width: 150, // Fixed width of 150 px
+      child: Column(
+        children: [
+          //Header for the Categories
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            alignment: Alignment.topLeft,
+            child: const Text("Categories", style: CustomTextStyle.homeButtons),
+          ),
+
+          // Expanded is needed to define the width of the cards. Column doesn't restrict it so render error occurs.
+          Expanded(
+            // Future Builder makes it empty initially. Then when recvCats returns, it builds.
+            child: FutureBuilder<List<String>>(
+              future: recvCats(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView(
+                    // snapshot.data! assures dart it will be defined.
+                    children: List.generate(snapshot.data!.length, (index) {
+                      return InkWell(
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(snapshot.data![index])
+                          ),
+                        ),
+                        onTap: () {},
+                      );
+                    })
+                  );
+                }
+                else {
+                  return ListView();
+                }
+              },
+            )
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class CommandHub extends StatefulWidget {
   const CommandHub({super.key});
 
@@ -28,52 +83,10 @@ class _CommandHub extends State<CommandHub> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
             children: <Widget>[
-
+              CategorySection()
               // 1st section, section that holds buttons for each of the categories on the menu.
               // Uses categories list.
-              SizedBox(
-                width: 150, // Fixed width of 150 px
-                child: Column(
-                  children: [
-                    //Header for the Categories
-                    Container(
-                      padding: const EdgeInsets.all(8.0),
-                      alignment: Alignment.topLeft,
-                      child: const Text("Categories", style: CustomTextStyle.homeButtons),
-                    ),
-
-                    // Expanded is needed to define the width of the cards. Column doesn't restrict it so render error occurs.
-                    Expanded(
-                        // Future Builder makes it empty initially. Then when recvCats returns, it builds.
-                        child: FutureBuilder<List<String>>(
-                          future: recvCats(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return
-                                ListView(
-                                    // snapshot.data! assures dart it will be defined.
-                                    children: List.generate(snapshot.data!.length, (index) {
-                                      return InkWell(
-                                        child: Card(
-                                          child: Padding(
-                                              padding: const EdgeInsets.all(20.0),
-                                              child: Text(snapshot.data![index])
-                                          ),
-                                        ),
-                                        onTap: () {},
-                                      );
-                                    })
-                                );
-                            }
-                            else {
-                              return ListView();
-                            }
-                          },
-                        )
-                    )
-                  ],
-                ),
-              ),
+              ,
 
               // 2nd section, section that holds item buttons according to whichever button was pressed in 1st section.
               // Uses menu list.
