@@ -4,16 +4,16 @@ import '../classes/menu_item.dart';
 // Hardcoded menu
 buildMenu() {
   final menu = <MenuItem>[];
-  menu.add(MenuItem(1, "Hot Dog", 1.2));
-  menu.add(MenuItem(2, "Pizza"));
-  menu.add(MenuItem(3, "Soup"));
-  menu.add(MenuItem(4, "Cheeseburger"));
-  menu.add(MenuItem(4, "Item"));
-  menu.add(MenuItem(4, "Item"));
-  menu.add(MenuItem(4, "Item"));
-  menu.add(MenuItem(4, "Item"));
-  menu.add(MenuItem(4, "Item"));
-  menu.add(MenuItem(4, "Item"));
+  menu.add(MenuItem("Hot Dog", 1, 1.2));
+  menu.add(MenuItem("Pizza", 2));
+  menu.add(MenuItem("Soup", 3));
+  menu.add(MenuItem("Cheeseburger", 4));
+  menu.add(MenuItem("Item", 4));
+  menu.add(MenuItem("Item", 4));
+  menu.add(MenuItem("Item", 4));
+  menu.add(MenuItem("Item", 4));
+  menu.add(MenuItem("Item", 4));
+  menu.add(MenuItem("Item", 4));
 
   return menu;
 }

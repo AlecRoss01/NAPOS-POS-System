@@ -22,32 +22,35 @@ class Order {
   // Initialization; takes an ID for now.
   Order(this.orderID);
 
-  /*
-  // Initialization; takes an ID for now.
-  Order(this.orderID,
-      // Optional parameters
-      [
-        this.orderItems = const<MenuItem>[]
-      ]);
-  */
-
-
   // METHODS
+
+  List<MenuItem> getMenuItems() { return orderItems; }
+
+  // Clears all items in the order.
+  void clearOrderItems() { orderItems = <MenuItem>[]; }
+
+  // Adds a single item to the order.
+  void addItemToOrder(MenuItem item) { orderItems.add(item); }
+
+  //Adds multiple items to the order.
+  void addItemsToOrder(List<MenuItem> items) {
+    for (var item in items) { addItemToOrder(item); }
+  }
+
+  // Clears order then adds the items.
+  void setOrderItems(List<MenuItem> items) {
+    clearOrderItems();
+    addItemsToOrder(items);
+  }
+
+  // Remove an item at an index. Cannot remove by name or ID, there can be duplicates.
+  void removeOrderItemAt(int index) { orderItems.removeAt(index); }
 
   // Sums the price of each menuItem
   double getSubTotal() {
     double sum = 0.0;
-    for (var element in orderItems) { sum += element.getPrice(); }
+    for (var element in orderItems) { sum += element.price; }
     return sum;
-  }
-
-  void addItemToOrder(MenuItem item) {
-    orderItems.add(item);
-    return;
-  }
-
-  List getMenuItems() {
-    return orderItems;
   }
 
   // Returns string of order ID.
@@ -57,7 +60,5 @@ class Order {
 
   // toString will return the string order ID.
   @override
-  String toString() {
-    return strOrderID();
-  }
+  String toString() { return strOrderID(); }
 }

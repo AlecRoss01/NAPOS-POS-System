@@ -47,7 +47,7 @@ Future<List<MenuItem>> recvMenu() async {
   }
   var dataList = output.split(' ');
     for(var i = 0 ; i < dataList.length ; i++ ){
-        menuList.add(MenuItem(0, dataList[i]));
+        menuList.add(MenuItem(dataList[i]));
   }
   socket.close();
   return menuList;
@@ -101,7 +101,7 @@ Future<List<Order>> recvOrders() async {
   var dataList = output.split(' ');
   for(var i = 0 ; i < dataList.length ; i++ ){
     Order cur_order = Order(i);
-    cur_order.addItemToOrder(MenuItem(0, dataList[i]));
+    cur_order.addItemToOrder(MenuItem(dataList[i]));
     ordersList.add(cur_order);
   }
   socket.close();
