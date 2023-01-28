@@ -1,4 +1,4 @@
-import menu_item.dart;
+import "menu_item.dart";
 
 class POS_Category {
     String name;
