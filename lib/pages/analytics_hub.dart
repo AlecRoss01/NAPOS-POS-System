@@ -61,7 +61,13 @@ class _AnalyticsHub extends State<AnalyticsHub> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text('ID: ${snapshot.data![index]}'),
-                                          Text(snapshot.data![index].orderItem()),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            // Absolutely hideous, I know. Makes a list of each item in the order (displayed beneath order ID).
+                                            children: List.generate(snapshot.data![index].getMenuItems().length, (indexOfOrder) {
+                                              return Text(snapshot.data![index].getMenuItems()[indexOfOrder].toString());
+                                            })
+                                          )
                                         ],
                                       ),
                                     ),
