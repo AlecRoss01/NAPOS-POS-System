@@ -5,7 +5,8 @@ class MenuItem {
   //double price = 0.0;
 
   // Sets members with parameter data.
-  MenuItem(this.id, this.name);
+  MenuItem(this.id, this.name){
+  }
 
   // toString will return the string order ID.
   @override
