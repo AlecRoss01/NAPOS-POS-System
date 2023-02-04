@@ -132,6 +132,109 @@ class _MenuItemSectionState extends State<MenuItemSection> {
   }
 }
 
+class OrderSection extends StatefulWidget {
+  final currentOrder;
+  const OrderSection({super.key, required this.currentOrder});
+
+  @override
+  State<OrderSection> createState() => _OrderSectionState();
+}
+
+class _OrderSectionState extends State<OrderSection> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      child: Column(
+        children: [
+          // Header for the MenuItems grid.
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            alignment: Alignment.topLeft,
+            child: const Text("Current Order", style: CustomTextStyle.homeButtons),
+          ),
+          // Current order details.
+          Expanded (
+            //height: 300,
+            child: ListView(
+              children: List.generate(widget.currentOrder.length, (index) {
+                return InkWell(
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(widget.currentOrder[index].toString())
+                        ],
+                      )
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      widget.currentOrder.removeAt(index);
+                    });
+                  },
+                );
+              })
+            )
+          ),
+          // Spacer between list of order items and command buttons.
+          const SizedBox( height: 10,),
+
+          // Command buttons (pay, receipt, etc).
+          SizedBox(
+            height: 105,
+            child: GridView(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 100,
+                mainAxisExtent: 50,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+              ),
+              shrinkWrap: true,
+              children: [
+                TextButton(
+                  style: CustomTextStyle.commandHubCommands,
+                  child: const Text("Send"),
+                  onPressed: () {
+                    setState(() {
+                      // TEMPORARY, ONLY SENDS FIRST ITEM IN ORDER
+                      if (widget.currentOrder.isNotEmpty) {
+                        //print(Order(0, order[0].toString()));
+                        //print(Order(0, order[0].toString()).orderItem());
+                        Order myOrder = Order(1);
+                        myOrder.addItemToOrder(widget.currentOrder[0]);
+                        sendOrder(myOrder);
+                        widget.currentOrder.clear();
+                      }
+                    });
+                  },
+                ),
+                TextButton(
+                  style: CustomTextStyle.commandHubCommands,
+                  child: const Text("Pay"),
+                  onPressed: () {},
+                ),
+                TextButton(
+                  style: CustomTextStyle.commandHubCommands,
+                  child: const Text("Receipt"),
+                  onPressed: () {},
+                ),
+                TextButton(
+                  style: CustomTextStyle.commandHubCommands,
+                  child: const Text("Edit"),
+                  onPressed: () {},
+                )
+              ],
+            ),
+          )
+        ]
+      ),
+    );
+  }
+}
+
 
 
 class CommandHub extends StatefulWidget {
@@ -143,15 +246,14 @@ class CommandHub extends StatefulWidget {
 
 class _CommandHub extends State<CommandHub> {
   
+  final order = <menu_item.MenuItem>[];
+  POS_Category currentCategory = new POS_Category("Food", 1);
+  
   void addToOrder(menu_item.MenuItem item) {
     setState(() {
       order.add(item);
     });
   }
-  
-  final order = <menu_item.MenuItem>[];
-  POS_Category currentCategory = new POS_Category("Food", 1);
-
 
   void changeCurrentCategory(POS_Category newCat) {
     setState(() { 
@@ -176,7 +278,6 @@ class _CommandHub extends State<CommandHub> {
             // 1st section, section that holds buttons for each of the categories on the menu.
             // Uses categories list.
             CategorySection(changeCategory: changeCurrentCategory),
-              
 
             // 2nd section, section that holds item buttons according to whichever button was pressed in 1st section.
             // Uses menu list.
@@ -184,95 +285,7 @@ class _CommandHub extends State<CommandHub> {
             MenuItemSection(addItemToOrder: addToOrder, categoryToBeDisplayed: currentCategory),
 
             // 3rd section, section that contains order information and buttons that apply to order.
-            SizedBox(
-              width: 200,
-              child: Column(
-                children: [
-                  // Header for the MenuItems grid.
-                  Container(
-                    padding: const EdgeInsets.all(8.0),
-                    alignment: Alignment.topLeft,
-                    child: const Text("Current Order", style: CustomTextStyle.homeButtons),
-                  ),
-                  // Current order details.
-                  Expanded (
-                    //height: 300,
-                    child: ListView(
-                      children: List.generate(order.length, (index) {
-                        return InkWell(
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(order[index].toString())
-                                ],
-                              )
-                            ),
-                          ),
-                          onTap: () {
-                            setState(() {
-                              order.removeAt(index);
-                            });
-                          },
-                        );
-                      })
-                    )
-                  ),
-                  // Spacer between list of order items and command buttons.
-                  const SizedBox( height: 10,),
-
-                  // Command buttons (pay, receipt, etc).
-                  SizedBox(
-                    height: 105,
-                    child: GridView(
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 100,
-                        mainAxisExtent: 50,
-                        crossAxisSpacing: 5,
-                        mainAxisSpacing: 5,
-                      ),
-                      shrinkWrap: true,
-                      children: [
-                        TextButton(
-                          style: CustomTextStyle.commandHubCommands,
-                          child: const Text("Send"),
-                          onPressed: () {
-                            setState(() {
-                              // TEMPORARY, ONLY SENDS FIRST ITEM IN ORDER
-                              if (order.isNotEmpty) {
-                                //print(Order(0, order[0].toString()));
-                                //print(Order(0, order[0].toString()).orderItem());
-                                Order myOrder = Order(1);
-                                myOrder.addItemToOrder(order[0]);
-                                sendOrder(myOrder);
-                                order.clear();
-                              }
-                            });
-                          },
-                        ),
-                        TextButton(
-                          style: CustomTextStyle.commandHubCommands,
-                          child: const Text("Pay"),
-                          onPressed: () {},
-                        ),
-                        TextButton(
-                          style: CustomTextStyle.commandHubCommands,
-                          child: const Text("Receipt"),
-                          onPressed: () {},
-                        ),
-                        TextButton(
-                          style: CustomTextStyle.commandHubCommands,
-                          child: const Text("Edit"),
-                          onPressed: () {},
-                        )
-                      ],
-                    ),
-                  )
-                ]
-              ),
-            )
+            OrderSection(currentOrder: order)
           ]
         ),
       )
