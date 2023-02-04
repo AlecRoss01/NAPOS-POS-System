@@ -35,6 +35,10 @@ buildMenu(POS_Category category) {
   }
 
   for (var i = 0; i < menu.length; i++){
+    menu[i].addCatTag("All");
+  }
+
+  for (var i = 0; i < menu.length; i++){
     if (menu[i].categories.contains(category.name)){
       catMenu.add(menu[i]);
     }
@@ -45,7 +49,7 @@ buildMenu(POS_Category category) {
 
 // Hardcoded categories
 buildCat() {
-  final cat = <String>["Food", "Drinks", "Merch"];
+  final cat = <String>["Food", "Drinks", "Merch", "All"];
   return cat;
 }
 
