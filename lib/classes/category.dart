@@ -1,11 +1,11 @@
 import "menu_item.dart";
 
 class POS_Category {
-    String name;
+    String _name;
     int id;
     final listOfItems = <MenuItem>[];
 
-    POS_Category(this.name, this.id);
+    POS_Category(this._name, this.id);
 
     void populateItemList() {
         
@@ -13,6 +13,8 @@ class POS_Category {
 
     @override
     String toString() {
-        return name;
+        return _name;
     }
+
+    String get name { return _name; }
 }

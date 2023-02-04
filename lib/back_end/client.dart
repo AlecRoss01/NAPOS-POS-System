@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:async';
 import '../classes/menu_item.dart';
 import '../classes/order.dart';
+import '../classes/category.dart';
 import 'hardcoded_pos_data.dart';
 
 const bool TESTING = true;
@@ -27,12 +28,12 @@ main() async {
 */
 
 
-Future<List<MenuItem>> recvMenu() async {
+Future<List<MenuItem>> recvMenu(POS_Category category) async {
   // returns the menu as a list of strings
 
   // Use hardcoded values.
   if(TESTING) {
-    return buildMenu();
+    return buildMenu(category);
   }
 
   // Use values from server.

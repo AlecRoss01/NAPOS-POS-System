@@ -3,9 +3,11 @@ import '../styles/styles.dart';
 import '../back_end/client.dart';
 import '../classes/menu_item.dart' as menu_item;
 import '../classes/order.dart';
+import '../classes/category.dart';
 
 class CategorySection extends StatefulWidget{
-  const CategorySection({super.key});
+  final Function(POS_Category) changeCategory;
+  const CategorySection({super.key, required this.changeCategory});
 
   @override
   State<CategorySection> createState() => _CategorySelectionState();
@@ -43,7 +45,8 @@ class _CategorySelectionState extends State<CategorySection> {
                           ),
                         ),
                         onTap: () {
-                          
+                          var cat = new POS_Category(snapshot.data![index], index);
+                          widget.changeCategory(cat);
                         },
                       );
                     })
@@ -63,7 +66,8 @@ class _CategorySelectionState extends State<CategorySection> {
 
 class MenuItemSection extends StatefulWidget {
   final Function(menu_item.MenuItem) addItemToOrder;
-  const MenuItemSection({super.key, required this.addItemToOrder});
+  final POS_Category categoryToBeDisplayed;
+  const MenuItemSection({super.key, required this.addItemToOrder, required this.categoryToBeDisplayed});
 
   @override
   State<MenuItemSection> createState() => _MenuItemSectionState();
@@ -86,7 +90,7 @@ class _MenuItemSectionState extends State<MenuItemSection> {
             // Gridview method: https://codesinsider.com/flutter-gridview-example/
             // Gridview.count method: https://www.geeksforgeeks.org/flutter-gridview/
             child: FutureBuilder<List<menu_item.MenuItem>>(
-              future: recvMenu(),
+              future: recvMenu(widget.categoryToBeDisplayed),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return GridView(
@@ -138,11 +142,20 @@ class CommandHub extends StatefulWidget {
 }
 
 class _CommandHub extends State<CommandHub> {
-  final order = <menu_item.MenuItem>[];
-
+  
   void addToOrder(menu_item.MenuItem item) {
     setState(() {
       order.add(item);
+    });
+  }
+  
+  final order = <menu_item.MenuItem>[];
+  POS_Category currentCategory = new POS_Category("Food", 1);
+
+
+  void changeCurrentCategory(POS_Category newCat) {
+    setState(() { 
+      currentCategory = newCat;
     });
   }
 
@@ -162,13 +175,13 @@ class _CommandHub extends State<CommandHub> {
           children: <Widget>[
             // 1st section, section that holds buttons for each of the categories on the menu.
             // Uses categories list.
-            CategorySection(),
+            CategorySection(changeCategory: changeCurrentCategory),
               
 
             // 2nd section, section that holds item buttons according to whichever button was pressed in 1st section.
             // Uses menu list.
             //width: contextWidth * 0.6, // <-- Old
-            MenuItemSection( addItemToOrder: addToOrder ),
+            MenuItemSection(addItemToOrder: addToOrder, categoryToBeDisplayed: currentCategory),
 
             // 3rd section, section that contains order information and buttons that apply to order.
             SizedBox(
