@@ -40,6 +40,12 @@ class _CommandHub extends State<CommandHub> {
     });
   }
 
+  void removeItemFromOrder(menu_item.MenuItem item) {
+    setState(() {
+      order.remove(item);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Dimensions of app
@@ -47,7 +53,7 @@ class _CommandHub extends State<CommandHub> {
     double contextHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      endDrawer: EditItemSidebar(editItem: itemToEdit),
+      endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Command Hub'),

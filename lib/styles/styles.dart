@@ -22,4 +22,14 @@ class CustomTextStyle {
     foregroundColor: Colors.white,
     backgroundColor: Colors.red,
   );
+
+  static ButtonStyle editItemButton = TextButton.styleFrom(
+    foregroundColor: Colors.red,
+    backgroundColor: Colors.white,
+  );
+
+  static ButtonStyle saveButton = TextButton.styleFrom(
+    foregroundColor: Colors.white,
+    backgroundColor: Colors.green,
+  );
 }
