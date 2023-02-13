@@ -18,13 +18,13 @@ class CommandHub extends StatefulWidget {
 
 class _CommandHub extends State<CommandHub> {
   
-  final order = <menu_item.MenuItem>[];
+  final currentOrder = new Order(1);
   POS_Category currentCategory = new POS_Category("Food", 1);
   menu_item.MenuItem itemToEdit = new menu_item.MenuItem("default");
   
   void addToOrder(menu_item.MenuItem item) {
     setState(() {
-      order.add(item);
+      currentOrder.addItemToOrder(item);
     });
   }
 
@@ -42,7 +42,7 @@ class _CommandHub extends State<CommandHub> {
 
   void removeItemFromOrder(menu_item.MenuItem item) {
     setState(() {
-      order.remove(item);
+      currentOrder.removeItemFromOrder(item);
     });
   }
 
@@ -55,7 +55,6 @@ class _CommandHub extends State<CommandHub> {
     return Scaffold(
       endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: const Text('Command Hub'),
       ),
       body: Padding(
@@ -72,7 +71,7 @@ class _CommandHub extends State<CommandHub> {
             MenuItemSection(addItemToOrder: addToOrder, categoryToBeDisplayed: currentCategory),
 
             // 3rd section, section that contains order information and buttons that apply to order.
-            OrderSection(currentOrder: order, setEditItem: setItemToEdit)
+            OrderSection(currentOrder: currentOrder, setEditItem: setItemToEdit)
           ]
         ),
       )

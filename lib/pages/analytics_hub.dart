@@ -64,8 +64,8 @@ class _AnalyticsHub extends State<AnalyticsHub> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             // Absolutely hideous, I know. Makes a list of each item in the order (displayed beneath order ID).
-                                            children: List.generate(snapshot.data![index].getMenuItems().length, (indexOfOrder) {
-                                              return Text(snapshot.data![index].getMenuItems()[indexOfOrder].toString());
+                                            children: List.generate(snapshot.data![index].getOrderItems().length, (indexOfOrder) {
+                                              return Text(snapshot.data![index].getOrderItems()[indexOfOrder].toString());
                                             })
                                           )
                                         ],

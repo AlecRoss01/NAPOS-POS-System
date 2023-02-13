@@ -24,13 +24,20 @@ class Order {
 
   // METHODS
 
-  List<MenuItem> getMenuItems() { return orderItems; }
+  List<MenuItem> getOrderItems() { return orderItems; }
+
+  MenuItem getItemAtIndex(int index) { return orderItems[index]; }
+
+  int getOrderLength() { return orderItems.length; }
 
   // Clears all items in the order.
   void clearOrderItems() { orderItems = <MenuItem>[]; }
 
   // Adds a single item to the order.
   void addItemToOrder(MenuItem item) { orderItems.add(item); }
+
+  //Remove a single item from the order
+  void removeItemFromOrder(MenuItem item) { orderItems.remove(item); }
 
   //Adds multiple items to the order.
   void addItemsToOrder(List<MenuItem> items) {
