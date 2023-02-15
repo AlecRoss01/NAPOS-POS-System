@@ -45,10 +45,10 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
             // Order items.
             ListView(
               shrinkWrap: true,
-              children: List.generate(widget.order.getMenuItems().length, (index) {
+              children: List.generate(widget.order.getOrderItems().length, (index) {
                 return DetailRow(
-                  title: widget.order.getMenuItems()[index].toString(),
-                  value: widget.order.getMenuItems()[index].price.toString(),
+                  title: widget.order.getOrderItems()[index].toString(),
+                  value: widget.order.getOrderItems()[index].price.toString(),
                 );
               })
             ),
