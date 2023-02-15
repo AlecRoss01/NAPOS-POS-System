@@ -33,7 +33,7 @@ class _OrderSectionState extends State<OrderSection> {
           Expanded (
             //height: 300,
             child: ListView(
-              children: List.generate(widget.currentOrder.length, (index) {
+              children: List.generate(widget.currentOrder.getOrderLength(), (index) {
                 return InkWell(
                   child: Card(
                     child: Padding(
@@ -41,13 +41,13 @@ class _OrderSectionState extends State<OrderSection> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(widget.currentOrder[index].toString())
+                          Text(widget.currentOrder.getItemAtIndex(index).toString())
                         ],
                       )
                     ),
                   ),
                   onTap: () {
-                    widget.setEditItem(widget.currentOrder[index]);
+                    widget.setEditItem(widget.currentOrder.getItemAtIndex(index));
                     Scaffold.of(context).openEndDrawer();
                     
                   },
@@ -76,13 +76,13 @@ class _OrderSectionState extends State<OrderSection> {
                   onPressed: () {
                     setState(() {
                       // TEMPORARY, ONLY SENDS FIRST ITEM IN ORDER
-                      if (widget.currentOrder.isNotEmpty) {
+                      if (widget.currentOrder.getOrderItems().isNotEmpty) {
                         //print(Order(0, order[0].toString()));
                         //print(Order(0, order[0].toString()).orderItem());
                         Order myOrder = Order(1);
-                        myOrder.addItemToOrder(widget.currentOrder[0]);
+                        myOrder.addItemToOrder(widget.currentOrder.getItemAtIndex(0));
                         sendOrder(myOrder);
-                        widget.currentOrder.clear();
+                        widget.currentOrder.getOrderItems().clear();
                       }
                     });
                   },
