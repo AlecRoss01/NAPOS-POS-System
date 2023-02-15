@@ -24,6 +24,11 @@ class MenuItem {
 
   double get price { return _price; }
 
+  // String of price with USD sign and to two decimals.
+  String strSubTotal() {
+    return "\$${price.toStringAsFixed(2)}";
+  }
+
   // Clears all category tags.
   void clearCatTags() { _catTags = {}; }
 

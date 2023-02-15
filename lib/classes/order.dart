@@ -60,6 +60,11 @@ class Order {
     return sum;
   }
 
+  // String of subtotal with USD sign and to two decimals.
+  String strSubTotal() {
+    return "\$${getSubTotal().toStringAsFixed(2)}";
+  }
+
   // Returns string of order ID.
   String strOrderID() {
     return orderID.toString().padLeft(orderIDLength, orderIDNullChar);

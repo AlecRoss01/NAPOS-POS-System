@@ -58,18 +58,32 @@ class _AnalyticsHub extends State<AnalyticsHub> {
                                   child: Card(
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: Column(
+                                      child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text('ID: ${snapshot.data![index]}'),
+                                          // Order info.
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('ID: ${snapshot.data![index]}'),
+                                              Text('Taken by: {Employee name}'),
+                                              Text('Placed on: {Datetime placed}'),
+                                              Text('Subtotal: ${snapshot.data![index].strSubTotal()}'),
+                                            ],
+                                          ),
+
+                                          Spacer(),
+
+                                          // Order items.
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
                                             // Absolutely hideous, I know. Makes a list of each item in the order (displayed beneath order ID).
                                             children: List.generate(snapshot.data![index].getOrderItems().length, (indexOfOrder) {
                                               return Text(snapshot.data![index].getOrderItems()[indexOfOrder].toString());
                                             })
                                           )
                                         ],
+
                                       ),
                                     ),
                                   ),

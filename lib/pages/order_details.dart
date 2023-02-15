@@ -40,6 +40,12 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
               title: "Taken by: ",
               value: "{Employee name}",
             ),
+
+            // Date order was placed.
+            DetailRow(
+              title: "Placed on: ",
+              value: "{Datetime placed}",
+            ),
             Divider(),
 
             // Order items.
@@ -48,7 +54,7 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
               children: List.generate(widget.order.getOrderItems().length, (index) {
                 return DetailRow(
                   title: widget.order.getOrderItems()[index].toString(),
-                  value: widget.order.getOrderItems()[index].price.toString(),
+                  value: widget.order.getOrderItems()[index].strSubTotal(),
                 );
               })
             ),
@@ -57,7 +63,7 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
             // Subtotal.
             DetailRow(
               title: "Subtotal: ",
-              value: widget.order.getSubTotal().toString()
+              value: widget.order.strSubTotal()
             ),
 
             DetailRow(
