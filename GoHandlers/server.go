@@ -13,6 +13,15 @@ import (
 
 var db *sql.DB
 
+var cfg = mysql.Config{
+	User:                 "root",
+	Passwd:               "EvilDuck666!!",
+	Net:                  "tcp",
+	Addr:                 "127.0.0.1:3306",
+	DBName:               "naposdatabase",
+	AllowNativePasswords: true,
+}
+
 type MenuItem struct {
 	menuID   int64
 	itemName string
@@ -28,19 +37,9 @@ type Order struct {
 //[]MenuItem
 
 func dbHandlerMenu() []MenuItem {
-
 	// Capture connection properties.
 	// https://stackoverflow.com/questions/70757210/how-do-i-connect-to-a-mysql-instance-without-using-the-password
 	// need to reconsider this at some point
-	// password has been removed for obvious reasons
-	cfg := mysql.Config{
-		User:                 "root",
-		Passwd:               "",
-		Net:                  "tcp",
-		Addr:                 "127.0.0.1:3306",
-		DBName:               "naposdatabase",
-		AllowNativePasswords: true,
-	}
 	// Get a database handle.
 	var err error
 	db, err = sql.Open("mysql", cfg.FormatDSN())
@@ -53,28 +52,21 @@ func dbHandlerMenu() []MenuItem {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected!")
-	menuitems, err := queryMenu("pasta")
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("found items: %v\n", menuitems)
+	/*
+		menuitems, err := queryMenu("pasta")
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("found items: %v\n", menuitems)
+	*/
 	menu, err := getMenu()
 	return menu
 }
 
 func dbHandlerOrders() []Order {
-
 	// Capture connection properties.
 	// https://stackoverflow.com/questions/70757210/how-do-i-connect-to-a-mysql-instance-without-using-the-password
 	// need to reconsider this at some point
-	cfg := mysql.Config{
-		User:                 "root",
-		Passwd:               "EvilDuck666!!",
-		Net:                  "tcp",
-		Addr:                 "127.0.0.1:3306",
-		DBName:               "naposdatabase",
-		AllowNativePasswords: true,
-	}
 	// Get a database handle.
 	var err error
 	db, err = sql.Open("mysql", cfg.FormatDSN())
@@ -86,24 +78,16 @@ func dbHandlerOrders() []Order {
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
+
 	fmt.Println("Connected!")
 	orders, err := getOrders()
 	return orders
 }
 
 func dbHandlerEntries(entry string) {
-
 	// Capture connection properties.
 	// https://stackoverflow.com/questions/70757210/how-do-i-connect-to-a-mysql-instance-without-using-the-password
 	// need to reconsider this at some point
-	cfg := mysql.Config{
-		User:                 "root",
-		Passwd:               "EvilDuck666!!",
-		Net:                  "tcp",
-		Addr:                 "127.0.0.1:3306",
-		DBName:               "naposdatabase",
-		AllowNativePasswords: true,
-	}
 	// Get a database handle.
 	var err error
 	db, err = sql.Open("mysql", cfg.FormatDSN())
@@ -119,13 +103,42 @@ func dbHandlerEntries(entry string) {
 	insertOrder(entry)
 }
 
+// need to find a way to make a "getTable()" function
+// need to find a way to have a generic return type
+// if able to do so, can use methods to simplify code https://go.dev/tour/methods/1
+func validDatabase(search string) bool {
+	databases := [2]string{"menu", "orders"}
+	for _, element := range databases {
+		if search == element {
+			return true
+		}
+	}
+	return false
+}
+
+//need to update to past 1.18 version of go in order to use generics
+//func getTotalData[ A MenuItem | Order] A {
+
+// }
+
+/*type Dataholders interface {
+	Order | MenuItem
+}
+
+func getDatabase[D Dataholders](pass D) []D {
+
+}*/
+
 func getMenu() ([]MenuItem, error) {
+	//returns a list containing all of the menu items
 	var menuitems []MenuItem
 	rows, err := db.Query("SELECT * FROM menu")
 	if err != nil {
 		return nil, fmt.Errorf("getMenu %v", err)
 	}
+
 	defer rows.Close()
+
 	for rows.Next() {
 		var menu MenuItem
 		if err := rows.Scan(&menu.menuID, &menu.itemName); err != nil {
@@ -136,16 +149,20 @@ func getMenu() ([]MenuItem, error) {
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("getMenu %v", err)
 	}
+
 	return menuitems, nil
 }
 
 func getOrders() ([]Order, error) {
+	//returns a list containing all of the orders
 	var orders []Order
 	rows, err := db.Query("SELECT * FROM orders")
 	if err != nil {
 		return nil, fmt.Errorf("getOrders %v", err)
 	}
+
 	defer rows.Close()
+
 	for rows.Next() {
 		var order Order
 		if err := rows.Scan(&order.ID, &order.item); err != nil {
@@ -156,10 +173,12 @@ func getOrders() ([]Order, error) {
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("getOrders %v", err)
 	}
+
 	return orders, nil
 }
 
 func insertOrder(name string) (int64, error) {
+	//adds and order to the database
 	result, err := db.Exec("INSERT INTO orders (ID, item) VALUES (?, ?)", 0, name)
 	if err != nil {
 		return 0, fmt.Errorf("insertOrder %v", err)
@@ -172,6 +191,7 @@ func insertOrder(name string) (int64, error) {
 }
 
 func queryMenu(name string) ([]MenuItem, error) {
+	// general function, queries the menu table for a specific name, and will return a list of those items
 	var menuitems []MenuItem
 	// turn this into function at some point, need query functions
 	rows, err := db.Query("SELECT * FROM menu WHERE name = ?", name)
@@ -192,12 +212,8 @@ func queryMenu(name string) ([]MenuItem, error) {
 	return menuitems, nil
 }
 
-//func queryOrders() ([]Order, error) {
-//var orders []Order
-//rows, err := db.Query()
-//}
-
 func tcpHandler(portNum string) {
+	//handles networking, need to probably break this up a bit
 	formatPort := ":" + portNum
 	l, err := net.Listen("tcp", formatPort)
 	if err != nil {
