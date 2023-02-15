@@ -56,6 +56,9 @@ class _CommandHub extends State<CommandHub> {
       endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder),
       appBar: AppBar(
         title: const Text('Command Hub'),
+        actions: <Widget>[
+          new Container(),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
