@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
-import '../classes/menu_item.dart';
-import '../classes/order.dart';
-import '../classes/category.dart';
+import 'dart:convert';
+import 'menu_item.dart';
+import 'order.dart';
 import 'hardcoded_pos_data.dart';
 
-const bool TESTING = true;
+const bool TESTING = false;
 
 // https://stackoverflow.com/questions/54481818/how-to-connect-flutter-app-to-tcp-socket-server
 // https://stackoverflow.com/questions/63323038/dart-return-data-from-a-stream-subscription-block
@@ -28,12 +28,12 @@ main() async {
 */
 
 
-Future<List<MenuItem>> recvMenu(POS_Category category) async {
+Future<List<MenuItem>> recvMenu() async {
   // returns the menu as a list of strings
 
   // Use hardcoded values.
   if(TESTING) {
-    return buildMenu(category);
+    return buildMenu();
   }
 
   // Use values from server.
@@ -48,7 +48,7 @@ Future<List<MenuItem>> recvMenu(POS_Category category) async {
   }
   var dataList = output.split(' ');
     for(var i = 0 ; i < dataList.length ; i++ ){
-        menuList.add(MenuItem(dataList[i]));
+        menuList.add(MenuItem(0, dataList[i]));
   }
   socket.close();
   return menuList;
@@ -67,7 +67,7 @@ Future<int> sendOrder(Order order) async {
   Socket socket = await Socket.connect('127.0.0.1', 30000);
     print('connected');
     socket.add(utf8.encode('SENDORDER\n'));
-    socket.add(utf8.encode(order.toString() + '\n'));
+    socket.add(utf8.encode(order.itemName + '\n'));
     await for (var data in socket){
         //print(utf8.decode(data));
         if (utf8.decode(data) == "finish") {
@@ -85,7 +85,6 @@ Future<List<Order>> recvOrders() async {
 
   // Use hardcoded values.
   if (TESTING) {
-    //List<Order> myhistOrders = [Order(1, [MenuItem(1, "Test")])];
     return buildHistOrders();
   }
 
@@ -101,9 +100,7 @@ Future<List<Order>> recvOrders() async {
   }
   var dataList = output.split(' ');
   for(var i = 0 ; i < dataList.length ; i++ ){
-    Order cur_order = Order(i);
-    cur_order.addItemToOrder(MenuItem(dataList[i]));
-    ordersList.add(cur_order);
+      ordersList.add(Order(0, dataList[i]));
   }
   socket.close();
   return ordersList;
@@ -114,3 +111,17 @@ Future<List<String>> recvCats() async {
   // returns the categories
   return buildCat(); // From hardcoded.
 }
+
+void recvJson() async {
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  var output = "";
+  socket.add(utf8.encode('GETMENU\n'));
+  await for (var data in socket){
+    //print(utf8.decode(data));
+    output = utf8.decode(data);
+  }
+  print(output);
+  socket.close();
+}
+
