@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:napos/pages/order_details.dart';
 import '../classes/order.dart';
 import '../styles/styles.dart';
 import '../back_end/client.dart';
@@ -72,7 +73,12 @@ class _AnalyticsHub extends State<AnalyticsHub> {
                                       ),
                                     ),
                                   ),
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => OrderDetailsPage(order: snapshot.data![index]))
+                                    );
+                                  },
                                 );
                               })
                           );

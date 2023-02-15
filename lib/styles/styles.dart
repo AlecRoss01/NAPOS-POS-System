@@ -10,6 +10,17 @@ class CustomTextStyle {
     fontSize: 24,
     color: Colors.black54,
   );
+
+  static const TextStyle headerText = TextStyle(
+    fontSize: 24,
+    color: Colors.black87,
+  );
+
+  static const TextStyle bodyText = TextStyle(
+    fontSize: 18,
+    color: Colors.black87,
+  );
+
   /*
   static const TextStyle commandHubCommands = TextStyle(
     fontSize: 10,

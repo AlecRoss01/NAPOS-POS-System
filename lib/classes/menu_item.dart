@@ -8,19 +8,21 @@ class MenuItem {
   int id = 0;
   String name = "";
   Set<String> _catTags = {};
-  double price = 0.0;
+  double _price = 0.0;
   // Initializer; Sets members with parameter data.
   MenuItem(this.name,
       // Optional parameters.
       [
         this.id = 0,
-        this.price = 0,
+        this._price = 0,
       ]);
 
   // METHODS
 
   // Private variable, externally it will appear as 'categories'
   Set<String> get categories { return _catTags; }
+
+  double get price { return _price; }
 
   // Clears all category tags.
   void clearCatTags() { _catTags = {}; }

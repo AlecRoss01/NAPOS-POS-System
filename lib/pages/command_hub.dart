@@ -55,7 +55,6 @@ class _CommandHub extends State<CommandHub> {
     return Scaffold(
       endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: const Text('Command Hub'),
       ),
       body: Padding(
