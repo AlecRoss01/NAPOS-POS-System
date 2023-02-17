@@ -1,3 +1,4 @@
+import 'dart:convert';
 class MenuItem {
   /*
   Represents one item on the menu.
@@ -54,4 +55,20 @@ class MenuItem {
   String toString() {
     return name;
   }
+
+  convertHashtoList(Set m) {
+    var len = m.length;
+    List<String> tags = List<String>.filled(len, "");
+    for( var i = 0 ; i < m.length ; i++) {
+      tags[i] = m.elementAt(i);
+    }
+    return tags;
+  }
+
+  Map<String, dynamic> toJson() => {
+    'Id' : id,
+    'Name' : name,
+    'CatTags' : convertHashtoList(_catTags),
+    'Price' : _price,
+  };
 }
