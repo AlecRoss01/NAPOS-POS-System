@@ -2,11 +2,23 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 import 'dart:convert';
-import 'menu_item.dart';
-import 'order.dart';
+import '../classes/menu_item.dart';
+import '../classes/order.dart';
 import 'hardcoded_pos_data.dart';
 
 const bool TESTING = false;
+
+class JsonRequest {
+  String requestType;
+  JsonRequest(this.requestType);
+
+  JsonRequest.fromJson(Map<String, dynamic> json) 
+              : requestType = json['RequestType'];
+
+  Map<String, dynamic> toJson() => {
+      'RequestType' : requestType,
+    };
+}
 
 // https://stackoverflow.com/questions/54481818/how-to-connect-flutter-app-to-tcp-socket-server
 // https://stackoverflow.com/questions/63323038/dart-return-data-from-a-stream-subscription-block
@@ -32,23 +44,23 @@ Future<List<MenuItem>> recvMenu() async {
   // returns the menu as a list of strings
 
   // Use hardcoded values.
-  if(TESTING) {
+  /*if(TESTING) {
     return buildMenu();
-  }
+  }*/
 
   // Use values from server.
   var menuList = <MenuItem>[];
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
   var output = "";
-  socket.add(utf8.encode('GETMENU\n'));
+  socket.add(utf8.encode(jsonEncode(new JsonRequest("MENU"))));
   await for (var data in socket){
     //print(utf8.decode(data));
     output = utf8.decode(data);
   }
-  var dataList = output.split(' ');
-    for(var i = 0 ; i < dataList.length ; i++ ){
-        menuList.add(MenuItem(0, dataList[i]));
+  var mapDecode = jsonDecode(output);
+  for (var i = 0; i < mapDecode['MenuItems'].length; i++) {
+    menuList.add(parseItem(mapDecode['MenuItems'][i]));
   }
   socket.close();
   return menuList;
@@ -66,8 +78,8 @@ Future<int> sendOrder(Order order) async {
   // Use values from server.
   Socket socket = await Socket.connect('127.0.0.1', 30000);
     print('connected');
-    socket.add(utf8.encode('SENDORDER\n'));
-    socket.add(utf8.encode(order.itemName + '\n'));
+    socket.add(utf8.encode(jsonEncode(new JsonRequest("SENDORDER"))));
+    socket.add(utf8.encode(jsonEncode(order)));
     await for (var data in socket){
         //print(utf8.decode(data));
         if (utf8.decode(data) == "finish") {
@@ -93,14 +105,15 @@ Future<List<Order>> recvOrders() async {
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
   var output = "";
-  socket.add(utf8.encode('GETORDERS\n'));
+  var request  = new JsonRequest("ORDERS");
+  socket.add(utf8.encode(jsonEncode(request)));
   await for (var data in socket){
       //print(utf8.decode(data));
       output = utf8.decode(data);
   }
-  var dataList = output.split(' ');
-  for(var i = 0 ; i < dataList.length ; i++ ){
-      ordersList.add(Order(0, dataList[i]));
+  var mapDecode = jsonDecode(output);
+  for(var i = 0 ; i < mapDecode['Orders'].length ; i++ ){
+      ordersList.add(parseOrder(mapDecode['Orders'][i]));
   }
   socket.close();
   return ordersList;
@@ -116,12 +129,81 @@ void recvJson() async {
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
   var output = "";
-  socket.add(utf8.encode('GETMENU\n'));
+  var request  = new JsonRequest("ORDERS");
+  socket.add(utf8.encode(jsonEncode(request)));
   await for (var data in socket){
     //print(utf8.decode(data));
     output = utf8.decode(data);
   }
   print(output);
+  //parseOrder(output);
   socket.close();
+}
+
+Order parseOrder(Map m) {
+  print(m);
+  var order = new Order(m['OrderID']);
+  order.orderIDNullChar = m['OrderIDNullChar'];
+  order.orderIDLength = m['OrderIDLength'];
+  var items = <MenuItem>[];
+  for (var i = 0 ; i < m['OrderItems'].length ; i++) {
+    items.add(parseItem(m['OrderItems'][i]));
+  }
+  order.setOrderItems(items);
+  return order;
+}
+
+MenuItem parseItem(Map m) {
+  var item = new MenuItem(m['Name'], m['Id'], m['Price']);
+  // got line below from https://stackoverflow.com/questions/60105956/how-to-cast-dynamic-to-liststring
+  List<String> catTags = List<String>.from(m['CatTags'] as List);
+  item.setCatTags(catTags);
+  return item;
+}
+
+convertHashtoList(MenuItem m) {
+  var len = m.categories.length;
+  List<String> tags = List<String>.filled(len, "");
+  for( var i = 0 ; i < m.categories.length ; i++) {
+    tags[i] = m.categories.elementAt(i);
+  }
+  return tags;
+}
+
+/*void send() async {
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  var output = "";
+  var order = new Order(1);
+  var item = new MenuItem("pasta", 1, 14.95);
+  item.addCatTag("food");
+  item.addCatTag("drink");
+  print(convertHashtoList(item));
+  order.addItemToOrder(item);
+  order.addItemToOrder(item);
+  var orderList = List<String>.filled(1, "stuff");
+  var encodedOrder = jsonEncode(item);
+  socket.add(utf8.encode(jsonEncode(new JsonRequest("SENDMENU"))));
+  //var encodedOrder = {'OrderIDNullChar' : order.orderIDNullChar, 'OrderIDLength' : order.orderIDLength, 'OrderID' : order.orderID, 'OrderItems' : order.orderItems};
+  // issue seems to be because of vector, so I need a function to  convert the vector to a list, then I should be able to handle things normally
+  socket.add(utf8.encode(encodedOrder));
+  await for (var data in socket){
+    //print(utf8.decode(data));
+    output = utf8.decode(data);
+  }
+  socket.close();
+}*/
+
+main() {
+  var order = new Order(1);
+  var item = new MenuItem("pasta", 1, 14.95);
+  item.addCatTag("food");
+  item.addCatTag("drink");
+  order.addItemToOrder(item);
+  //recvJson();
+  //send();
+  //recvOrders();
+  //sendOrder(order);
+  //recvMenu();
 }
 
