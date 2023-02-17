@@ -1,4 +1,5 @@
 import 'menu_item.dart';
+import 'dart:convert';
 
 /*
 How will we do unique order numbers?
@@ -23,6 +24,13 @@ class Order {
   Order(this.orderID);
 
   // METHODS
+
+  Map<String, dynamic> toJson() => {
+    'OrderIDNullChar' : orderIDNullChar,
+    'OrderIDLength' : orderIDLength,
+    'OrderID' : orderID,
+    'OrderItems' : jsonEncode(orderItems),
+  };
 
   List<MenuItem> getOrderItems() { return orderItems; }
 
