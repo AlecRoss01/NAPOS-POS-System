@@ -59,6 +59,7 @@ Future<List<MenuItem>> recvMenu() async {
     output = utf8.decode(data);
   }
   var mapDecode = jsonDecode(output);
+  print(mapDecode);
   for (var i = 0; i < mapDecode['MenuItems'].length; i++) {
     menuList.add(parseItem(mapDecode['MenuItems'][i]));
   }
@@ -154,7 +155,8 @@ Order parseOrder(Map m) {
 }
 
 MenuItem parseItem(Map m) {
-  var item = new MenuItem(m['Name'], m['Id'], m['Price']);
+  var item = new MenuItem(m['Name'], m['Id'], m['Price'].toDouble());
+  //item.setPrice();
   // got line below from https://stackoverflow.com/questions/60105956/how-to-cast-dynamic-to-liststring
   List<String> catTags = List<String>.from(m['CatTags'] as List);
   item.setCatTags(catTags);
@@ -195,11 +197,10 @@ convertHashtoList(MenuItem m) {
 }*/
 
 main() {
-  var order = new Order(1);
-  var item = new MenuItem("pasta", 1, 14.95);
-  item.addCatTag("food");
-  item.addCatTag("drink");
-  order.addItemToOrder(item);
+  //var order = new Order(7);
+  //var item = new MenuItem("pizza", 1, 13.95);
+  //item.addCatTag("food");
+  //order.addItemToOrder(item);
   //recvJson();
   //send();
   //recvOrders();
