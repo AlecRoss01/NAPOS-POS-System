@@ -31,7 +31,7 @@ class _MenuItemSectionState extends State<MenuItemSection> {
             // Gridview method: https://codesinsider.com/flutter-gridview-example/
             // Gridview.count method: https://www.geeksforgeeks.org/flutter-gridview/
             child: FutureBuilder<List<menu_item.MenuItem>>(
-              future: recvMenu(widget.categoryToBeDisplayed),
+              future: recvMenu(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return GridView(

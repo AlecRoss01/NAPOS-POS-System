@@ -2,10 +2,10 @@ import "menu_item.dart";
 
 class POS_Category {
     String _name;
-    int id;
-    final listOfItems = <MenuItem>[];
+    //int id;
+    //final listOfItems = <MenuItem>[];
 
-    POS_Category(this._name, this.id);
+    POS_Category(this._name);
 
     void populateItemList() {
         

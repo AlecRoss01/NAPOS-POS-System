@@ -19,7 +19,7 @@ class CommandHub extends StatefulWidget {
 class _CommandHub extends State<CommandHub> {
   
   final currentOrder = new Order(1);
-  POS_Category currentCategory = new POS_Category("Food", 1);
+  POS_Category currentCategory = new POS_Category("Food");
   menu_item.MenuItem itemToEdit = new menu_item.MenuItem("default");
   
   void addToOrder(menu_item.MenuItem item) {

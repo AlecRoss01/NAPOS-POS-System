@@ -23,7 +23,7 @@ buildMenu(POS_Category category) {
   menu.add(MenuItem("Glassware", 4));
   
   for (var i = 0; i < 5; i++){
-    menu[i].addCatTag("Food"); 
+    menu[i].addCatTag("Food");
   }
 
   for (var i = 5; i < 10; i++){
@@ -55,7 +55,7 @@ buildCat() {
 
 // Hardcoded historical orders
 List<Order> buildHistOrders() {
-  var cat = new POS_Category("Food", 1);
+  var cat = new POS_Category("Food");
   final myMenu = buildMenu(cat);
   List<Order> histOrders = <Order>[];
 

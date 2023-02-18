@@ -45,7 +45,7 @@ class _CategorySelectionState extends State<CategorySection> {
                           ),
                         ),
                         onTap: () {
-                          var cat = new POS_Category(snapshot.data![index], index);
+                          var cat = new POS_Category(snapshot.data![index]);
                           widget.changeCategory(cat);
                         },
                       );

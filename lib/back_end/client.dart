@@ -2,11 +2,13 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 import 'dart:convert';
+import 'package:napos/classes/category.dart';
+
 import '../classes/menu_item.dart';
 import '../classes/order.dart';
 import 'hardcoded_pos_data.dart';
 
-const bool TESTING = false;
+const bool TESTING = true;
 
 class JsonRequest {
   String requestType;
@@ -44,9 +46,9 @@ Future<List<MenuItem>> recvMenu() async {
   // returns the menu as a list of strings
 
   // Use hardcoded values.
-  /*if(TESTING) {
-    return buildMenu();
-  }*/
+  if(TESTING) {
+    return buildMenu(POS_Category('All'));
+  }
 
   // Use values from server.
   var menuList = <MenuItem>[];
