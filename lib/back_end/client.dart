@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import '../classes/menu_item.dart';
 import '../classes/order.dart';
+import '../classes/category.dart';
 import 'hardcoded_pos_data.dart';
 
 const bool TESTING = false;
@@ -59,7 +60,6 @@ Future<List<MenuItem>> recvMenu() async {
     output = utf8.decode(data);
   }
   var mapDecode = jsonDecode(output);
-  print(mapDecode);
   for (var i = 0; i < mapDecode['MenuItems'].length; i++) {
     menuList.add(parseItem(mapDecode['MenuItems'][i]));
   }
@@ -67,6 +67,25 @@ Future<List<MenuItem>> recvMenu() async {
   return menuList;
 }
 
+Future<List<MenuItem>> recvMenuCat(POS_Category p) async {
+  // returns the menu as a list of strings
+
+  // Use hardcoded values.
+  /*if(TESTING) {
+    return buildMenu();
+  }*/
+
+  // Use values from server.
+  var catMenuList = <MenuItem>[];
+  var menuList = await recvMenu();
+  for (var i = 0; i < menuList.length ; i ++) {
+    if (menuList[i].categories.contains(p.name)) {
+      catMenuList.add(menuList[i]);
+    }
+  }
+  return menuList;
+  
+}
 
 Future<int> sendOrder(Order order) async {
   //Sends order and adds it to order db
@@ -136,13 +155,11 @@ void recvJson() async {
     //print(utf8.decode(data));
     output = utf8.decode(data);
   }
-  print(output);
   //parseOrder(output);
   socket.close();
 }
 
 Order parseOrder(Map m) {
-  print(m);
   var order = new Order(m['OrderID']);
   order.orderIDNullChar = m['OrderIDNullChar'];
   order.orderIDLength = m['OrderIDLength'];
@@ -206,5 +223,7 @@ main() {
   //recvOrders();
   //sendOrder(order);
   //recvMenu();
+  var cat = new POS_Category("drink", 1);
+  var catMenu = recvMenuCat(cat);
 }
 
