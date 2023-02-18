@@ -76,14 +76,15 @@ Future<List<MenuItem>> recvMenuCat(POS_Category p) async {
   }*/
 
   // Use values from server.
+  var p2 = p.name.toLowerCase();
   var catMenuList = <MenuItem>[];
   var menuList = await recvMenu();
   for (var i = 0; i < menuList.length ; i ++) {
-    if (menuList[i].categories.contains(p.name)) {
+    if (menuList[i].categories.contains(p2)) {
       catMenuList.add(menuList[i]);
     }
   }
-  return menuList;
+  return catMenuList;
   
 }
 
@@ -223,7 +224,7 @@ main() {
   //recvOrders();
   //sendOrder(order);
   //recvMenu();
-  var cat = new POS_Category("drink", 1);
-  var catMenu = recvMenuCat(cat);
+  var cat = new POS_Category("FOOD", 1);
+  recvMenuCat(cat);
 }
 
