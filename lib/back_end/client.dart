@@ -78,7 +78,6 @@ Future<List<MenuItem>> recvMenuCat(POS_Category p) async {
   }
 
   // Use values from server.
-  var p2 = p.name.toLowerCase();
   var catMenuList = <MenuItem>[];
   var menuList = await recvMenu();
 
@@ -87,7 +86,7 @@ Future<List<MenuItem>> recvMenuCat(POS_Category p) async {
   }
 
   for (var i = 0; i < menuList.length ; i ++) {
-    if (menuList[i].categories.contains(p2)) {
+    if (menuList[i].categories.contains(p.name)) {
       catMenuList.add(menuList[i]);
     }
   }
@@ -184,7 +183,7 @@ MenuItem parseItem(Map m) {
   //item.setPrice();
   // got line below from https://stackoverflow.com/questions/60105956/how-to-cast-dynamic-to-liststring
   List<String> catTags = List<String>.from(m['CatTags'] as List);
-  item.setCatTags(catTags);
+  item.addCatTags(catTags);
   return item;
 }
 
@@ -222,16 +221,5 @@ convertHashtoList(MenuItem m) {
 }*/
 
 main() {
-  //var order = new Order(7);
-  //var item = new MenuItem("pizza", 1, 13.95);
-  //item.addCatTag("food");
-  //order.addItemToOrder(item);
-  //recvJson();
-  //send();
-  //recvOrders();
-  //sendOrder(order);
-  //recvMenu();
-  var cat = new POS_Category("FOOD");
-  recvMenuCat(cat);
 }
 
