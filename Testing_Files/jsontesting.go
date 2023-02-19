@@ -75,9 +75,9 @@ func writeToConnection(c net.Conn) {
 }
 
 func sendMenu(c net.Conn) {
-	msg := MenuItem{1, "pasta", []string{}, 13.45}
-	msg2 := MenuItem{2, "pizza", []string{}, 17.95}
-	msg3 := MenuItem{2, "fish and chips", []string{}, 20.99}
+	msg := MenuItem{1, "pasta", []string{"All", "Food"}, 13.45}
+	msg2 := MenuItem{2, "pizza", []string{"All", "Drink"}, 17.95}
+	msg3 := MenuItem{3, "fish and chips", []string{"All", "Food"}, 20.99}
 	menu := Menu{[]MenuItem{msg, msg2, msg3}}
 	//part above is where I would get the menu from the database
 	e := json.NewEncoder(c)
@@ -85,6 +85,7 @@ func sendMenu(c net.Conn) {
 	if err != nil {
 		fmt.Println("Error Occuered in sendMenu")
 	}
+	c.Close()
 }
 
 func recvMenuItem(c net.Conn) {
@@ -106,6 +107,7 @@ func sendOrders(c net.Conn) {
 	if err != nil {
 		fmt.Println("Error Occuered in sendOrders")
 	}
+	c.Close()
 }
 
 //{0 5 1 [{"Id":1,"Name":"pasta","CatTags":["food","drink"],"Price":14.95},{"Id":1,"Name":"pasta","CatTags":["food","drink"],"Price":14.95}]} <nil>
