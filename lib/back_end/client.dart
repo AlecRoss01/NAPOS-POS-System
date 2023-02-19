@@ -81,6 +81,11 @@ Future<List<MenuItem>> recvMenuCat(POS_Category p) async {
   // Use values from server.
   var catMenuList = <MenuItem>[];
   var menuList = await recvMenu();
+
+  if (p.name == "All") {
+    return menuList;
+  }
+
   for (var i = 0; i < menuList.length ; i ++) {
     if (menuList[i].categories.contains(p.name)) {
       catMenuList.add(menuList[i]);

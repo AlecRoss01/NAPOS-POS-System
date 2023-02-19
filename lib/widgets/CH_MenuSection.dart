@@ -49,7 +49,7 @@ class _MenuItemSectionState extends State<MenuItemSection> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(snapshot.data![index].toString()),
-                              const Text('1.0')
+                              Text(snapshot.data![index].strPrice())
                             ],
                           )
                         ),

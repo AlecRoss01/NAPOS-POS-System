@@ -54,7 +54,7 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
               children: List.generate(widget.order.getOrderItems().length, (index) {
                 return DetailRow(
                   title: widget.order.getOrderItems()[index].toString(),
-                  value: widget.order.getOrderItems()[index].strSubTotal(),
+                  value: widget.order.getOrderItems()[index].strPrice(),
                 );
               })
             ),
