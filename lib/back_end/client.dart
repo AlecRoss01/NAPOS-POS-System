@@ -9,7 +9,7 @@ import '../classes/order.dart';
 import '../classes/category.dart';
 import 'hardcoded_pos_data.dart';
 
-const bool TESTING = true;
+const bool TESTING = false;
 
 class JsonRequest {
   String requestType;
@@ -62,6 +62,7 @@ Future<List<MenuItem>> recvMenu() async {
     output = utf8.decode(data);
   }
   var mapDecode = jsonDecode(output);
+  print(mapDecode);
   for (var i = 0; i < mapDecode['MenuItems'].length; i++) {
     menuList.add(parseItem(mapDecode['MenuItems'][i]));
   }
@@ -215,6 +216,11 @@ convertHashtoList(MenuItem m) {
   socket.close();
 }*/
 
-main() {
+main() async {
+  //var recv = await recvMenu();
+  //for (var i = 0; i < recv.length; i++) {
+    //print(recv[i].categories);
+  //}
+
 }
 
