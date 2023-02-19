@@ -214,7 +214,7 @@ func getMenu() ([]MenuItem, error) {
 	}
 	cats, err := getCategories()
 	for i := 0; i < len(menuitems); i++ {
-		for y := 0; y < len(menuitems); y++ {
+		for y := 0; y < len(cats); y++ {
 			if menuitems[i].Id == cats[y].MenuID {
 				menuitems[i].CatTags = append(menuitems[i].CatTags, cats[y].CatTag)
 			}
