@@ -9,7 +9,7 @@ import '../classes/order.dart';
 import '../classes/category.dart';
 import 'hardcoded_pos_data.dart';
 
-const bool TESTING = false;
+const bool TESTING = true;
 
 class JsonRequest {
   String requestType;
@@ -81,6 +81,7 @@ Future<List<MenuItem>> recvMenuCat(POS_Category p) async {
   var catMenuList = <MenuItem>[];
   var menuList = await recvMenu();
 
+  // Returns full menu.
   if (p.name == "All") {
     return menuList;
   }
@@ -149,7 +150,9 @@ Future<List<Order>> recvOrders() async {
 
 Future<List<String>> recvCats() async {
   // returns the categories
-  return buildCat(); // From hardcoded.
+  List<String> cats = buildCats();
+  cats.insert(0, 'All');
+  return cats; // From hardcoded.
 }
 
 void recvJson() async {
@@ -179,7 +182,7 @@ Order parseOrder(Map m) {
 }
 
 MenuItem parseItem(Map m) {
-  var item = new MenuItem(m['Name'], m['Id'], m['Price'].toDouble());
+  var item = new MenuItem(m['Name'], id: m['Id'], price: m['Price'].toDouble());
   //item.setPrice();
   // got line below from https://stackoverflow.com/questions/60105956/how-to-cast-dynamic-to-liststring
   List<String> catTags = List<String>.from(m['CatTags'] as List);

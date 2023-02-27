@@ -13,10 +13,15 @@ class MenuItem {
   // Initializer; Sets members with parameter data.
   MenuItem(this.name,
       // Optional parameters.
-      [
-        this.id = 0,
-        this._price = 0,
-      ]);
+      // Curly braces mean their name must be used in initialization.
+      // Like: MenuItem('Hot Dog', price : 1.25)
+      {
+        int id = 0,
+        double price = 0,
+      }) {
+    this.id = id;
+    this._price = price;
+  }
 
   // METHODS
 
