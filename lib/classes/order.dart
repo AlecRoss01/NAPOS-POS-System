@@ -21,7 +21,11 @@ class Order {
   List<MenuItem> orderItems = <MenuItem>[]; // Growable list of menu items
 
   // Initialization; takes an ID for now.
-  Order(this.orderID);
+  Order(
+      // Optional parameters.
+      [
+        this.orderID = 0,
+      ]);
 
   // METHODS
 

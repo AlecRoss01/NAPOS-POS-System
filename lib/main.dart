@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'styles/styles.dart';
 import 'pages/command_hub.dart';
 import 'pages/analytics_hub.dart';
+import 'pages/pos_home_page.dart';
 
 // Runs the app.
 void main() {
@@ -21,71 +22,106 @@ class NaposPOS extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const POSHomePage(title: 'Napos POS'),
+      home: const LoginScreen(),
     );
   }
 }
 
-// This widget is the home page of the POS application.
-class POSHomePage extends StatefulWidget {
-  const POSHomePage({super.key, required this.title});
-
-  // Fields in a Widget subclass are always marked "final".
-  final String title;
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<POSHomePage> createState() => _POSHomePage();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-// Implementation of home page
-class _POSHomePage extends State<POSHomePage> {
-  
-
-  // This method is rerun every time setState is called.
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center, // Align buttons to center of the row
-          children: <Widget>[
-            // Sized boxes wrap buttons so they can be sized
-            // First Button, for POS page
-            SizedBox(
-              height: 100,
-              width: 200,
-              child: TextButton(
-                child: const Text("Point of Sale", style:CustomTextStyle.homeButtons),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const CommandHub())
-                  );
-                },
+      backgroundColor: Colors.red,
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget> [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget> [
+                  PinNumber(number: "1"),
+                  SizedBox(width: 10),
+                  PinNumber(number: "2"),
+                  SizedBox(width: 10),
+                  PinNumber(number: "3")
+                ]
               ),
-            ),
-            // Space between buttons
-            SizedBox(width: 50,),
-            // Second Button, for Analytics Hub page
-            SizedBox(
-              height: 100,
-              width: 200,
-              child: TextButton(
-                child: const Text("Analytics Hub", style:CustomTextStyle.homeButtons),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const AnalyticsHub())
-                  );
-                },
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget> [
+                  PinNumber(number: "4"),
+                  SizedBox(width: 10),
+                  PinNumber(number: "5"),
+                  SizedBox(width: 10),
+                  PinNumber(number: "6")
+                ]
               ),
-            ),
-          ],
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget> [
+                  PinNumber(number: "7"),
+                  SizedBox(width: 10),
+                  PinNumber(number: "8"),
+                  SizedBox(width: 10),
+                  PinNumber(number: "9")
+                ]
+              ),
+              SizedBox(height: 10),
+              TextButton(
+                child: Padding(
+                  padding: EdgeInsets.all(15), 
+                  child: Text("Login", style:CustomTextStyle.homeButtons)
+                ),
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.white)
+                    )
+                  )
+                ),
+                onPressed: () {
+                  //check login credentials here, if they pass got to POS Home Page
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const POSHomePage(title: 'Napos POS')));
+                }
+              )
+            ]
+          )
+        )
+      )
+    );
+  }
+}
+
+class PinNumber extends StatelessWidget {
+  final String number;
+  const PinNumber({super.key, required this.number});
+
+  // This widget is the root of the application.
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      child: Text(number, style:CustomTextStyle.homeButtons),
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+            side: BorderSide(color: Colors.white)
+          )
         )
       ),
+      onPressed: () {
+      }
     );
   }
 }

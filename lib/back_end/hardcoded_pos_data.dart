@@ -6,21 +6,21 @@ import '../classes/category.dart';
 buildMenu(POS_Category category) {
   final menu = <MenuItem>[];
   final catMenu = <MenuItem>[];
-  menu.add(MenuItem("Hot Dog", 1, 1.2));
-  menu.add(MenuItem("Pizza", 2));
-  menu.add(MenuItem("Soup", 3));
-  menu.add(MenuItem("Cheeseburger", 4));
-  menu.add(MenuItem("Spaghetti", 4));
-  menu.add(MenuItem("Coke", 4));
-  menu.add(MenuItem("Rootbeer", 4));
-  menu.add(MenuItem("Beer", 4));
-  menu.add(MenuItem("Water", 4));
-  menu.add(MenuItem("Ice Tea", 4));
-  menu.add(MenuItem("T-Shirt", 4));
-  menu.add(MenuItem("Hat", 4));
-  menu.add(MenuItem("Hoodie", 4));
-  menu.add(MenuItem("Sticker", 4));
-  menu.add(MenuItem("Glassware", 4));
+  menu.add(MenuItem('Hot Dog', price: 1.25));
+  menu.add(MenuItem("Pizza", price: 2.0));
+  menu.add(MenuItem("Soup", price: 3.0));
+  menu.add(MenuItem("Cheeseburger", price: 5.0));
+  menu.add(MenuItem("Spaghetti", price: 4.0));
+  menu.add(MenuItem("Coke", price: 1.0));
+  menu.add(MenuItem("Rootbeer", price: 1.0));
+  menu.add(MenuItem("Beer", price: 2.0));
+  menu.add(MenuItem("Water", price: 0.0));
+  menu.add(MenuItem("Ice Tea", price: 2.0));
+  menu.add(MenuItem("T-Shirt", price: 20.0));
+  menu.add(MenuItem("Hat", price: 10.0));
+  menu.add(MenuItem("Hoodie", price: 25.0));
+  menu.add(MenuItem("Sticker", price: 0.5));
+  menu.add(MenuItem("Glassware", price: 5.0));
   
   for (var i = 0; i < 5; i++){
     menu[i].addCatTag("Food");
@@ -34,8 +34,9 @@ buildMenu(POS_Category category) {
     menu[i].addCatTag("Merch");
   }
 
-  for (var i = 0; i < menu.length; i++){
-    menu[i].addCatTag("All");
+  // Returns full menu.
+  if (category.name == 'All') {
+    return menu;
   }
 
   for (var i = 0; i < menu.length; i++){
@@ -48,8 +49,8 @@ buildMenu(POS_Category category) {
 }
 
 // Hardcoded categories
-buildCat() {
-  final cat = <String>["Food", "Drinks", "Merch", "All"];
+buildCats() {
+  final cat = <String>["Food", "Drinks", "Merch"];
   return cat;
 }
 
