@@ -15,12 +15,12 @@ class JsonRequest {
   String requestType;
   JsonRequest(this.requestType);
 
-  JsonRequest.fromJson(Map<String, dynamic> json) 
-              : requestType = json['RequestType'];
+  JsonRequest.fromJson(Map<String, dynamic> json)
+      : requestType = json['RequestType'];
 
   Map<String, dynamic> toJson() => {
-      'RequestType' : requestType,
-    };
+        'RequestType': requestType,
+      };
 }
 
 // https://stackoverflow.com/questions/54481818/how-to-connect-flutter-app-to-tcp-socket-server
@@ -42,12 +42,11 @@ main() async {
 }
 */
 
-
 Future<List<MenuItem>> recvMenu() async {
   // returns the menu as a list of strings
 
   // Use hardcoded values.
-  if(TESTING) {
+  if (TESTING) {
     return buildMenu(POS_Category('All'));
   }
 
@@ -57,7 +56,7 @@ Future<List<MenuItem>> recvMenu() async {
   print('connected');
   var output = "";
   socket.add(utf8.encode(jsonEncode(new JsonRequest("MENU"))));
-  await for (var data in socket){
+  await for (var data in socket) {
     //print(utf8.decode(data));
     output = utf8.decode(data);
   }
@@ -73,7 +72,7 @@ Future<List<MenuItem>> recvMenuCat(POS_Category p) async {
   // returns the menu as a list of strings
 
   // Use hardcoded values.
-  if(TESTING) {
+  if (TESTING) {
     return buildMenu(p);
   }
 
@@ -85,13 +84,12 @@ Future<List<MenuItem>> recvMenuCat(POS_Category p) async {
     return menuList;
   }
 
-  for (var i = 0; i < menuList.length ; i ++) {
+  for (var i = 0; i < menuList.length; i++) {
     if (menuList[i].categories.contains(p.name)) {
       catMenuList.add(menuList[i]);
     }
   }
   return catMenuList;
-  
 }
 
 Future<int> sendOrder(Order order) async {
@@ -104,20 +102,19 @@ Future<int> sendOrder(Order order) async {
 
   // Use values from server.
   Socket socket = await Socket.connect('127.0.0.1', 30000);
-    print('connected');
-    socket.add(utf8.encode(jsonEncode(new JsonRequest("SENDORDER"))));
-    socket.add(utf8.encode(jsonEncode(order)));
-    await for (var data in socket){
-        //print(utf8.decode(data));
-        if (utf8.decode(data) == "finish") {
-            socket.close();
-            return 0;
-        }
+  print('connected');
+  socket.add(utf8.encode(jsonEncode(JsonRequest("SENDORDER"))));
+  socket.add(utf8.encode(jsonEncode(order)));
+  await for (var data in socket) {
+    //print(utf8.decode(data));
+    if (utf8.decode(data) == "finish") {
+      socket.close();
+      return 0;
     }
-    socket.close();
-    return 0;
+  }
+  socket.close();
+  return 0;
 }
-
 
 Future<List<Order>> recvOrders() async {
   // returns all orders in the order db
@@ -132,33 +129,51 @@ Future<List<Order>> recvOrders() async {
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
   var output = "";
-  var request  = new JsonRequest("ORDERS");
+  var request = new JsonRequest("ORDERS");
   socket.add(utf8.encode(jsonEncode(request)));
-  await for (var data in socket){
-      //print(utf8.decode(data));
-      output = utf8.decode(data);
+  await for (var data in socket) {
+    //print(utf8.decode(data));
+    output = utf8.decode(data);
   }
   var mapDecode = jsonDecode(output);
-  for(var i = 0 ; i < mapDecode['Orders'].length ; i++ ){
-      ordersList.add(parseOrder(mapDecode['Orders'][i]));
+  for (var i = 0; i < mapDecode['Orders'].length; i++) {
+    ordersList.add(parseOrder(mapDecode['Orders'][i]));
   }
   socket.close();
   return ordersList;
 }
 
-
 Future<List<String>> recvCats() async {
   // returns the categories
-  return buildCat(); // From hardcoded.
+  // From hardcoded.
+  if (TESTING) {
+    return buildCat();
+  }
+
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  var output = "";
+  var request = JsonRequest("CATEGORIES");
+  socket.add(utf8.encode(jsonEncode(request)));
+  await for (var data in socket) {
+    output = utf8.decode(data);
+  }
+  var mapDecode = jsonDecode(output);
+  socket.close();
+  var catList = <String>[];
+  for (var i = 0; i < mapDecode['Categories'].length; i++) {
+    catList.add(mapDecode['Categories'][i]);
+  }
+  return catList;
 }
 
 void recvJson() async {
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
   var output = "";
-  var request  = new JsonRequest("ORDERS");
+  var request = JsonRequest("ORDERS");
   socket.add(utf8.encode(jsonEncode(request)));
-  await for (var data in socket){
+  await for (var data in socket) {
     //print(utf8.decode(data));
     output = utf8.decode(data);
   }
@@ -167,11 +182,11 @@ void recvJson() async {
 }
 
 Order parseOrder(Map m) {
-  var order = new Order(m['OrderID']);
+  var order = Order(m['OrderID']);
   order.orderIDNullChar = m['OrderIDNullChar'];
   order.orderIDLength = m['OrderIDLength'];
   var items = <MenuItem>[];
-  for (var i = 0 ; i < m['OrderItems'].length ; i++) {
+  for (var i = 0; i < m['OrderItems'].length; i++) {
     items.add(parseItem(m['OrderItems'][i]));
   }
   order.setOrderItems(items);
@@ -179,7 +194,7 @@ Order parseOrder(Map m) {
 }
 
 MenuItem parseItem(Map m) {
-  var item = new MenuItem(m['Name'], m['Id'], m['Price'].toDouble());
+  var item = MenuItem(m['Name'], m['Id'], m['Price'].toDouble());
   //item.setPrice();
   // got line below from https://stackoverflow.com/questions/60105956/how-to-cast-dynamic-to-liststring
   List<String> catTags = List<String>.from(m['CatTags'] as List);
@@ -190,7 +205,7 @@ MenuItem parseItem(Map m) {
 convertHashtoList(MenuItem m) {
   var len = m.categories.length;
   List<String> tags = List<String>.filled(len, "");
-  for( var i = 0 ; i < m.categories.length ; i++) {
+  for (var i = 0; i < m.categories.length; i++) {
     tags[i] = m.categories.elementAt(i);
   }
   return tags;
@@ -220,6 +235,4 @@ convertHashtoList(MenuItem m) {
   socket.close();
 }*/
 
-main() async {
-}
-
+main() async {}
