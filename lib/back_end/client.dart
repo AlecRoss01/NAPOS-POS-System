@@ -9,7 +9,7 @@ import '../classes/order.dart';
 import '../classes/category.dart';
 import 'hardcoded_pos_data.dart';
 
-const bool TESTING = false;
+const bool TESTING = true;
 
 class JsonRequest {
   String requestType;
@@ -150,6 +150,15 @@ Future<List<Order>> recvOrders() async {
 Future<List<String>> recvCats() async {
   // returns the categories
   return buildCat(); // From hardcoded.
+}
+
+bool checkPINNumbers(int pin) {
+  if (TESTING){
+    return checkHardcodedPinNumbers(pin);
+  }
+  else{
+    return false;
+  }
 }
 
 void recvJson() async {

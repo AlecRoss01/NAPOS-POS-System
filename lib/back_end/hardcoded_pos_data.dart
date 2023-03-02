@@ -2,6 +2,27 @@ import 'package:napos/classes/order.dart';
 import '../classes/menu_item.dart';
 import '../classes/category.dart';
 
+bool checkHardcodedPinNumbers(int pin) {
+  var pinNumbersWithAccess = <int>[
+    1234,
+    5678,
+    2233,
+    0904,
+    4582,
+    7243,
+    9999,
+    0000,
+    2321
+  ];
+  if (pinNumbersWithAccess.contains(pin)) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+
 // Hardcoded menu
 buildMenu(POS_Category category) {
   final menu = <MenuItem>[];

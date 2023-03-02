@@ -3,6 +3,7 @@ import 'styles/styles.dart';
 import 'pages/command_hub.dart';
 import 'pages/analytics_hub.dart';
 import 'pages/pos_home_page.dart';
+import 'back_end/client.dart';
 
 // Runs the app.
 void main() {
@@ -37,6 +38,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   
   var pin = <int>[];
+  String errorMessage = "";
 
   void addNumToPIN(String number){
     setState(() {
@@ -45,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       else {
         pin.add(int.parse(number));
+        errorMessage = "";
       }
     });
   }
@@ -80,7 +83,22 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget> [
-              Text(pinToString()),
+              Text(errorMessage),
+              Container(
+                child: SizedBox(
+                  width: 160,
+                  child: Center(child: Text(pinToString()))
+                ),
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  color: Colors.white,
+                  border: Border.all(
+                    width: 2
+                  )
+                ),
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.all(10)
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget> [
@@ -138,10 +156,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 onPressed: () {
                   //check login credentials here, if they pass got to POS Home Page
-                  setState(() {
-                    pin.clear();
-                  });
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const POSHomePage(title: 'Napos POS')));
+                  if (checkPINNumbers(int.parse(pinToString()))){
+                    setState(() {
+                      pin.clear();
+                      errorMessage = "";
+                    });
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const POSHomePage(title: 'Napos POS')));
+                  }
+                  else {
+                    setState(() {
+                      errorMessage = "Invalid Pin";
+                      pin.clear();
+                    });
+                  }
                 }
               )
             ]
