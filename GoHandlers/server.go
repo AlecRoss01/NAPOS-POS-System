@@ -66,6 +66,10 @@ type Categories struct {
 	CatTag string
 }
 
+type UniqueCats struct {
+	Categories []string
+}
+
 // https://go.dev/doc/tutorial/database-access
 
 //[]MenuItem
@@ -88,6 +92,26 @@ func dbHandlerMenu() []MenuItem {
 	fmt.Println("Connected!")
 	menu, err := getMenu()
 	return menu
+}
+
+func dbHandlerCategories() []Categories {
+	// Capture connection properties.
+	// https://stackoverflow.com/questions/70757210/how-do-i-connect-to-a-mysql-instance-without-using-the-password
+	// need to reconsider this at some point
+	// Get a database handle.
+	var err error
+	db, err = sql.Open("mysql", cfg.FormatDSN())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	fmt.Println("Connected!")
+	cats, err := getCategories()
+	return cats
 }
 
 func dbHandlerOrders() []Order {
@@ -142,6 +166,7 @@ func validDatabase(search string) bool {
 	}
 	return false
 }
+
 func getCategories() ([]Categories, error) {
 	var items []Categories
 	rows, err := db.Query("SELECT * FROM categories")
@@ -427,6 +452,8 @@ func handleServerConnection(c net.Conn) {
 		sendOrders(c)
 	case "SENDORDER":
 		recvOrder(c)
+	case "CATEGORIES":
+		sendCategories(c)
 	default:
 		fmt.Printf("reached default in request type, request was: %s", requestType)
 	}
@@ -456,9 +483,40 @@ func sendOrders(c net.Conn) {
 	c.Close()
 }
 
+func contains(arr []string, obj string) bool {
+	if len(arr) == 0 {
+		return false
+	}
+	for i := 0; i < len(arr); i++ {
+		if arr[i] == obj {
+			return true
+		}
+	}
+	return false
+}
+
+func sendCategories(c net.Conn) {
+	msg := dbHandlerCategories()
+	var cats []string
+	for i := 0; i < len(msg); i++ {
+		if !contains(cats, msg[i].CatTag) {
+			cats = append(cats, msg[i].CatTag)
+		}
+	}
+	categories := UniqueCats{cats}
+	e := json.NewEncoder(c)
+	err := e.Encode(categories)
+	if err != nil {
+		fmt.Println("Error Occuered in sendCategories")
+	}
+	c.Close()
+}
+
 func getCatTags(s string) []string {
 	noQuotes := strings.Replace(s, "\"", "", -1)
-	splitString := strings.Split(noQuotes, ",")
+	noBrackets1 := strings.Replace(noQuotes, "[", "", -1)
+	noBrackets2 := strings.Replace(noBrackets1, "]", "", -1)
+	splitString := strings.Split(noBrackets2, ",")
 	return splitString
 }
 
@@ -510,6 +568,40 @@ func makeMenuItem(s string) MenuItem {
 	return MenuItem{intId, Name, CatTags, floatPrice}
 }
 
+// {0 5 1 [{"Id":1,"Name":"pasta","CatTags":["food","drink"],"Price":14.95},{"Id":1,"Name":"pasta","CatTags":["food","drink"],"Price":14.95}]} <nil>
+// [{"Id":1,"Name":"pizza","CatTags":["Food","All"],"Price":13.95}]
+// "Id":1,"Name":"pizza","CatTags":["Food","All"],"Price":13.95
+// below doesn't have proper syntax cuz missing "" but is general idea
+// [Id, 1, Name, Pizza, CatTags, [Food, All], Price, 13.95]
+func convergeItems(s []string) MenuItem {
+	fmt.Println(s[0])
+	intId, err := strconv.Atoi(s[0])
+	if err != nil {
+		fmt.Println("int error in convergeItems")
+	}
+	fmt.Println(s[3])
+	floatPrice, err := strconv.ParseFloat(s[3], 64)
+	if err != nil {
+		fmt.Println("float error in convergeItems")
+	}
+	return MenuItem{intId, s[1], getCatTags(s[2]), floatPrice}
+}
+
+func makeMenuItem1(s string) MenuItem {
+	var data []string
+	index := strings.Index(s, "Id")
+	subtr := s[index-1 : len(s)-2]
+	itemList := strings.Split(subtr, ":")
+	fmt.Println("itemList")
+	fmt.Println(itemList)
+	for i := 0; i < len(itemList); i++ {
+		if i%2 == 1 {
+			data = append(data, itemList[i+1])
+		}
+	}
+	return convergeItems(itemList)
+}
+
 func convertStringtoList(s string) []MenuItem {
 	var greatestPoint int
 	var leastPoint int = strings.Index(s, "Id") - 2
@@ -535,9 +627,11 @@ func recvOrder(c net.Conn) {
 	err := d.Decode(&msg)
 	fmt.Println(msg, err)
 	c.Write([]byte("finish"))
+	fmt.Println(msg.OrderItems)
 	//currently does not like orders without menuitems in it, need to fix that at some point
 	conv := Order{msg.OrderIDNullChar, msg.OrderIDLength, msg.OrderID, convertStringtoList(msg.OrderItems)}
-	dbHandlerEntries(conv)
+	fmt.Println(conv)
+	//dbHandlerEntries(conv)
 	c.Close()
 }
 
