@@ -234,7 +234,4 @@ convertHashtoList(MenuItem m) {
   socket.close();
 }*/
 
-main() async {
-  var cats = await recvCats();
-  print(cats);
-}
+main() async {}
