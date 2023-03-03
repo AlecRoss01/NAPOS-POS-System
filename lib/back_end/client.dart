@@ -166,6 +166,15 @@ Future<List<String>> recvCats() async {
   return catList;
 }
 
+bool checkPINNumbers(int pin) {
+  if (TESTING){
+    return checkHardcodedPinNumbers(pin);
+  }
+  else{
+    return false;
+  }
+}
+
 void recvJson() async {
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
