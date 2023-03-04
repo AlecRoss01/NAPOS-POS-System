@@ -166,13 +166,18 @@ Future<List<String>> recvCats() async {
   return catList;
 }
 
-bool checkPINNumbers(int pin) {
+bool recvPINNumbers(int pin) {
+  // call recvEmployees amd check each pin from list it returns
   if (TESTING){
     return checkHardcodedPinNumbers(pin);
   }
   else{
     return false;
   }
+}
+
+bool recvEmployees() {
+  // Receive list of employees here
 }
 
 void recvJson() async {
