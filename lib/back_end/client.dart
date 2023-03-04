@@ -166,7 +166,7 @@ Future<List<String>> recvCats() async {
   return catList;
 }
 
-bool recvPINNumbers(int pin) {
+bool checkPINNumbers(int pin) {
   // call recvEmployees amd check each pin from list it returns
   if (TESTING){
     return checkHardcodedPinNumbers(pin);
