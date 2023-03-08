@@ -8,7 +8,7 @@ class NAPOS_Employee {
     NAPOS_Employee(this._empName, this._empID, this._empPIN, this._accessLevel);
 
     String get name { return _empName; }
-    String get id { return _empID; }
-    String get pin { return _empPIN; }
-    String get access { return _accessLevel; }
+    int get id { return _empID; }
+    int get pin { return _empPIN; }
+    int get access { return _accessLevel; }
 }

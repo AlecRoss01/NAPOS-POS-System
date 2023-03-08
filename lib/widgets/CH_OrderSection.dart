@@ -7,9 +7,16 @@ import '../classes/category.dart';
 import 'CH_EditItemSidebar.dart';
 
 class OrderSection extends StatefulWidget {
-  final currentOrder;
+  final Order currentOrder;
   final Function(menu_item.MenuItem) setEditItem;
-  const OrderSection({super.key, required this.currentOrder, required this.setEditItem});
+  final Function(Order) payButtonClick;
+
+  const OrderSection({
+    super.key,
+    required this.currentOrder,
+    required this.setEditItem,
+    required this.payButtonClick
+  });
 
   @override
   State<OrderSection> createState() => _OrderSectionState();
@@ -90,7 +97,9 @@ class _OrderSectionState extends State<OrderSection> {
                 TextButton(
                   style: CustomTextStyle.commandHubCommands,
                   child: const Text("Pay"),
-                  onPressed: () {},
+                  onPressed: () {
+                    widget.payButtonClick(widget.currentOrder);
+                  },
                 ),
                 TextButton(
                   style: CustomTextStyle.commandHubCommands,

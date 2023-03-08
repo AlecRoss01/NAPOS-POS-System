@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:square_in_app_payments/in_app_payments.dart';
+import 'package:square_in_app_payments/models.dart';
 import '../styles/styles.dart';
 import '../back_end/client.dart';
 import '../classes/menu_item.dart' as menu_item;
@@ -17,7 +19,49 @@ class CommandHub extends StatefulWidget {
 }
 
 class _CommandHub extends State<CommandHub> {
-  
+
+  Future<void> _initSquarePayment() async {
+    await InAppPayments.setSquareApplicationId('APPLICATION_ID (from square website)');
+  }
+
+  Future<void> _onStartCardEntryFlow() async {
+    await InAppPayments.startCardEntryFlow(
+        onCardNonceRequestSuccess: _onCardEntryCardNonceRequestSuccess,
+        onCardEntryCancel: _onCancelCardEntryFlow);
+  }
+
+  void _onCancelCardEntryFlow() {
+    // Handle the cancel callback
+  }
+
+  void _onCardEntryCardNonceRequestSuccess(CardDetails result) async {
+    try {
+      // take payment with the card nonce details
+      // you can take a charge
+      // await chargeCard(result);
+
+      // payment finished successfully
+      // you must call this method to close card entry
+      // this ONLY apply to startCardEntryFlow, please don't call this method when use startCardEntryFlowWithBuyerVerification
+      InAppPayments.completeCardEntry(
+          onCardEntryComplete: _onCardEntryComplete);
+    } on Exception catch (ex) {
+      // payment failed to complete due to error
+      // notify card entry to show processing error
+      InAppPayments.showCardNonceProcessingError(ex.toString());
+    }
+  }
+
+  void _onCardEntryComplete() {
+    // Update UI to notify user that the payment flow is finished successfully
+  }
+
+  void payButtonClick(Order order) {
+    setState(() {
+      //_onStartCardEntryFlow();
+    });
+  }
+
   final currentOrder = new Order(1);
   POS_Category currentCategory = new POS_Category("All");
   menu_item.MenuItem itemToEdit = new menu_item.MenuItem("default");
@@ -74,7 +118,11 @@ class _CommandHub extends State<CommandHub> {
             MenuItemSection(addItemToOrder: addToOrder, categoryToBeDisplayed: currentCategory),
 
             // 3rd section, section that contains order information and buttons that apply to order.
-            OrderSection(currentOrder: currentOrder, setEditItem: setItemToEdit)
+            OrderSection(
+              currentOrder: currentOrder,
+              setEditItem: setItemToEdit,
+              payButtonClick: payButtonClick,
+            )
           ]
         ),
       )

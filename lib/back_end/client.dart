@@ -178,6 +178,7 @@ bool checkPINNumbers(int pin) {
 
 bool recvEmployees() {
   // Receive list of employees here
+  return false;
 }
 
 void recvJson() async {
