@@ -19,6 +19,8 @@ class NaposPOS extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Napos POS',
+      debugShowCheckedModeBanner: false,
+
       //Theme for application
       theme: ThemeData(
         primarySwatch: Colors.red,

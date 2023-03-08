@@ -48,7 +48,10 @@ class _MenuItemSectionState extends State<MenuItemSection> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(snapshot.data![index].toString()),
+                              Text(
+                                snapshot.data![index].toString(),
+                                textAlign: TextAlign.center,
+                              ),
                               Text(snapshot.data![index].strPrice())
                             ],
                           )

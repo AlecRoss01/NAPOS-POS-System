@@ -7,7 +7,13 @@ import '../classes/category.dart';
 
 class CategorySection extends StatefulWidget{
   final Function(POS_Category) changeCategory;
-  const CategorySection({super.key, required this.changeCategory});
+  final double width;
+
+  const CategorySection({
+    super.key,
+    required this.changeCategory,
+    required this.width,
+  });
 
   @override
   State<CategorySection> createState() => _CategorySelectionState();
@@ -17,7 +23,7 @@ class _CategorySelectionState extends State<CategorySection> {
   @override
   Widget build(BuildContext context){
     return SizedBox(
-      width: 150, // Fixed width of 150 px
+      width: widget.width, // Fixed width of 150 px
       child: Column(
         children: [
           //Header for the Categories

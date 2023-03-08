@@ -10,12 +10,14 @@ class OrderSection extends StatefulWidget {
   final Order currentOrder;
   final Function(menu_item.MenuItem) setEditItem;
   final Function(Order) payButtonClick;
+  final double width;
 
   const OrderSection({
     super.key,
     required this.currentOrder,
     required this.setEditItem,
-    required this.payButtonClick
+    required this.payButtonClick,
+    required this.width,
   });
 
   @override
@@ -27,7 +29,7 @@ class _OrderSectionState extends State<OrderSection> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
+      width: widget.width,
       child: Column(
         children: [
           // Header for the MenuItems grid.
@@ -48,7 +50,18 @@ class _OrderSectionState extends State<OrderSection> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(widget.currentOrder.getItemAtIndex(index).toString())
+                          Row(
+                            children: [
+                              Container(
+                                constraints: BoxConstraints(
+                                    maxWidth: widget.width * 6/10,
+                                ),
+                                child: Text(widget.currentOrder.getItemAtIndex(index).toString()),
+                              ),
+                              Spacer(),
+                              Text(widget.currentOrder.getItemAtIndex(index).strPrice()),
+                            ],
+                          ),
                         ],
                       )
                     ),
@@ -56,7 +69,7 @@ class _OrderSectionState extends State<OrderSection> {
                   onTap: () {
                     widget.setEditItem(widget.currentOrder.getItemAtIndex(index));
                     Scaffold.of(context).openEndDrawer();
-                    
+
                   },
                 );
               })

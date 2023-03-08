@@ -16,14 +16,24 @@ class POSHomePage extends StatefulWidget {
 
 // Implementation of home page
 class _POSHomePage extends State<POSHomePage> {
-  
 
   // This method is rerun every time setState is called.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          SizedBox(width: 10,),
+        ],
       ),
       body: Center(
         child: Row(

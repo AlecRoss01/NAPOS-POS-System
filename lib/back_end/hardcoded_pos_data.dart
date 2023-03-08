@@ -30,7 +30,7 @@ buildMenu(POS_Category category) {
   menu.add(MenuItem('Hot Dog', price: 1.25));
   menu.add(MenuItem("Pizza", price: 2.0));
   menu.add(MenuItem("Soup", price: 3.0));
-  menu.add(MenuItem("Cheeseburger", price: 5.0));
+  menu.add(MenuItem("Hamburger Cheeseburger Big Mac Whopper", price: 500.0));
   menu.add(MenuItem("Spaghetti", price: 4.0));
   menu.add(MenuItem("Coke", price: 1.0));
   menu.add(MenuItem("Rootbeer", price: 1.0));
@@ -71,7 +71,7 @@ buildMenu(POS_Category category) {
 
 // Hardcoded categories
 buildCats() {
-  final cat = <String>["Food", "Drinks", "Merch"];
+  final cat = <String>["All", "Food", "Drinks", "Merch"];
   return cat;
 }
 

@@ -19,6 +19,13 @@ class CommandHub extends StatefulWidget {
 }
 
 class _CommandHub extends State<CommandHub> {
+  final currentOrder = new Order(1);
+  POS_Category currentCategory = new POS_Category("All");
+  menu_item.MenuItem itemToEdit = new menu_item.MenuItem("default");
+  final double orderSectionWidth = 200;
+  final double categoriesSectionWidth = 150;
+
+  //// Start of payment.
 
   Future<void> _initSquarePayment() async {
     await InAppPayments.setSquareApplicationId('APPLICATION_ID (from square website)');
@@ -62,9 +69,7 @@ class _CommandHub extends State<CommandHub> {
     });
   }
 
-  final currentOrder = new Order(1);
-  POS_Category currentCategory = new POS_Category("All");
-  menu_item.MenuItem itemToEdit = new menu_item.MenuItem("default");
+  //// End of payment.
   
   void addToOrder(menu_item.MenuItem item) {
     setState(() {
@@ -110,7 +115,10 @@ class _CommandHub extends State<CommandHub> {
           children: <Widget>[
             // 1st section, section that holds buttons for each of the categories on the menu.
             // Uses categories list.
-            CategorySection(changeCategory: changeCurrentCategory),
+            CategorySection(
+              changeCategory: changeCurrentCategory,
+              width: categoriesSectionWidth,
+            ),
 
             // 2nd section, section that holds item buttons according to whichever button was pressed in 1st section.
             // Uses menu list.
@@ -122,6 +130,7 @@ class _CommandHub extends State<CommandHub> {
               currentOrder: currentOrder,
               setEditItem: setItemToEdit,
               payButtonClick: payButtonClick,
+              width: orderSectionWidth,
             )
           ]
         ),
