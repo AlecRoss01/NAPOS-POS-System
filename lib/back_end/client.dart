@@ -6,6 +6,8 @@ import 'package:napos/classes/category.dart';
 
 import '../classes/menu_item.dart';
 import '../classes/order.dart';
+import '../classes/employee.dart';
+import '../classes/item_addition.dart';
 import 'hardcoded_pos_data.dart';
 
 const bool TESTING = true;
@@ -176,10 +178,19 @@ bool checkPINNumbers(int pin) {
   }
 }
 
-bool recvEmployees() {
+Future<List<NAPOS_Employee>> recvEmployees() async {
   // Receive list of employees here
-  return false;
+  var employees = <NAPOS_Employee>[];
+  return employees;
 }
+
+Future<List<ItemAddition>> recvItemAdditions() async {
+  // Receive all item additions
+  var additions = <ItemAddition>[ItemAddition("onions", 1, 1.0)];
+  return additions;
+}
+
+
 
 void recvJson() async {
   Socket socket = await Socket.connect('127.0.0.1', 30000);

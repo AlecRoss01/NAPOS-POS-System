@@ -6,6 +6,8 @@ import '../back_end/client.dart';
 import '../classes/menu_item.dart' as menu_item;
 import '../classes/order.dart';
 import '../classes/category.dart';
+import '../classes/employee.dart';
+import '../classes/item_addition.dart';
 import '../widgets/CH_MenuSection.dart';
 import '../widgets/CH_CategorySection.dart';
 import '../widgets/CH_OrderSection.dart';
@@ -95,6 +97,13 @@ class _CommandHub extends State<CommandHub> {
     });
   }
 
+  void addAdditionToItem(menu_item.MenuItem item, ItemAddition addition){
+    setState(() {
+      // Add addition to list of additions on menu item
+      return;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Dimensions of app
@@ -102,7 +111,7 @@ class _CommandHub extends State<CommandHub> {
     double contextHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder),
+      endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder, addAdditionToItem: addAdditionToItem),
       appBar: AppBar(
         title: const Text('Command Hub'),
         actions: <Widget>[

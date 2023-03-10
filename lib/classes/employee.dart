@@ -1,4 +1,3 @@
-
 class NAPOS_Employee {
     String _empName;
     int _empID;
