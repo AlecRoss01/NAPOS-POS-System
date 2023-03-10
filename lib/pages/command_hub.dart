@@ -111,7 +111,7 @@ class _CommandHub extends State<CommandHub> {
     double contextHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder, addAdditionToItem: addAdditionToItem),
+      //endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder, addAdditionToItem: addAdditionToItem),
       appBar: AppBar(
         title: const Text('Command Hub'),
         actions: <Widget>[
