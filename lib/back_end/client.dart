@@ -186,7 +186,7 @@ Future<List<NAPOS_Employee>> recvEmployees() async {
 
 Future<List<ItemAddition>> recvItemAdditions() async {
   // Receive all item additions
-  var additions = <ItemAddition>[ItemAddition("onions", 1, 1.0)];
+  var additions = <ItemAddition>[];
   return additions;
 }
 

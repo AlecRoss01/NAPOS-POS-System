@@ -23,6 +23,7 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
             child: SingleChildScrollView(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget> [
                         Text(
                             widget.editItem.toString(),
@@ -63,48 +64,49 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                                 )
                             ]
                         ),
-                        Expanded(
+                        Flexible(
+                            fit: FlexFit.loose,
                             child:Column(
                                 children: <Widget>[
                                     Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        alignment: Alignment.topLeft,
-                                        child: const Text("Adititons:", style: CustomTextStyle.homeButtons),
-                                    ),
-                                    FutureBuilder<List<ItemAddition>>(
-                                        future: recvItemAdditions(),
-                                        builder: (context, snapshot) {
-                                            if (snapshot.hasData) {
-                                                return GridView(
-                                                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                                                        maxCrossAxisExtent: 150,
-                                                        mainAxisExtent: 100,
-                                                    ),
-                                                    padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-                                                    shrinkWrap: true,
-                                                    children: List.generate(snapshot.data!.length, (index){
-                                                        return InkWell(
-                                                            child: Card(
-                                                                child: Column(
-                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                    children: [
-                                                                        Text(snapshot.data![index].toString(), textAlign: TextAlign.center),
-                                                                        Text(snapshot.data![index].strPrice())
-                                                                    ],
-                                                                )
-                                                            ),
-                                                            onTap: () {
-                                                                //Add addition to specific menu item
-                                                            },
-                                                        );
-                                                    })
-                                                );
+                                        height: 325,
+                                        child: FutureBuilder<List<ItemAddition>>(
+                                            future: recvItemAdditions(),
+                                            builder: (context, snapshot) {
+                                                if (snapshot.hasData) {
+                                                    return GridView(
+                                                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                                                            maxCrossAxisExtent: 150,
+                                                            mainAxisExtent: 100,
+                                                        ),
+                                                        padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+                                                        shrinkWrap: true,
+                                                        children: List.generate(snapshot.data!.length, (index){
+                                                            return InkWell(
+                                                                child: Card(
+                                                                        child: Column(
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            children: [
+                                                                                Text(snapshot.data![index].toString(), textAlign: TextAlign.center),
+                                                                                Text(snapshot.data![index].strPrice())
+                                                                            ],
+                                                                        )
+                                                                    ),
+                                                                    onTap: () {
+                                                                        //Add addition to specific menu item
+                                                                    },
+                                                                );
+                                                            
+                                                        })
+                                                    );
+                                                }
+                                                else {
+                                                    return GridView.count(crossAxisCount: 2);
+                                                }
                                             }
-                                            else {
-                                                return GridView.count(crossAxisCount: 2);
-                                            }
-                                        }
+                                        )
                                     )
+                                    
                                 ]
                             )
                             
