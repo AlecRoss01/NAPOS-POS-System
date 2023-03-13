@@ -17,17 +17,6 @@ import (
 
 var db *sql.DB
 
-var cfg = mysql.Config{
-	User:                 "goaccess",
-	Passwd:               "AVNS_MEuNlhdPsHOewev8974",
-	Net:                  "tcp",
-	Addr:                 "napos-mysql-database-do-user-13684142-0.b.db.ondigitalocean.com:20506",
-	DBName:               "naposdb",
-	AllowNativePasswords: true,
-}
-
-var connString = "goaccess:AVNS_MEuNlhdPsHOewev8974@tcp(napos-mysql-database-do-user-13684142-0.b.db.ondigitalocean.com:25060)/naposdb?"
-
 type MenuItem struct {
 	Id      int
 	Name    string
