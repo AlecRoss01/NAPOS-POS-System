@@ -7,7 +7,7 @@ import 'package:napos/classes/category.dart';
 import '../classes/menu_item.dart';
 import '../classes/order.dart';
 import '../classes/employee.dart';
-import '../classes/item_C:\Users\rcinl\Documents\2022-2023 Capstone Project\NAPOS-POS-SystemC:\Users\rcinl\Documents\2022-2023 Capstone Project\NAPOS-POS-Systemaddition.dart';
+import '../classes/item_addition.dart';
 import 'hardcoded_pos_data.dart';
 
 const bool TESTING = false;
