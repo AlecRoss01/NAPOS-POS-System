@@ -1,9 +1,12 @@
 package main
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"strconv"
@@ -13,15 +16,6 @@ import (
 )
 
 var db *sql.DB
-
-var cfg = mysql.Config{
-	User:                 "root",
-	Passwd:               "EvilDuck666!!",
-	Net:                  "tcp",
-	Addr:                 "127.0.0.1:3306",
-	DBName:               "naposdatabase",
-	AllowNativePasswords: true,
-}
 
 type MenuItem struct {
 	Id      int
@@ -74,13 +68,59 @@ type UniqueCats struct {
 
 //[]MenuItem
 
+// should let me connect to Digitalocean server, seems to be using the mysql driver package I am
+// https://whatibroke.com/2021/11/30/golang-and-mysql-digitalocean-managed-cluster/
+
+// initDb creates initialises the connection to mysql
+func initDb(connectionString string, caCertPath string) (*sql.DB, error) {
+
+	fmt.Println("initialising db connection")
+
+	// Prepare ssl if required: https://stackoverflow.com/a/54189333/522859
+	if caCertPath != "" {
+
+		fmt.Printf("Loading the ca-cert: %v\n", caCertPath)
+
+		// Load the CA cert
+		certBytes, err := ioutil.ReadFile(caCertPath)
+		if err != nil {
+			log.Fatal("unable to read in the cert file", err)
+		}
+
+		caCertPool := x509.NewCertPool()
+		if ok := caCertPool.AppendCertsFromPEM(certBytes); !ok {
+			log.Fatal("failed-to-parse-sql-ca", err)
+		}
+
+		tlsConfig := &tls.Config{
+			InsecureSkipVerify: false,
+			RootCAs:            caCertPool,
+		}
+
+		mysql.RegisterTLSConfig("bbs-tls", tlsConfig)
+	}
+
+	var sqlDb, err = sql.Open("mysql", connectionString)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to the database: %v", err)
+	}
+
+	// Ensure that the database can be reached
+	err = sqlDb.Ping()
+	if err != nil {
+		return nil, fmt.Errorf("error on opening database connection: %s", err.Error())
+	}
+
+	return sqlDb, nil
+}
+
 func dbHandlerMenu() []MenuItem {
 	// Capture connection properties.
 	// https://stackoverflow.com/questions/70757210/how-do-i-connect-to-a-mysql-instance-without-using-the-password
 	// need to reconsider this at some point
 	// Get a database handle.
 	var err error
-	db, err = sql.Open("mysql", cfg.FormatDSN())
+	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -100,7 +140,7 @@ func dbHandlerCategories() []Categories {
 	// need to reconsider this at some point
 	// Get a database handle.
 	var err error
-	db, err = sql.Open("mysql", cfg.FormatDSN())
+	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -120,7 +160,7 @@ func dbHandlerOrders() []Order {
 	// need to reconsider this at some point
 	// Get a database handle.
 	var err error
-	db, err = sql.Open("mysql", cfg.FormatDSN())
+	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -141,7 +181,7 @@ func dbHandlerEntries(entry Order) {
 	// need to reconsider this at some point
 	// Get a database handle.
 	var err error
-	db, err = sql.Open("mysql", cfg.FormatDSN())
+	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -359,77 +399,6 @@ func queryMenu(name string) ([]MenuItem, error) {
 	}
 	return menuitems, nil
 }
-
-/*func tcpHandler(portNum string) {
-	//handles networking, need to probably break this up a bit
-	formatPort := ":" + portNum
-	l, err := net.Listen("tcp", formatPort)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer l.Close()
-
-	for {
-		c, err := l.Accept()
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		netData, err := bufio.NewReader(c).ReadString('\n')
-		if err != nil {
-			fmt.Print("error: ")
-			fmt.Println(err)
-			return
-		}
-		if strings.TrimSpace(string(netData)) == "STOP" {
-			fmt.Println("Exiting TCP server!")
-			return
-		} else if strings.TrimSpace(string(netData)) == "GETMENU" {
-			menu := dbHandlerMenu()
-			var itemArray []string
-			for i := 0; i < len(menu); i++ {
-				itemArray = append(itemArray, menu[i].Name)
-			}
-			totalItemArray := strings.Join(itemArray, " ")
-			c.Write([]byte(totalItemArray))
-			//for i := 0; i < len(itemArray); i++ {
-			//c.Write([]byte(itemArray[i] + " "))
-			//}
-			c.Close()
-		} else if strings.TrimSpace(string(netData)) == "GETORDERS" {
-			orders := dbHandlerOrders()
-			var itemArray []string
-			for i := 0; i < len(orders); i++ {
-				itemArray = append(itemArray, orders[i].item)
-			}
-			totalItemArray := strings.Join(itemArray, " ")
-			c.Write([]byte(totalItemArray))
-			//for i := 0; i < len(itemArray); i++ {
-			//c.Write([]byte(itemArray[i] + " "))
-			//}
-			c.Close()
-		} else if strings.TrimSpace(string(netData)) == "SENDORDER" {
-			netData, err := bufio.NewReader(c).ReadString('\n')
-			if err != nil {
-				fmt.Print("error: ")
-				fmt.Println(err)
-				return
-			}
-			order := strings.TrimSpace(string(netData))
-			print(order)
-			dbHandlerEntries(order)
-			c.Write([]byte("finish"))
-			c.Close()
-		}
-		c.Close()
-		//fmt.Print("-> ", string(netData))
-		//t := time.Now()
-		//myTime := t.Format(time.RFC3339) + "\n"
-		//c.Write([]byte(myTime))
-	}
-}*/
 
 func handleServerConnection(c net.Conn) {
 
