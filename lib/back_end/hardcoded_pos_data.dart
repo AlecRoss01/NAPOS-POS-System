@@ -1,6 +1,7 @@
 import 'package:napos/classes/order.dart';
 import '../classes/menu_item.dart';
 import '../classes/category.dart';
+import '../classes/item_addition.dart';
 
 bool checkHardcodedPinNumbers(int pin) {
   var pinNumbersWithAccess = <int>[
@@ -20,6 +21,24 @@ bool checkHardcodedPinNumbers(int pin) {
   else {
     return false;
   }
+}
+
+buildItemAdditions() {
+  final itemAdditions = <ItemAddition>[];
+  itemAdditions.add(ItemAddition('Onions', 1, 0.5));
+  itemAdditions.add(ItemAddition('Lettuce', 2, 0.5));
+  itemAdditions.add(ItemAddition('Tomato', 3, 0.5));
+  itemAdditions.add(ItemAddition('Pickles', 4, 0.5));
+  itemAdditions.add(ItemAddition('Avocado', 5, 1));
+  itemAdditions.add(ItemAddition('Mushrooms', 6, 0.5));
+  itemAdditions.add(ItemAddition('Jalepenos', 7, 1));
+  itemAdditions.add(ItemAddition('Bean Sprouts', 8, 0.5));
+  itemAdditions.add(ItemAddition('Ketchup', 9, 0.5));
+  itemAdditions.add(ItemAddition('Mustard', 10, 0.5));
+  itemAdditions.add(ItemAddition('Pepperoni', 11, 2));
+  itemAdditions.add(ItemAddition('Sausage', 12, 2));
+  itemAdditions.add(ItemAddition('Cheese', 13, 1));
+  return itemAdditions;
 }
 
 
@@ -88,3 +107,4 @@ List<Order> buildHistOrders() {
 
   return histOrders;
 }
+

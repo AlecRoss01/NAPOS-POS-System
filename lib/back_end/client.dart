@@ -187,6 +187,11 @@ Future<List<NAPOS_Employee>> recvEmployees() async {
 Future<List<ItemAddition>> recvItemAdditions() async {
   // Receive all item additions
   var additions = <ItemAddition>[];
+
+  if (TESTING) {
+    additions = buildItemAdditions();
+  }
+
   return additions;
 }
 
