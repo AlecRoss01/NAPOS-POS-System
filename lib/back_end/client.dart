@@ -10,7 +10,7 @@ import '../classes/employee.dart';
 import '../classes/item_addition.dart';
 import 'hardcoded_pos_data.dart';
 
-const bool TESTING = true;
+const bool TESTING = false;
 
 class JsonRequest {
   String requestType;
@@ -205,6 +205,11 @@ Future<List<NAPOS_Employee>> recvEmployees() async {
 Future<List<ItemAddition>> recvItemAdditions() async {
   // Receive all item additions
   var additions = <ItemAddition>[];
+
+  if (TESTING) {
+    additions = buildItemAdditions();
+  }
+
   return additions;
 }
 

@@ -9,14 +9,16 @@ import '../classes/item_addition.dart';
 class EditItemSidebar extends StatefulWidget {
     final menu_item.MenuItem editItem;
     final Function(menu_item.MenuItem) removeItemFromOrder;
-    final Function(menu_item.MenuItem, ItemAddition) addAdditionToItem;
-    const EditItemSidebar({super.key, required this.editItem, required this.removeItemFromOrder, required this.addAdditionToItem});
+    final Function(menu_item.MenuItem, List<ItemAddition>) addAdditionsToItem;
+    const EditItemSidebar({super.key, required this.editItem, required this.removeItemFromOrder, required this.addAdditionsToItem});
 
     @override
     State<EditItemSidebar> createState() => _EditItemSidebarState();
 }
 
 class _EditItemSidebarState extends State<EditItemSidebar> {
+    var additionType = AdditionType.none;
+    final listOfAdditions = <ItemAddition>[];
     @override
     Widget build(BuildContext context) {
         return Drawer(
@@ -29,7 +31,10 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                             widget.editItem.toString(),
                             style: TextStyle(fontSize: 24)
                         ),
-                        SizedBox(height: 200), //Could insert picture of the item here
+                        SizedBox(
+                            height: 200,
+                            /*child: have list view of all current available additions that you can remove when clicked on*/
+                        ),
                         TextButton(
                             style: CustomTextStyle.commandHubCommands,
                             child: const Text("Remove Item From Order"),
@@ -42,25 +47,34 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget> [
+                                /*add way to highlight addition type button when clicked so user know what type they are adding*/
                                 OutlinedButton(
                                     style: CustomTextStyle.editItemButton,
                                     child: const Text("Remove"),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                        additionType = AdditionType.remove;
+                                    },
                                 ),
                                 OutlinedButton(
                                     style: CustomTextStyle.editItemButton,
                                     child: const Text("Add"),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                        additionType = AdditionType.add;
+                                    },
                                 ),
                                 OutlinedButton(
                                     style: CustomTextStyle.editItemButton,
                                     child: const Text("Light"),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                        additionType = AdditionType.light;
+                                    },
                                 ),
                                 OutlinedButton(
                                     style: CustomTextStyle.editItemButton,
                                     child: const Text("Extra"),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                        additionType = AdditionType.extra;
+                                    },
                                 )
                             ]
                         ),
@@ -93,7 +107,8 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                                                                         )
                                                                     ),
                                                                     onTap: () {
-                                                                        //Add addition to specific menu item
+                                                                        snapshot.data![index].setAdditionType(additionType);
+                                                                        listOfAdditions.add(snapshot.data![index]);
                                                                     },
                                                                 );
                                                             
@@ -109,7 +124,6 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                                     
                                 ]
                             )
-                            
                         ),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -117,13 +131,16 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                                 TextButton(
                                     style: CustomTextStyle.saveButton,
                                     child: const Text("Save"),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                        // call add item additions to item and send list of additions
+                                    },
                                 ),
                                 SizedBox(width: 10),
                                 TextButton(
                                     style: CustomTextStyle.commandHubCommands,
                                     child: const Text("Cancel"),
                                     onPressed: () {
+                                        // clear list of additions to be added
                                         Navigator.of(context).pop();
                                     }
                                 )
