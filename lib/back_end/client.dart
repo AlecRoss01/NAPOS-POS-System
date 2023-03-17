@@ -145,6 +145,24 @@ Future<List<Order>> recvOrders() async {
   return ordersList;
 }
 
+Future<List<Order>> recvCompleteOrders() async {
+  // TODO receive all complete orders from the db.
+  // TODO possibly restrict timeframe of orders in future (like past 24 hours).
+  return await recvOrders();
+}
+
+Future<List<Order>> recvIncompleteOrders() async {
+  // TODO receive all incomplete orders from the db.
+  // TODO possibly restrict timeframe of orders in future (like past 24 hours).
+  return await recvOrders();
+}
+
+void markOrderAsComplete(Order order, bool complete) {
+  // TODO update an order as completed or uncompleted.
+  // TODO bool complete is true if order should be marked as complete. False if it should be marked as incomplete.
+  print('Marked as $complete');
+}
+
 Future<List<String>> recvCats() async {
   // returns the categories
   if (TESTING) {

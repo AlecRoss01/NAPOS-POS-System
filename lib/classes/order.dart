@@ -85,4 +85,13 @@ class Order {
   // toString will return the string order ID.
   @override
   String toString() { return strOrderID(); }
+
+  // Override the == operator, if they have the same ID, they are equal.
+  @override
+  bool operator ==(Object o) {
+    if (o is Order) {
+      return o.orderID == orderID;
+    }
+    return false;
+  }
 }

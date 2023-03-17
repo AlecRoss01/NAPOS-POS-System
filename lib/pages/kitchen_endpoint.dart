@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:napos/classes/order.dart';
 
 import '../back_end/client.dart';
 import '../styles/styles.dart';
+import '../widgets/kitchen_order_display.dart';
 
 class KitchenEndpointPage extends StatefulWidget {
   bool todo;
@@ -18,7 +21,22 @@ class KitchenEndpointPage extends StatefulWidget {
 
 // Implementation of home page
 class _KitchenEndpointPage extends State<KitchenEndpointPage> {
-  List<Order> orders = [];
+  List<Order> completeOrders = [];
+  List<Order> inCompleteOrders = [];
+  late Timer myUpdater;
+
+  @override
+  void initState() {
+    const Duration oneSecond = Duration(seconds: 1);
+    const Duration oneMinute = Duration(minutes: 1);
+    myUpdater = Timer.periodic(oneSecond, (Timer t) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    myUpdater.cancel();
+  }
 
   void setToDo(bool todo) {
     setState(() {
@@ -27,13 +45,33 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
   }
 
   void updateOrders() async {
-    setState(() async {
-      orders = await recvOrders();
-    });
+    completeOrders = await recvCompleteOrders();
+    inCompleteOrders = await recvIncompleteOrders();
+    // Call to rebuild.
+    setState(() {});
+
+    //orders = newOrders;
+    // Remove all
+    /*
+      for (int i = 0; i < orders.length; i++) {
+        newOrders.removeWhere((element) => element == orders[i]);
+      }
+    */
+  }
+
+  Future<List<Order>> getOrders() async {
+    //print(orders);
+    if (widget.todo) {
+      return completeOrders;
+    } else {
+      return inCompleteOrders;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    updateOrders();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -80,7 +118,7 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
                   Expanded(
                     child: FutureBuilder<List<Order>>(
                       //TODO: HERE, WE NEED TO DISTINGUISH BETWEEN TODO, AND FINISHED ORDERS.
-                      future: recvOrders(),
+                      future: getOrders(),
                       builder: (context, snapshot) {
                         if(snapshot.hasData) {
                           return ListView.separated(
@@ -88,10 +126,7 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
                             //shrinkWrap: true,
                             itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
-                              return Text(
-                                //TODO: MAKE WIDGET FOR AN ORDER.
-                                'ID: ${snapshot.data![0]}'
-                              );
+                              return OrderDisplayWidget(order: snapshot.data![index]);
                             },
                             separatorBuilder: (context, index) {
                               return Divider();

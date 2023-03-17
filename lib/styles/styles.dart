@@ -21,6 +21,11 @@ class CustomTextStyle {
     color: Colors.black87,
   );
 
+  static const TextStyle kitchenEndpointText = TextStyle(
+    fontSize: 16,
+    color: Colors.black87,
+  );
+
   static const TextStyle kitchenEndpointToggles = TextStyle(
     fontSize: 20,
     color: Colors.black54,

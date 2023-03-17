@@ -86,5 +86,10 @@ List<Order> buildHistOrders() {
   order1.addItemToOrder(myMenu[1]);
   histOrders.add(order1);
 
+  Order order2 = Order(2);
+  order2.addItemToOrder(myMenu[0]);
+  order2.addItemToOrder(myMenu[1]);
+  histOrders.add(order2);
+
   return histOrders;
 }
