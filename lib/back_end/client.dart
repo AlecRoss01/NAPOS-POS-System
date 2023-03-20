@@ -148,19 +148,65 @@ Future<List<Order>> recvOrders() async {
 Future<List<Order>> recvCompleteOrders() async {
   // TODO receive all complete orders from the db.
   // TODO possibly restrict timeframe of orders in future (like past 24 hours).
-  return await recvOrders();
+  //return await recvOrders();
+  var ordersList = <Order>[];
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  var output = "";
+  var request = new JsonRequest("GETCOMPLETEORDERS");
+  socket.add(utf8.encode(jsonEncode(request)));
+  await for (var data in socket) {
+    //print(utf8.decode(data));
+    output = utf8.decode(data);
+  }
+  var mapDecode = jsonDecode(output);
+  for (var i = 0; i < mapDecode['Orders'].length; i++) {
+    ordersList.add(parseOrder(mapDecode['Orders'][i]));
+  }
+  socket.close();
+  return ordersList;
 }
 
 Future<List<Order>> recvIncompleteOrders() async {
   // TODO receive all incomplete orders from the db.
   // TODO possibly restrict timeframe of orders in future (like past 24 hours).
-  return await recvOrders();
+  //return await recvOrders();
+  var ordersList = <Order>[];
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  var output = "";
+  var request = new JsonRequest("GETINCOMPLETEORDERS");
+  socket.add(utf8.encode(jsonEncode(request)));
+  await for (var data in socket) {
+    //print(utf8.decode(data));
+    output = utf8.decode(data);
+  }
+  var mapDecode = jsonDecode(output);
+  for (var i = 0; i < mapDecode['Orders'].length; i++) {
+    ordersList.add(parseOrder(mapDecode['Orders'][i]));
+  }
+  socket.close();
+  return ordersList;
 }
 
-void markOrderAsComplete(Order order, bool complete) {
+Future<int> markOrderAsComplete(Order order, bool complete) async {
   // TODO update an order as completed or uncompleted.
   // TODO bool complete is true if order should be marked as complete. False if it should be marked as incomplete.
   print('Marked as $complete');
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  var output = "";
+  var request = new JsonRequest("MARKCOMPLETE");
+  socket.add(utf8.encode(jsonEncode(request)));
+  socket.add(utf8.encode(jsonEncode(order)));
+  await for (var data in socket) {
+    if (utf8.decode(data) == "finish") {
+      socket.close();
+      return 0;
+    }
+  }
+  socket.close();
+  return -1;
 }
 
 Future<List<String>> recvCats() async {
@@ -186,14 +232,30 @@ Future<List<String>> recvCats() async {
   return catList;
 }
 
-bool checkPINNumbers(int pin) {
+Future<bool> checkPINNumbers(int pin) async {
   // call recvEmployees amd check each pin from list it returns
-  if (TESTING){
+  if (TESTING) {
     return checkHardcodedPinNumbers(pin);
   }
-  else{
-    return false;
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  var package = {'PIN': pin};
+  var request = new JsonRequest("PINCHECK");
+  socket.add(utf8.encode(jsonEncode(request)));
+  socket.add(utf8.encode(jsonEncode(package)));
+  await for (var data in socket) {
+    var decode = utf8.decode(data);
+    var json = jsonDecode(decode);
+    if (json['PIN'] == pin) {
+      socket.close();
+      return true;
+    } else {
+      socket.close();
+      return false;
+    }
   }
+  socket.close();
+  return false;
 }
 
 Future<List<NAPOS_Employee>> recvEmployees() async {
@@ -212,8 +274,6 @@ Future<List<ItemAddition>> recvItemAdditions() async {
 
   return additions;
 }
-
-
 
 void recvJson() async {
   Socket socket = await Socket.connect('127.0.0.1', 30000);
