@@ -17,6 +17,17 @@ import (
 
 var db *sql.DB
 
+var cfg = mysql.Config{
+	User:                 "goaccess",
+	Passwd:               "AVNS_MEuNlhdPsHOewev8974",
+	Net:                  "tcp",
+	Addr:                 "napos-mysql-database-do-user-13684142-0.b.db.ondigitalocean.com:20506",
+	DBName:               "naposdb",
+	AllowNativePasswords: true,
+}
+
+var connString = "goaccess:AVNS_MEuNlhdPsHOewev8974@tcp(napos-mysql-database-do-user-13684142-0.b.db.ondigitalocean.com:25060)/naposdb?"
+
 type MenuItem struct {
 	Id      int
 	Name    string
@@ -400,34 +411,6 @@ func queryMenu(name string) ([]MenuItem, error) {
 	return menuitems, nil
 }
 
-func handleServerConnection(c net.Conn) {
-
-	// we create a decoder that reads directly from the socket
-	d := json.NewDecoder(c)
-
-	var msg Request
-
-	err := d.Decode(&msg)
-	fmt.Println(msg, err)
-	if err != nil {
-		fmt.Println("error in handleServerConnection")
-	}
-	switch requestType := msg.RequestType; requestType {
-	case "MENU":
-		sendMenu(c)
-	case "SENDMENU":
-		recvMenuItem(c)
-	case "ORDERS":
-		sendOrders(c)
-	case "SENDORDER":
-		recvOrder(c)
-	case "CATEGORIES":
-		sendCategories(c)
-	default:
-		fmt.Printf("reached default in request type, request was: %s", requestType)
-	}
-}
-
 func sendMenu(c net.Conn) {
 	msg := dbHandlerMenu()
 	menu := Menu{msg}
@@ -611,6 +594,61 @@ func recvMenuItem(c net.Conn) {
 	err := d.Decode(&msg)
 	fmt.Println(msg, err)
 	c.Close()
+}
+
+type Pin struct {
+	PIN int
+}
+
+// no garuntees this works, mostly just thrown together
+func checkPIN(c net.Conn) {
+	d := json.NewDecoder(c)
+	var msg Pin
+	err := d.Decode(&msg)
+	fmt.Println(msg, err)
+	e := json.NewEncoder(c)
+	if msg.PIN == 1234 {
+		err := e.Encode(msg)
+		if err != nil {
+			fmt.Println(err, msg)
+		}
+	} else {
+		err := e.Encode(Pin{-1})
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+	c.Close()
+}
+
+func handleServerConnection(c net.Conn) {
+
+	// we create a decoder that reads directly from the socket
+	d := json.NewDecoder(c)
+
+	var msg Request
+
+	err := d.Decode(&msg)
+	fmt.Println(msg, err)
+	if err != nil {
+		fmt.Println("error in handleServerConnection")
+	}
+	switch requestType := msg.RequestType; requestType {
+	case "MENU":
+		sendMenu(c)
+	case "SENDMENU":
+		recvMenuItem(c)
+	case "ORDERS":
+		sendOrders(c)
+	case "SENDORDER":
+		recvOrder(c)
+	case "CATEGORIES":
+		sendCategories(c)
+	case "PINCHECK":
+		checkPIN(c)
+	default:
+		fmt.Printf("reached default in request type, request was: %s", requestType)
+	}
 }
 
 func main() {
