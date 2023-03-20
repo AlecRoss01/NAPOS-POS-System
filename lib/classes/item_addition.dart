@@ -3,14 +3,15 @@ class ItemAddition {
   String _name;
   int _id;
   double _price;
+  AdditionType _type = AdditionType.none;
 
   ItemAddition(this._name, this._id, this._price);
 
   String get name { return _name; }
   int get id { return _id; }
 
-  double getprice(AdditionType addType) {
-    if (addType == AdditionType.remove || addType == AdditionType.light){
+  double getprice() {
+    if (_type == AdditionType.remove || _type == AdditionType.light){
       return 0;
     } else {
       return _price;
@@ -26,11 +27,16 @@ class ItemAddition {
     return "\$${_price.toStringAsFixed(2)}";
   }
 
+  void setAdditionType(AdditionType type){
+    _type = type;
+  }
+
 }
 
 enum AdditionType{
   remove,
   add,
   light,
-  extra
+  extra,
+  none
 }
