@@ -17,17 +17,6 @@ import (
 
 var db *sql.DB
 
-var cfg = mysql.Config{
-	User:                 "goaccess",
-	Passwd:               "AVNS_MEuNlhdPsHOewev8974",
-	Net:                  "tcp",
-	Addr:                 "napos-mysql-database-do-user-13684142-0.b.db.ondigitalocean.com:20506",
-	DBName:               "naposdb",
-	AllowNativePasswords: true,
-}
-
-var connString = "goaccess:AVNS_MEuNlhdPsHOewev8974@tcp(napos-mysql-database-do-user-13684142-0.b.db.ondigitalocean.com:25060)/naposdb?"
-
 type MenuItem struct {
 	Id      int
 	Name    string
@@ -73,6 +62,13 @@ type Categories struct {
 
 type UniqueCats struct {
 	Categories []string
+}
+
+type Employee struct {
+	Name   string
+	ID     int
+	PIN    int
+	access int
 }
 
 // https://go.dev/doc/tutorial/database-access
@@ -165,7 +161,7 @@ func dbHandlerCategories() []Categories {
 	return cats
 }
 
-func dbHandlerOrders() []Order {
+func dbHandlerOrders(orderType bool) []Order {
 	// Capture connection properties.
 	// https://stackoverflow.com/questions/70757210/how-do-i-connect-to-a-mysql-instance-without-using-the-password
 	// need to reconsider this at some point
@@ -182,7 +178,7 @@ func dbHandlerOrders() []Order {
 	}
 
 	fmt.Println("Connected!")
-	orders, err := getOrders()
+	orders, err := BoolGetOrders(orderType)
 	return orders
 }
 
@@ -322,6 +318,7 @@ func getOrderItems() ([]OrderItem, error) {
 	return items, nil
 }
 
+// deprecated, will be removed at some point
 func getOrders() ([]Order, error) {
 	//returns a list containing all of the orders
 	var orders []Order
@@ -355,6 +352,50 @@ func getOrders() ([]Order, error) {
 		}
 	}
 
+	return orders, nil
+}
+
+// "SELECT * FROM menu WHERE id = ?"
+func BoolGetOrders(orderType bool) ([]Order, error) {
+	//returns a list containing all of the orders
+	var orderState = 0
+	if orderType {
+		orderState = 1
+	}
+	fmt.Println("here")
+	var orders []Order
+	rows, err := db.Query("SELECT * FROM orders WHERE complete = ?", orderState)
+	if err != nil {
+		return nil, fmt.Errorf("getOrders %v", err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var order Order
+		var holder int
+		if err := rows.Scan(&order.OrderID, &order.OrderIDNullChar, &order.OrderIDLength, &holder); err != nil {
+			return nil, fmt.Errorf("getOrders %v", err)
+		}
+		orders = append(orders, order)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("getOrders %v", err)
+	}
+	items, err := getOrderItems()
+	for i := 0; i < len(orders); i++ {
+		for y := 0; y < len(items); y++ {
+			if orders[i].OrderID == items[y].OrderID {
+				item, err := getMenuItem(strconv.Itoa(items[y].OrderItemID))
+				if err != nil {
+					log.Fatal(err)
+				}
+				orders[i].OrderItems = append(orders[i].OrderItems, item[0])
+			}
+		}
+	}
+	fmt.Println("here")
+	fmt.Println(orders)
 	return orders, nil
 }
 
@@ -423,8 +464,8 @@ func sendMenu(c net.Conn) {
 	c.Close()
 }
 
-func sendOrders(c net.Conn) {
-	msg := dbHandlerOrders()
+func sendOrders(orderType bool, c net.Conn) {
+	msg := dbHandlerOrders(orderType)
 	orders := HistOrder{msg}
 	//part above is where I would get the data from the database
 	e := json.NewEncoder(c)
@@ -601,24 +642,71 @@ type Pin struct {
 }
 
 // no garuntees this works, mostly just thrown together
-func checkPIN(c net.Conn) {
+func checkPIN(c net.Conn) (int64, error) {
 	d := json.NewDecoder(c)
 	var msg Pin
 	err := d.Decode(&msg)
 	fmt.Println(msg, err)
 	e := json.NewEncoder(c)
-	if msg.PIN == 1234 {
-		err := e.Encode(msg)
-		if err != nil {
-			fmt.Println(err, msg)
+	db, err = initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	fmt.Println("Connected!")
+	rows, err := db.Query("SELECT * FROM employees WHERE PIN = ?", msg.PIN)
+	if err != nil {
+		return 0, fmt.Errorf("checkPIN %q: %v", msg.PIN, err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var check Employee
+		if err := rows.Scan(&check.Name, &check.ID, &check.PIN, &check.access); err != nil {
+			return 0, fmt.Errorf("checkPIN %q: %v", msg.PIN, err)
 		}
-	} else {
-		err := e.Encode(Pin{-1})
-		if err != nil {
-			fmt.Println(err)
+		if check.PIN == msg.PIN {
+			fmt.Println(check)
+			e.Encode(Pin{check.PIN})
+			return 1, nil
 		}
 	}
+	if err := rows.Err(); err != nil {
+		e := json.NewEncoder(c)
+		e.Encode(Pin{-1})
+		return 0, fmt.Errorf("queryMenu %q: %v", msg.PIN, err)
+	}
 	c.Close()
+	return 0, nil
+}
+
+func markComplete(c net.Conn) {
+	//adds and order to the database
+	d := json.NewDecoder(c)
+
+	var msg RecvOrder
+	err := d.Decode(&msg)
+	fmt.Println(msg, err)
+	c.Write([]byte("finish"))
+	fmt.Println(msg.OrderItems)
+	db, err = initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	fmt.Println("Connected!")
+	result, err := db.Exec("UPDATE orders SET complete = '1' WHERE orderID = ?", msg.OrderID)
+	if err != nil {
+		fmt.Println(fmt.Errorf("markComplete %v", err))
+	}
+	fmt.Println(result)
 }
 
 func handleServerConnection(c net.Conn) {
@@ -639,13 +727,19 @@ func handleServerConnection(c net.Conn) {
 	case "SENDMENU":
 		recvMenuItem(c)
 	case "ORDERS":
-		sendOrders(c)
+		sendOrders(true, c)
 	case "SENDORDER":
 		recvOrder(c)
 	case "CATEGORIES":
 		sendCategories(c)
 	case "PINCHECK":
 		checkPIN(c)
+	case "GETCOMPLETEORDERS":
+		sendOrders(true, c)
+	case "GETINCOMPLETEORDERS":
+		sendOrders(false, c)
+	case "MARKCOMPLETE":
+		markComplete(c)
 	default:
 		fmt.Printf("reached default in request type, request was: %s", requestType)
 	}
