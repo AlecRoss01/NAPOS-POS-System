@@ -1,21 +1,13 @@
 package main
 
 import (
-	"crypto/tls"
-	"crypto/x509"
-	"database/sql"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net"
 	"strconv"
 	"strings"
-
-	"github.com/go-sql-driver/mysql"
 )
-
-var db *sql.DB
 
 type MenuItem struct {
 	Id      int
@@ -79,47 +71,6 @@ type Employee struct {
 // https://whatibroke.com/2021/11/30/golang-and-mysql-digitalocean-managed-cluster/
 
 // initDb creates initialises the connection to mysql
-func initDb(connectionString string, caCertPath string) (*sql.DB, error) {
-
-	fmt.Println("initialising db connection")
-
-	// Prepare ssl if required: https://stackoverflow.com/a/54189333/522859
-	if caCertPath != "" {
-
-		fmt.Printf("Loading the ca-cert: %v\n", caCertPath)
-
-		// Load the CA cert
-		certBytes, err := ioutil.ReadFile(caCertPath)
-		if err != nil {
-			log.Fatal("unable to read in the cert file", err)
-		}
-
-		caCertPool := x509.NewCertPool()
-		if ok := caCertPool.AppendCertsFromPEM(certBytes); !ok {
-			log.Fatal("failed-to-parse-sql-ca", err)
-		}
-
-		tlsConfig := &tls.Config{
-			InsecureSkipVerify: false,
-			RootCAs:            caCertPool,
-		}
-
-		mysql.RegisterTLSConfig("bbs-tls", tlsConfig)
-	}
-
-	var sqlDb, err = sql.Open("mysql", connectionString)
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to the database: %v", err)
-	}
-
-	// Ensure that the database can be reached
-	err = sqlDb.Ping()
-	if err != nil {
-		return nil, fmt.Errorf("error on opening database connection: %s", err.Error())
-	}
-
-	return sqlDb, nil
-}
 
 func dbHandlerMenu() []MenuItem {
 	// Capture connection properties.
@@ -362,7 +313,6 @@ func BoolGetOrders(orderType bool) ([]Order, error) {
 	if orderType {
 		orderState = 1
 	}
-	fmt.Println("here")
 	var orders []Order
 	rows, err := db.Query("SELECT * FROM orders WHERE complete = ?", orderState)
 	if err != nil {
@@ -394,7 +344,6 @@ func BoolGetOrders(orderType bool) ([]Order, error) {
 			}
 		}
 	}
-	fmt.Println("here")
 	fmt.Println(orders)
 	return orders, nil
 }
@@ -723,23 +672,23 @@ func handleServerConnection(c net.Conn) {
 	}
 	switch requestType := msg.RequestType; requestType {
 	case "MENU":
-		sendMenu(c)
+		go sendMenu(c)
 	case "SENDMENU":
-		recvMenuItem(c)
+		go recvMenuItem(c)
 	case "ORDERS":
-		sendOrders(true, c)
+		go sendOrders(true, c)
 	case "SENDORDER":
-		recvOrder(c)
+		go recvOrder(c)
 	case "CATEGORIES":
-		sendCategories(c)
+		go sendCategories(c)
 	case "PINCHECK":
-		checkPIN(c)
+		go checkPIN(c)
 	case "GETCOMPLETEORDERS":
-		sendOrders(true, c)
+		go sendOrders(false, c)
 	case "GETINCOMPLETEORDERS":
-		sendOrders(false, c)
+		go sendOrders(true, c)
 	case "MARKCOMPLETE":
-		markComplete(c)
+		go markComplete(c)
 	default:
 		fmt.Printf("reached default in request type, request was: %s", requestType)
 	}
