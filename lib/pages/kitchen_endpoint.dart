@@ -27,13 +27,14 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
 
   @override
   void initState() {
-    const Duration oneSecond = Duration(seconds: 2);
+    const Duration oneSecond = Duration(seconds: 1);
+    const Duration twoSeconds = Duration(seconds: 2);
     const Duration oneMinute = Duration(minutes: 1);
     myUpdater = Timer.periodic(
-        oneSecond,
+        twoSeconds,
         (Timer t) => setState(() {
-              updateOrders();
-            }));
+          updateOrders();
+        }));
   }
 
   @override
@@ -52,7 +53,8 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
     completeOrders = await recvCompleteOrders();
     inCompleteOrders = await recvIncompleteOrders();
     // Call to rebuild.
-    //setState(() {});
+    // Todo I think we can keep this in, but if there is an issue, this is probably the source.
+    setState(() {});
 
     //orders = newOrders;
     // Remove all
