@@ -164,8 +164,10 @@ Future<List<Order>> recvCompleteOrders() async {
     output = utf8.decode(data);
   }
   var mapDecode = jsonDecode(output);
-  for (var i = 0; i < mapDecode['Orders'].length; i++) {
-    ordersList.add(parseOrder(mapDecode['Orders'][i]));
+  if (mapDecode['Orders'] != null) {
+    for (var i = 0; i < mapDecode['Orders'].length; i++) {
+      ordersList.add(parseOrder(mapDecode['Orders'][i]));
+    }
   }
   socket.close();
   return ordersList;
@@ -373,5 +375,3 @@ convertHashtoList(MenuItem m) {
   }
   socket.close();
 }*/
-
-main() async {}

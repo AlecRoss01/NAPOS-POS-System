@@ -1,6 +1,7 @@
 import 'menu_item.dart';
 import 'dart:convert';
 import 'employee.dart';
+import 'package:intl/intl.dart';
 
 /*
 How will we do unique order numbers?
@@ -14,11 +15,11 @@ class Order {
 
   // MEMBERS
 
-  // Order ID
   String orderIDNullChar = '0';
   int idLength = 5;
   int id = 0;
   NAPOS_Employee orderTaker;
+  DateTime _dateTime;
 
   List<MenuItem> orderItems = <MenuItem>[]; // Growable list of menu items
 
@@ -29,8 +30,10 @@ class Order {
       // Optional parameters.
       {
         this.id = 0,
+        DateTime? dateTime,
       }
-  );
+  )
+  : _dateTime = dateTime ?? DateTime.now();
 
   // METHODS
 
@@ -69,6 +72,17 @@ class Order {
 
   // Remove an item at an index. Cannot remove by name or ID, there can be duplicates.
   void removeOrderItemAt(int index) { orderItems.removeAt(index); }
+
+  String get dateTimeStr {
+    DateFormat formatterDate = DateFormat('MM-dd-yyyy');
+    DateFormat formatterTime = DateFormat('jm');
+    return '${formatterTime.format(_dateTime)}   ${formatterDate.format(_dateTime)}';
+    //return '';
+  }
+
+  int get dateTimeMilli {
+    return _dateTime.millisecondsSinceEpoch;
+  }
 
   // Sums the price of each menuItem
   double getSubTotal() {

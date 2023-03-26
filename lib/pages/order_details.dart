@@ -44,7 +44,7 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
             // Date order was placed.
             DetailRow(
               title: "Placed on: ",
-              value: "{Datetime placed}",
+              value: widget.order.dateTimeStr,
             ),
             Divider(),
 

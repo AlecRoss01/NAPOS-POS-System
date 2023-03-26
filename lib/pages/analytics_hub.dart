@@ -67,7 +67,7 @@ class _AnalyticsHub extends State<AnalyticsHub> {
                                             children: [
                                               Text('ID: ${snapshot.data![index]}'),
                                               Text('Taken by: ${snapshot.data![index].orderTaker.name}'),
-                                              Text('Placed on: {Datetime placed}'),
+                                              Text('Placed on: ${snapshot.data![index].dateTimeStr}'),
                                               Text('Subtotal: ${snapshot.data![index].strSubTotal()}'),
                                             ],
                                           ),
