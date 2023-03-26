@@ -32,6 +32,9 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Certification and Server Information
+/GoHandlers/ca-certificate.crt
+
 # Symbolication related
 app.*.symbols
 
