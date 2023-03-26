@@ -10,7 +10,7 @@ import '../classes/employee.dart';
 import '../classes/item_addition.dart';
 import 'hardcoded_pos_data.dart';
 
-const bool TESTING = false;
+const bool TESTING = true;
 
 class JsonRequest {
   String requestType;
@@ -149,6 +149,11 @@ Future<List<Order>> recvCompleteOrders() async {
   // TODO receive all complete orders from the db.
   // TODO possibly restrict timeframe of orders in future (like past 24 hours).
   //return await recvOrders();
+
+  if (TESTING) {
+    return recvOrders();
+  }
+
   var ordersList = <Order>[];
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
@@ -171,6 +176,11 @@ Future<List<Order>> recvIncompleteOrders() async {
   // TODO receive all incomplete orders from the db.
   // TODO possibly restrict timeframe of orders in future (like past 24 hours).
   //return await recvOrders();
+
+  if (TESTING) {
+    return recvOrders();
+  }
+
   var ordersList = <Order>[];
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
@@ -192,6 +202,11 @@ Future<List<Order>> recvIncompleteOrders() async {
 Future<int> markOrderAsComplete(Order order, bool complete) async {
   // TODO update an order as completed or uncompleted.
   // TODO bool complete is true if order should be marked as complete. False if it should be marked as incomplete.
+
+  if (TESTING) {
+    return 0;
+  }
+
   print('Marked as $complete');
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
@@ -234,9 +249,11 @@ Future<List<String>> recvCats() async {
 
 Future<bool> checkPINNumbers(int pin) async {
   // call recvEmployees amd check each pin from list it returns
+
   if (TESTING) {
     return checkHardcodedPinNumbers(pin);
   }
+
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
   var package = {'PIN': pin};
