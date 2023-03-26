@@ -10,7 +10,7 @@ import '../classes/employee.dart';
 import '../classes/item_addition.dart';
 import 'hardcoded_pos_data.dart';
 
-const bool TESTING = true;
+const bool TESTING = false;
 
 class JsonRequest {
   String requestType;
@@ -165,8 +165,10 @@ Future<List<Order>> recvCompleteOrders() async {
     output = utf8.decode(data);
   }
   var mapDecode = jsonDecode(output);
-  for (var i = 0; i < mapDecode['Orders'].length; i++) {
-    ordersList.add(parseOrder(mapDecode['Orders'][i]));
+  if (mapDecode['Orders'] != null) {
+    for (var i = 0; i < mapDecode['Orders'].length; i++) {
+      ordersList.add(parseOrder(mapDecode['Orders'][i]));
+    }
   }
   socket.close();
   return ordersList;
@@ -360,4 +362,8 @@ convertHashtoList(MenuItem m) {
   socket.close();
 }*/
 
-main() async {}
+main() async {
+  var order = Order(2);
+  var item = MenuItem("pasta", id: 1, price: 14.95);
+  markOrderAsComplete(order, true);
+}
