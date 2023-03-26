@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:napos/classes/employee.dart';
 import '../styles/styles.dart';
 import '../back_end/client.dart';
 import '../classes/menu_item.dart' as menu_item;
@@ -11,6 +12,7 @@ class OrderSection extends StatefulWidget {
   final Function(menu_item.MenuItem) setEditItem;
   final Function(Order) payButtonClick;
   final double width;
+  final NAPOS_Employee employee;
 
   const OrderSection({
     super.key,
@@ -18,6 +20,7 @@ class OrderSection extends StatefulWidget {
     required this.setEditItem,
     required this.payButtonClick,
     required this.width,
+    required this.employee,
   });
 
   @override
@@ -95,11 +98,10 @@ class _OrderSectionState extends State<OrderSection> {
                   child: const Text("Send"),
                   onPressed: () {
                     setState(() {
-                      // TEMPORARY, ONLY SENDS FIRST ITEM IN ORDER
                       if (widget.currentOrder.getOrderItems().isNotEmpty) {
                         //print(Order(0, order[0].toString()));
                         //print(Order(0, order[0].toString()).orderItem());
-                        Order myOrder = Order(1);
+                        Order myOrder = Order(widget.employee);
                         myOrder.addItemToOrder(widget.currentOrder.getItemAtIndex(0));
                         sendOrder(myOrder);
                         widget.currentOrder.getOrderItems().clear();

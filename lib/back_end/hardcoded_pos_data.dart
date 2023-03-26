@@ -1,3 +1,4 @@
+import 'package:napos/classes/employee.dart';
 import 'package:napos/classes/order.dart';
 import '../classes/menu_item.dart';
 import '../classes/category.dart';
@@ -94,18 +95,36 @@ buildCats() {
   return cat;
 }
 
+// Hardcoded employees
+List<NAPOS_Employee> buildEmployees() {
+  return [NAPOS_Employee('Jake', 2, 1234, 100)];
+}
+
 // Hardcoded historical orders
 List<Order> buildHistOrders() {
   var cat = new POS_Category("Food");
   final myMenu = buildMenu(cat);
+  final myAdditions = buildItemAdditions();
+  final myEmployees = buildEmployees();
   List<Order> histOrders = <Order>[];
 
-  Order order1 = Order(1);
-  order1.addItemToOrder(myMenu[0]);
-  order1.addItemToOrder(myMenu[1]);
+  // One order with additions.
+  Order order1 = Order(myEmployees[0], id : 1);
+  MenuItem item1 = myMenu[0];
+  item1.addAddition(myAdditions[1]);
+  item1.addAddition(myAdditions[3]);
+
+  MenuItem item2 = myMenu[4];
+  item2.addAddition(myAdditions[5]);
+  item2.addAddition(myAdditions[1]);
+
+  order1.addItemToOrder(item1);
+  order1.addItemToOrder(item2);
   histOrders.add(order1);
 
-  Order order2 = Order(2);
+
+  // Second order with no additions.
+  Order order2 = Order(myEmployees[0], id : 2);
   order2.addItemToOrder(myMenu[0]);
   order2.addItemToOrder(myMenu[1]);
   histOrders.add(order2);

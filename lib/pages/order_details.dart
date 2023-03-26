@@ -38,7 +38,7 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
             // Employee who took order.
             DetailRow(
               title: "Taken by: ",
-              value: "{Employee name}",
+              value: widget.order.orderTaker.name,
             ),
 
             // Date order was placed.
@@ -52,9 +52,33 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
             ListView(
               shrinkWrap: true,
               children: List.generate(widget.order.getOrderItems().length, (index) {
-                return DetailRow(
-                  title: widget.order.getOrderItems()[index].toString(),
-                  value: widget.order.getOrderItems()[index].strPrice(),
+                return Column(
+                  children: [
+                    DetailRow(
+                      title: widget.order.getOrderItems()[index].toString(),
+                      value: widget.order.getOrderItems()[index].strPrice(),
+                      style: CustomTextStyle.orderDetailItem,
+                    ),
+
+                    ListView(
+                      shrinkWrap: true,
+                      children: List.generate(widget.order.getOrderItems()[index].additions.length, (item_index) {
+                        return Row(
+                          children: [
+                            SizedBox(width: 20),
+                            Expanded(
+                              child: DetailRow(
+                                title: widget.order.getOrderItems()[index].additions[item_index].name,
+                                value: widget.order.getOrderItems()[index].additions[item_index].strPrice(),
+                                style: CustomTextStyle.orderDetailAddition,
+                              ),
+                            )
+                          ],
+                        );
+                      })
+                    )
+
+                  ],
                 );
               })
             ),

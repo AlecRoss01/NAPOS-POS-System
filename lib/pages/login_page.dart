@@ -116,15 +116,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () async {
                             //check login credentials here, if they pass got to POS Home Page
                             if (await checkPINNumbers(int.parse(pinToString()))) {
+                              var employee = await getEmployeeFromPin(int.parse(pinToString()));
                               setState(() {
                                 pin.clear();
                                 errorMessage = "";
                               });
+
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                      const POSHomePage(title: 'Napos POS')));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return POSHomePage(
+                                      employee: employee,
+                                      title: 'Napos POS'
+                                    );
+                                  }
+                                )
+                              );
                             } else {
                               setState(() {
                                 errorMessage = "Invalid Pin";

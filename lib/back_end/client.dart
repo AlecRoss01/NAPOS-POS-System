@@ -148,10 +148,9 @@ Future<List<Order>> recvOrders() async {
 Future<List<Order>> recvCompleteOrders() async {
   // TODO receive all complete orders from the db.
   // TODO possibly restrict timeframe of orders in future (like past 24 hours).
-  //return await recvOrders();
 
   if (TESTING) {
-    return recvOrders();
+    return await recvOrders();
   }
 
   var ordersList = <Order>[];
@@ -178,7 +177,7 @@ Future<List<Order>> recvIncompleteOrders() async {
   //return await recvOrders();
 
   if (TESTING) {
-    return recvOrders();
+    return await recvOrders();
   }
 
   var ordersList = <Order>[];
@@ -276,9 +275,24 @@ Future<bool> checkPINNumbers(int pin) async {
 }
 
 Future<List<NAPOS_Employee>> recvEmployees() async {
-  // Receive list of employees here
+
+  if(TESTING) {
+    return buildEmployees();
+  }
+
+  //TODO: get employees from server
   var employees = <NAPOS_Employee>[];
   return employees;
+}
+
+Future<NAPOS_Employee> getEmployeeFromPin(int pin) async {
+  var employees = await recvEmployees();
+  for (int i = 0; i < employees.length; i++) {
+    if (employees[i].pin == pin) {
+      return employees[i];
+    }
+  }
+  throw("No employee found with that pin");
 }
 
 Future<List<ItemAddition>> recvItemAdditions() async {
@@ -309,7 +323,7 @@ void recvJson() async {
 Order parseOrder(Map m) {
   var order = Order(m['OrderID']);
   order.orderIDNullChar = m['OrderIDNullChar'];
-  order.orderIDLength = m['OrderIDLength'];
+  order.idLength = m['OrderIDLength'];
   var items = <MenuItem>[];
   for (var i = 0; i < m['OrderItems'].length; i++) {
     items.add(parseItem(m['OrderItems'][i]));

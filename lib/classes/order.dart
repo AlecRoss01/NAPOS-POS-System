@@ -1,5 +1,6 @@
 import 'menu_item.dart';
 import 'dart:convert';
+import 'employee.dart';
 
 /*
 How will we do unique order numbers?
@@ -15,24 +16,28 @@ class Order {
 
   // Order ID
   String orderIDNullChar = '0';
-  int orderIDLength = 5;
-  int orderID = 0;
+  int idLength = 5;
+  int id = 0;
+  NAPOS_Employee orderTaker;
 
   List<MenuItem> orderItems = <MenuItem>[]; // Growable list of menu items
 
   // Initialization; takes an ID for now.
   Order(
+      this.orderTaker,
+
       // Optional parameters.
-      [
-        this.orderID = 0,
-      ]);
+      {
+        this.id = 0,
+      }
+  );
 
   // METHODS
 
   Map<String, dynamic> toJson() => {
     'OrderIDNullChar' : orderIDNullChar,
-    'OrderIDLength' : orderIDLength,
-    'OrderID' : orderID,
+    'OrderIDLength' : idLength,
+    'OrderID' : id,
     'OrderItems' : jsonEncode(orderItems),
   };
 
@@ -79,7 +84,7 @@ class Order {
 
   // Returns string of order ID.
   String strOrderID() {
-    return orderID.toString().padLeft(orderIDLength, orderIDNullChar);
+    return id.toString().padLeft(idLength, orderIDNullChar);
   }
 
   // toString will return the string order ID.
@@ -90,7 +95,7 @@ class Order {
   @override
   bool operator ==(Object o) {
     if (o is Order) {
-      return o.orderID == orderID;
+      return o.id == id;
     }
     return false;
   }

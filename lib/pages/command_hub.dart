@@ -14,14 +14,19 @@ import '../widgets/CH_OrderSection.dart';
 import '../widgets/CH_EditItemSidebar.dart';
 
 class CommandHub extends StatefulWidget {
-  const CommandHub({super.key});
+  NAPOS_Employee employee;
+
+  CommandHub({
+    super.key,
+    required this.employee,
+  });
 
   @override
   State<CommandHub> createState() => _CommandHub();
 }
 
 class _CommandHub extends State<CommandHub> {
-  final currentOrder = new Order(1);
+  late var currentOrder = new Order(widget.employee, id : 1);
   POS_Category currentCategory = new POS_Category("All");
   menu_item.MenuItem itemToEdit = new menu_item.MenuItem("default");
   final double orderSectionWidth = 200;
@@ -140,6 +145,7 @@ class _CommandHub extends State<CommandHub> {
               setEditItem: setItemToEdit,
               payButtonClick: payButtonClick,
               width: orderSectionWidth,
+              employee: widget.employee,
             )
           ]
         ),

@@ -1,4 +1,7 @@
 import 'dart:convert';
+//import 'dart:js_util';
+import 'item_addition.dart';
+
 class MenuItem {
   /*
   Represents one item on the menu.
@@ -11,6 +14,7 @@ class MenuItem {
   String description = "";
   Set<String> _catTags = {};
   double _price = 0.0;
+  List<ItemAddition> additions = [];
 
   // Initializer; Sets members with parameter data.
   MenuItem(this.name,
@@ -32,11 +36,25 @@ class MenuItem {
   // Private variable, externally it will appear as 'categories'
   Set<String> get categories { return _catTags; }
 
-  double get price { return _price; }
+  double get additionPrice {
+    double additionSum = 0;
+    for (int i = 0; i < additions.length; i++) {
+        additionSum += additions[i].getprice();
+    }
+    return additionSum;
+  }
+
+  double get price {
+    return _price + additionPrice;
+  }
+
+  double get defaultPrice {
+    return _price;
+  }
 
   // String of price with USD sign and to two decimals.
   String strPrice() {
-    return "\$${price.toStringAsFixed(2)}";
+    return "\$${defaultPrice.toStringAsFixed(2)}";
   }
 
   // Clears all category tags.
@@ -58,6 +76,14 @@ class MenuItem {
 
   // Remove a given tag.
   void removeCatTag(String tag) { _catTags.remove(tag); }
+
+  void addAddition(ItemAddition addition) {
+    additions.add(addition);
+  }
+
+  void removeAddition(ItemAddition addition) {
+    additions.remove(addition);
+  }
 
   // toString will return the string order ID.
   @override

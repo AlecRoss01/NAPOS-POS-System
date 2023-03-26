@@ -66,7 +66,7 @@ class _AnalyticsHub extends State<AnalyticsHub> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text('ID: ${snapshot.data![index]}'),
-                                              Text('Taken by: {Employee name}'),
+                                              Text('Taken by: ${snapshot.data![index].orderTaker.name}'),
                                               Text('Placed on: {Datetime placed}'),
                                               Text('Subtotal: ${snapshot.data![index].strSubTotal()}'),
                                             ],

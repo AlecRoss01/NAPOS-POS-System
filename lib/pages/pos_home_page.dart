@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:napos/classes/employee.dart';
 import 'package:napos/widgets/home_page_button.dart';
 import '../styles/styles.dart';
 import 'command_hub.dart';
@@ -7,10 +8,15 @@ import 'kitchen_endpoint.dart';
 
 // This widget is the home page of the POS application.
 class POSHomePage extends StatefulWidget {
-  const POSHomePage({super.key, required this.title});
+  const POSHomePage({
+    super.key,
+    required this.title,
+    required this.employee,
+  });
 
   // Fields in a Widget subclass are always marked "final".
   final String title;
+  final NAPOS_Employee employee;
 
   @override
   State<POSHomePage> createState() => _POSHomePage();
@@ -46,7 +52,7 @@ class _POSHomePage extends State<POSHomePage> {
               // First Button, for POS page
               HomePageButton(
                 text: 'Point of Sale',
-                targetPage: () => CommandHub(),
+                targetPage: () => CommandHub(employee : widget.employee),
               ),
 
               SizedBox(width: 50),

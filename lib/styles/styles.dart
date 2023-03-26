@@ -21,6 +21,16 @@ class CustomTextStyle {
     color: Colors.black87,
   );
 
+  static const TextStyle orderDetailItem = TextStyle(
+    fontSize: 18,
+    color: Colors.black87,
+  );
+
+  static const TextStyle orderDetailAddition = TextStyle(
+    fontSize: 14,
+    color: Colors.black87,
+  );
+
   static const TextStyle kitchenEndpointText = TextStyle(
     fontSize: 16,
     color: Colors.black87,

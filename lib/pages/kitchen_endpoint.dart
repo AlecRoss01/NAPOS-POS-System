@@ -29,7 +29,7 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
   void initState() {
     const Duration oneSecond = Duration(seconds: 1);
     const Duration oneMinute = Duration(minutes: 1);
-    myUpdater = Timer.periodic(oneSecond, (Timer t) => setState(() {}));
+    //myUpdater = Timer.periodic(oneSecond, (Timer t) => setState(() {}));
   }
 
   @override
@@ -48,7 +48,7 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
     completeOrders = await recvCompleteOrders();
     inCompleteOrders = await recvIncompleteOrders();
     // Call to rebuild.
-    setState(() {});
+    //setState(() {});
 
     //orders = newOrders;
     // Remove all

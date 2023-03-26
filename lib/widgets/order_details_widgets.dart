@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:napos/styles/styles.dart';
 
 class DetailRow extends StatefulWidget {
-  const DetailRow({super.key, required this.title, required this.value, this.style = CustomTextStyle.bodyText});
+  const DetailRow({
+    super.key,
+    required this.title,
+    required this.value,
+    this.style = CustomTextStyle.bodyText
+  });
 
   final String title;
   final String value;
