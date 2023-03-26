@@ -8,8 +8,10 @@ class MenuItem {
 
   int id = 0;
   String name = "";
+  String description = "";
   Set<String> _catTags = {};
   double _price = 0.0;
+
   // Initializer; Sets members with parameter data.
   MenuItem(this.name,
       // Optional parameters.
@@ -18,10 +20,12 @@ class MenuItem {
       {
         int id = 0,
         double price = 0,
+        String description = "",
       }) {
-    this.id = id;
-    this._price = price;
-  }
+        this.id = id;
+        this._price = price;
+        this.description = description;
+      }
 
   // METHODS
 
