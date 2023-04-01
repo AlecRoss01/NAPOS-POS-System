@@ -43,6 +43,37 @@ main() async {
 }
 */
 
+void addItemToMenu(MenuItem item) {
+  // TODO add menu item to database.
+  //print('Added item');
+}
+
+void removeItemInMenu(MenuItem item) {
+  // TODO remove menu item from database.
+  // Note: Passed item may or may not exist in the database.
+  //print('Removed item');
+}
+
+void replaceItemInMenu(MenuItem oldItem, MenuItem newItem) {
+  removeItemInMenu(oldItem);
+  addItemToMenu(newItem);
+}
+
+void addAdditionToMenu(ItemAddition addition) {
+  // TODO add addition to database.
+  print('Added addition');
+}
+
+void removeAdditionInMenu(ItemAddition addition) {
+  // TODO remove addition from database.
+  print('Removed addition');
+}
+
+void replaceAdditionInMenu(ItemAddition oldAddition, ItemAddition newAddition) {
+  removeAdditionInMenu(oldAddition);
+  addAdditionToMenu(newAddition);
+}
+
 Future<List<MenuItem>> recvMenu() async {
   // returns the menu as a list of strings
 

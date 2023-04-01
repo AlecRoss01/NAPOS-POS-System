@@ -5,6 +5,7 @@ import '../styles/styles.dart';
 import 'command_hub.dart';
 import 'analytics_hub.dart';
 import 'kitchen_endpoint.dart';
+import 'menu_editor_page.dart';
 
 // This widget is the home page of the POS application.
 class POSHomePage extends StatefulWidget {
@@ -74,6 +75,13 @@ class _POSHomePage extends State<POSHomePage> {
               HomePageButton(
                 text: 'Kitchen Endpoint',
                 targetPage: () => KitchenEndpointPage(),
+              ),
+
+              SizedBox(width: 50),
+
+              HomePageButton(
+                text: 'Menu Editor',
+                targetPage: () => MenuEditor(),
               ),
             ],
           ),
