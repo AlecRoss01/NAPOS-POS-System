@@ -61,12 +61,12 @@ void replaceItemInMenu(MenuItem oldItem, MenuItem newItem) {
 
 void addAdditionToMenu(ItemAddition addition) {
   // TODO add addition to database.
-  print('Added addition');
+  //print('Added addition');
 }
 
 void removeAdditionInMenu(ItemAddition addition) {
   // TODO remove addition from database.
-  print('Removed addition');
+  //print('Removed addition');
 }
 
 void replaceAdditionInMenu(ItemAddition oldAddition, ItemAddition newAddition) {
