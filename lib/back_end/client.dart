@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:convert';
 import 'package:napos/classes/category.dart';
-
+import 'package:square_in_app_payments/models.dart';
 import '../classes/menu_item.dart';
 import '../classes/order.dart';
 import '../classes/employee.dart';
@@ -351,6 +351,11 @@ void recvJson() async {
   }
   //parseOrder(output);
   socket.close();
+}
+
+Future<void> chargeCard(CardDetails result) async{
+  // use result.nonce to get nonce
+
 }
 
 Order parseOrder(Map m) {
