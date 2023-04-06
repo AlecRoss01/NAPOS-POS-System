@@ -10,7 +10,7 @@ import '../classes/employee.dart';
 import '../classes/item_addition.dart';
 import 'hardcoded_pos_data.dart';
 
-const bool TESTING = true;
+const bool TESTING = false;
 
 class JsonRequest {
   String requestType;
@@ -43,15 +43,41 @@ main() async {
 }
 */
 
-void addItemToMenu(MenuItem item) {
+Future<int> addItemToMenu(MenuItem item) async {
   // TODO add menu item to database.
   //print('Added item');
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  socket.add(utf8.encode(jsonEncode(JsonRequest("ADDMENITEM"))));
+  socket.add(utf8.encode(jsonEncode(item)));
+  await for (var data in socket) {
+    //print(utf8.decode(data));
+    if (utf8.decode(data) == "finish") {
+      socket.close();
+      return 0;
+    }
+  }
+  socket.close();
+  return 0;
 }
 
-void removeItemInMenu(MenuItem item) {
+Future<int> removeItemInMenu(MenuItem item) async {
   // TODO remove menu item from database.
   // Note: Passed item may or may not exist in the database.
   //print('Removed item');
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  socket.add(utf8.encode(jsonEncode(JsonRequest("REMOVEMENITEM"))));
+  socket.add(utf8.encode(jsonEncode(item)));
+  await for (var data in socket) {
+    //print(utf8.decode(data));
+    if (utf8.decode(data) == "finish") {
+      socket.close();
+      return 0;
+    }
+  }
+  socket.close();
+  return 0;
 }
 
 void replaceItemInMenu(MenuItem oldItem, MenuItem newItem) {
@@ -59,14 +85,41 @@ void replaceItemInMenu(MenuItem oldItem, MenuItem newItem) {
   addItemToMenu(newItem);
 }
 
-void addAdditionToMenu(ItemAddition addition) {
+Future<int> addAdditionToMenu(ItemAddition addition) async {
   // TODO add addition to database.
+  // TODO add json encoding to addition class
   //print('Added addition');
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  socket.add(utf8.encode(jsonEncode(JsonRequest("ADDADDITION"))));
+  socket.add(utf8.encode(jsonEncode(addition)));
+  await for (var data in socket) {
+    //print(utf8.decode(data));
+    if (utf8.decode(data) == "finish") {
+      socket.close();
+      return 0;
+    }
+  }
+  socket.close();
+  return 0;
 }
 
-void removeAdditionInMenu(ItemAddition addition) {
+Future<int> removeAdditionInMenu(ItemAddition addition) async {
   // TODO remove addition from database.
   //print('Removed addition');
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  socket.add(utf8.encode(jsonEncode(JsonRequest("REMOVEADDITION"))));
+  socket.add(utf8.encode(jsonEncode(addition)));
+  await for (var data in socket) {
+    //print(utf8.decode(data));
+    if (utf8.decode(data) == "finish") {
+      socket.close();
+      return 0;
+    }
+  }
+  socket.close();
+  return 0;
 }
 
 void replaceAdditionInMenu(ItemAddition oldAddition, ItemAddition newAddition) {
@@ -308,13 +361,27 @@ Future<bool> checkPINNumbers(int pin) async {
 }
 
 Future<List<NAPOS_Employee>> recvEmployees() async {
-
-  if(TESTING) {
+  if (TESTING) {
     return buildEmployees();
   }
 
   //TODO: get employees from server
   var employees = <NAPOS_Employee>[];
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  var output = "";
+  socket.add(utf8.encode(jsonEncode(JsonRequest("GETEMPLOYEES"))));
+  await for (var data in socket) {
+    //print(utf8.decode(data));
+    output = utf8.decode(data);
+  }
+  var mapDecode = jsonDecode(output);
+  if (mapDecode['Employees'] != null) {
+    for (var i = 0; i < mapDecode['Employees'].length; i++) {
+      employees.add(NAPOS_Employee.fromJson(mapDecode['Employees'][i]));
+    }
+  }
+  socket.close();
   return employees;
 }
 
@@ -325,7 +392,7 @@ Future<NAPOS_Employee> getEmployeeFromPin(int pin) async {
       return employees[i];
     }
   }
-  throw("No employee found with that pin");
+  throw ("No employee found with that pin");
 }
 
 Future<List<ItemAddition>> recvItemAdditions() async {
@@ -336,10 +403,25 @@ Future<List<ItemAddition>> recvItemAdditions() async {
     additions = buildItemAdditions();
   }
 
+  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  print('connected');
+  var output = "";
+  socket.add(utf8.encode(jsonEncode(JsonRequest("GETADDITIONS"))));
+  await for (var data in socket) {
+    //print(utf8.decode(data));
+    output = utf8.decode(data);
+  }
+  var mapDecode = jsonDecode(output);
+  if (mapDecode['All'] != null) {
+    for (var i = 0; i < mapDecode['All'].length; i++) {
+      additions.add(ItemAddition.fromJson(mapDecode['All'][i]));
+    }
+  }
+  socket.close();
   return additions;
 }
 
-void recvJson() async {
+/* void recvJson() async {
   Socket socket = await Socket.connect('127.0.0.1', 30000);
   print('connected');
   var output = "";
@@ -351,7 +433,7 @@ void recvJson() async {
   }
   //parseOrder(output);
   socket.close();
-}
+}*/
 
 Order parseOrder(Map m) {
   var order = Order(m['OrderID']);
@@ -406,3 +488,24 @@ convertHashtoList(MenuItem m) {
   }
   socket.close();
 }*/
+
+main() async {
+  //var item = MenuItem("burger", id: 2, price: 17.39);
+  //item.addCatTag("Food");
+  //addItemToMenu(item);
+  //removeItemInMenu(item);
+  //var addition = ItemAddition("French Fries", 1, 1.99);
+  //addAdditionToMenu(addition);
+  //removeAdditionInMenu(addition);
+  //var employees = await recvEmployees();
+  //for (var i = 0; i < employees.length; i++) {
+  //print(employees[i].name);
+  //}
+  //var additions = await recvItemAdditions();
+  //print(additions.length);
+  //for (var i = 0; i < additions.length; i++) {
+  //print(additions[i].name);
+  //print(additions[i].id);
+  //print(additions[i].getprice());
+  //}
+}
