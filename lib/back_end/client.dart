@@ -353,7 +353,7 @@ void recvJson() async {
   socket.close();
 }
 
-Future<void> chargeCard(CardDetails result) async{
+Future<void> chargeCard(CardDetails result, double chargeAmount) async{
   // use result.nonce to get nonce
 
 }

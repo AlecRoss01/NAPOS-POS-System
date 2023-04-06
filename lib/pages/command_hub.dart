@@ -54,7 +54,7 @@ class _CommandHub extends State<CommandHub> {
       // take payment with the card nonce details
       // you can take a charge
       // await chargeCard(result);
-      await chargeCard(result);
+      await chargeCard(result, currentOrder.getSubTotal());
 
       // payment finished successfully
       // you must call this method to close card entry
