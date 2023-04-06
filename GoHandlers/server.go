@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -60,7 +61,22 @@ type Employee struct {
 	Name   string
 	ID     int
 	PIN    int
-	access int
+	Access int
+}
+
+type Employees struct {
+	Employees []Employee
+}
+
+type Addition struct {
+	Name         string
+	Id           int
+	Price        float64
+	AdditionType string
+}
+
+type Additions struct {
+	All []Addition
 }
 
 // https://go.dev/doc/tutorial/database-access
@@ -614,7 +630,7 @@ func checkPIN(c net.Conn) (int64, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var check Employee
-		if err := rows.Scan(&check.Name, &check.ID, &check.PIN, &check.access); err != nil {
+		if err := rows.Scan(&check.Name, &check.ID, &check.PIN, &check.Access); err != nil {
 			return 0, fmt.Errorf("checkPIN %q: %v", msg.PIN, err)
 		}
 		if check.PIN == msg.PIN {
@@ -658,6 +674,224 @@ func markComplete(c net.Conn) {
 	fmt.Println(result)
 }
 
+func addItemToMenu(c net.Conn) {
+	d := json.NewDecoder(c)
+
+	var msg MenuItem
+	err := d.Decode(&msg)
+	fmt.Println(msg, err)
+	c.Write([]byte("finish"))
+	fmt.Println(msg)
+	db, err = initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+
+	fmt.Println("Connected!")
+	result, err := db.Exec("INSERT INTO menu (id, name, Price) VALUES (?, ?, ?)", msg.Id, msg.Name, msg.Price)
+	addCatTagsToMenu(msg, db)
+	//INSERT INTO orders (orderID, orderIDNullChar, orderIDLength) VALUES (?, ?, ?)"
+	// need to eventually add catTags as well
+	if err != nil {
+		fmt.Println(fmt.Errorf("additemToMenu %v", err))
+	}
+	fmt.Println(result)
+}
+
+func addCatTagsToMenu(item MenuItem, db *sql.DB) {
+	for _, tag := range item.CatTags {
+		result, err := db.Exec("INSERT INTO categories (MenuID, CatTag) VALUES (?, ?)", item.Id, tag)
+		if err != nil {
+			fmt.Println(fmt.Errorf("addCatTagsToMenu %v", err))
+		}
+		fmt.Println(result)
+	}
+}
+
+func removeCatTagsFromMenu(item MenuItem, db *sql.DB) {
+	result, err := db.Exec("DELETE FROM categories WHERE MenuID = ?", item.Id)
+	if err != nil {
+		fmt.Println(fmt.Errorf("addCatTagsToMenu %v", err))
+	}
+	fmt.Println(result)
+}
+
+func removeItemFromMenu(c net.Conn) {
+	d := json.NewDecoder(c)
+	var msg MenuItem
+	err := d.Decode(&msg)
+	fmt.Println(msg, err)
+	c.Write([]byte("finish"))
+	fmt.Println(msg)
+	db, err = initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+
+	fmt.Println("Connected!")
+	result, err := db.Exec("DELETE FROM menu WHERE id = ?", msg.Id)
+	removeCatTagsFromMenu(msg, db)
+	//INSERT INTO orders (orderID, orderIDNullChar, orderIDLength) VALUES (?, ?, ?)"
+	if err != nil {
+		fmt.Println(fmt.Errorf("markComplete %v", err))
+	}
+	fmt.Println(result)
+}
+
+func removeAddition(c net.Conn) {
+	d := json.NewDecoder(c)
+
+	var msg Addition
+	err := d.Decode(&msg)
+	fmt.Println(msg, err)
+	c.Write([]byte("finish"))
+	fmt.Println(msg)
+	db, err = initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+
+	fmt.Println("Connected!")
+	result, err := db.Exec("DELETE FROM additions WHERE id = ?", msg.Id)
+	//INSERT INTO orders (orderID, orderIDNullChar, orderIDLength) VALUES (?, ?, ?)"
+	if err != nil {
+		fmt.Println(fmt.Errorf("markComplete %v", err))
+	}
+	fmt.Println(result)
+}
+
+func addAddition(c net.Conn) {
+	d := json.NewDecoder(c)
+
+	var msg Addition
+	err := d.Decode(&msg)
+	fmt.Println(msg, err)
+	c.Write([]byte("finish"))
+	fmt.Println(msg)
+	db, err = initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+
+	fmt.Println("Connected!")
+	result, err := db.Exec("INSERT INTO additions (id, name, price, type) VALUES (?, ?, ?, ?)", msg.Id, msg.Name, msg.Price, msg.AdditionType)
+	//INSERT INTO orders (orderID, orderIDNullChar, orderIDLength) VALUES (?, ?, ?)"
+	if err != nil {
+		fmt.Println(fmt.Errorf("markComplete %v", err))
+	}
+	fmt.Println(result)
+}
+
+func getEmployees() ([]Employee, error) {
+	db, err := initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+
+	fmt.Println("Connected!")
+	var employees []Employee
+	rows, err := db.Query("SELECT * FROM employees")
+	if err != nil {
+		return nil, fmt.Errorf("getMenu %v", err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var employee Employee
+		if err := rows.Scan(&employee.Name, &employee.ID, &employee.PIN, &employee.Access); err != nil {
+			return nil, fmt.Errorf("getMenu %v", err)
+		}
+		employees = append(employees, employee)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("getMenu %v", err)
+	}
+	return employees, nil
+
+}
+
+func sendEmployees(c net.Conn) {
+	employees, err := getEmployees()
+	msg := Employees{employees}
+	e := json.NewEncoder(c)
+	err = e.Encode(msg)
+	if err != nil {
+		fmt.Println("Error Occuered in sendEmployees")
+	}
+	c.Close()
+}
+
+func getAdditions() ([]Addition, error) {
+	db, err := initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+
+	fmt.Println("Connected!")
+	var additions []Addition
+	rows, err := db.Query("SELECT * FROM additions")
+	if err != nil {
+		return nil, fmt.Errorf("getAdditions %v", err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var addition Addition
+		if err := rows.Scan(&addition.Id, &addition.Name, &addition.Price, &addition.AdditionType); err != nil {
+			return nil, fmt.Errorf("getAdditions %v", err)
+		}
+		additions = append(additions, addition)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("getAdditions %v", err)
+	}
+	return additions, nil
+}
+
+func sendAdditions(c net.Conn) {
+	additions, err := getAdditions()
+	fmt.Println(additions)
+	msg := Additions{additions}
+	e := json.NewEncoder(c)
+	err = e.Encode(msg)
+	if err != nil {
+		fmt.Println("Error Occuered in sendEmployees")
+	}
+	c.Close()
+}
+
 func handleServerConnection(c net.Conn) {
 
 	// we create a decoder that reads directly from the socket
@@ -689,6 +923,18 @@ func handleServerConnection(c net.Conn) {
 		go sendOrders(true, c)
 	case "MARKCOMPLETE":
 		go markComplete(c)
+	case "ADDMENITEM":
+		go addItemToMenu(c)
+	case "REMOVEMENITEM":
+		go removeItemFromMenu(c)
+	case "ADDADDITION":
+		go addAddition(c)
+	case "REMOVEADDITION":
+		go removeAddition(c)
+	case "GETEMPLOYEES":
+		go sendEmployees(c)
+	case "GETADDITIONS":
+		go sendAdditions(c)
 	default:
 		fmt.Printf("reached default in request type, request was: %s", requestType)
 	}
