@@ -24,6 +24,8 @@ class JsonRequest {
       };
 }
 
+const String connString = '';
+
 // https://stackoverflow.com/questions/54481818/how-to-connect-flutter-app-to-tcp-socket-server
 // https://stackoverflow.com/questions/63323038/dart-return-data-from-a-stream-subscription-block
 
@@ -46,7 +48,7 @@ main() async {
 Future<int> addItemToMenu(MenuItem item) async {
   // TODO add menu item to database.
   //print('Added item');
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   socket.add(utf8.encode(jsonEncode(JsonRequest("ADDMENITEM"))));
   socket.add(utf8.encode(jsonEncode(item)));
@@ -65,7 +67,7 @@ Future<int> removeItemInMenu(MenuItem item) async {
   // TODO remove menu item from database.
   // Note: Passed item may or may not exist in the database.
   //print('Removed item');
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   socket.add(utf8.encode(jsonEncode(JsonRequest("REMOVEMENITEM"))));
   socket.add(utf8.encode(jsonEncode(item)));
@@ -89,7 +91,7 @@ Future<int> addAdditionToMenu(ItemAddition addition) async {
   // TODO add addition to database.
   // TODO add json encoding to addition class
   //print('Added addition');
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   socket.add(utf8.encode(jsonEncode(JsonRequest("ADDADDITION"))));
   socket.add(utf8.encode(jsonEncode(addition)));
@@ -107,7 +109,7 @@ Future<int> addAdditionToMenu(ItemAddition addition) async {
 Future<int> removeAdditionInMenu(ItemAddition addition) async {
   // TODO remove addition from database.
   //print('Removed addition');
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   socket.add(utf8.encode(jsonEncode(JsonRequest("REMOVEADDITION"))));
   socket.add(utf8.encode(jsonEncode(addition)));
@@ -137,7 +139,7 @@ Future<List<MenuItem>> recvMenu() async {
 
   // Use values from server.
   var menuList = <MenuItem>[];
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   var output = "";
   socket.add(utf8.encode(jsonEncode(new JsonRequest("MENU"))));
@@ -187,7 +189,7 @@ Future<int> sendOrder(Order order) async {
   }
 
   // Use values from server.
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   socket.add(utf8.encode(jsonEncode(JsonRequest("SENDORDER"))));
   socket.add(utf8.encode(jsonEncode(order)));
@@ -212,7 +214,7 @@ Future<List<Order>> recvOrders() async {
 
   // Use values from server.
   var ordersList = <Order>[];
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   var output = "";
   var request = new JsonRequest("ORDERS");
@@ -238,7 +240,7 @@ Future<List<Order>> recvCompleteOrders() async {
   }
 
   var ordersList = <Order>[];
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   var output = "";
   var request = new JsonRequest("GETCOMPLETEORDERS");
@@ -267,7 +269,7 @@ Future<List<Order>> recvIncompleteOrders() async {
   }
 
   var ordersList = <Order>[];
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   var output = "";
   var request = new JsonRequest("GETINCOMPLETEORDERS");
@@ -293,7 +295,7 @@ Future<int> markOrderAsComplete(Order order, bool complete) async {
   }
 
   print('Marked as $complete');
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   var output = "";
   var request = new JsonRequest("MARKCOMPLETE");
@@ -315,7 +317,7 @@ Future<List<String>> recvCats() async {
     return buildCats();
   }
 
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   var output = "";
   var request = JsonRequest("CATEGORIES");
@@ -339,7 +341,7 @@ Future<bool> checkPINNumbers(int pin) async {
     return checkHardcodedPinNumbers(pin);
   }
 
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   var package = {'PIN': pin};
   var request = new JsonRequest("PINCHECK");
@@ -367,7 +369,7 @@ Future<List<NAPOS_Employee>> recvEmployees() async {
 
   //TODO: get employees from server
   var employees = <NAPOS_Employee>[];
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   var output = "";
   socket.add(utf8.encode(jsonEncode(JsonRequest("GETEMPLOYEES"))));
@@ -403,7 +405,7 @@ Future<List<ItemAddition>> recvItemAdditions() async {
     additions = buildItemAdditions();
   }
 
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
+  Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   var output = "";
   socket.add(utf8.encode(jsonEncode(JsonRequest("GETADDITIONS"))));
@@ -435,9 +437,9 @@ Future<List<ItemAddition>> recvItemAdditions() async {
   socket.close();
 }*/
 
-Future<void> chargeCard(CardDetails result, double chargeAmount) async{
+Future<void> chargeCard(CardDetails result, double chargeAmount) async {
   // use result.nonce to get nonce
-
+  var nonce = result.nonce;
 }
 
 Order parseOrder(Map m) {
