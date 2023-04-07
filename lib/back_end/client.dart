@@ -489,23 +489,4 @@ convertHashtoList(MenuItem m) {
   socket.close();
 }*/
 
-main() async {
-  //var item = MenuItem("burger", id: 2, price: 17.39);
-  //item.addCatTag("Food");
-  //addItemToMenu(item);
-  //removeItemInMenu(item);
-  //var addition = ItemAddition("French Fries", 1, 1.99);
-  //addAdditionToMenu(addition);
-  //removeAdditionInMenu(addition);
-  //var employees = await recvEmployees();
-  //for (var i = 0; i < employees.length; i++) {
-  //print(employees[i].name);
-  //}
-  //var additions = await recvItemAdditions();
-  //print(additions.length);
-  //for (var i = 0; i < additions.length; i++) {
-  //print(additions[i].name);
-  //print(additions[i].id);
-  //print(additions[i].getprice());
-  //}
-}
+main() async {}
