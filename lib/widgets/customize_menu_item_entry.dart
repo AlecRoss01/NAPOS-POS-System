@@ -4,22 +4,22 @@ import 'package:napos/classes/menu_item.dart';
 import 'package:napos/styles/styles.dart';
 
 // This widget is the home page of the POS application.
-class CustomizeMenuItemEntry extends StatefulWidget {
+class CustomizePurchasableEntry extends StatefulWidget {
   final TextEditingController controller;
   final String title;
 
-  const CustomizeMenuItemEntry({
+  const CustomizePurchasableEntry({
     super.key,
     required this.title,
     required this.controller,
   });
 
   @override
-  State<CustomizeMenuItemEntry> createState() => _CustomizeMenuItemEntry();
+  State<CustomizePurchasableEntry> createState() => _CustomizePurchasableEntry();
 }
 
 // Implementation of home page
-class _CustomizeMenuItemEntry extends State<CustomizeMenuItemEntry> {
+class _CustomizePurchasableEntry extends State<CustomizePurchasableEntry> {
   @override
   Widget build(BuildContext context) {
     return Row(

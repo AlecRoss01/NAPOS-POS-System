@@ -7,7 +7,7 @@ import 'pages/pos_home_page.dart';
 import 'back_end/client.dart';
 
 // Runs the app.
-void main() {
+void main() async {
   runApp(const NaposPOS());
 }
 

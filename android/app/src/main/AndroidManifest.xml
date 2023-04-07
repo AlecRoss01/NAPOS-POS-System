@@ -29,6 +29,10 @@
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
-            android:value="2" />
+            android:value="2"/>
+       <meta-data
+           android:name="sqip.SQUARE_APPLICATION_ID"
+           android:value="REPLACE WITH APPLICATION ID"/>
     </application>
+    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="32" />
 </manifest>

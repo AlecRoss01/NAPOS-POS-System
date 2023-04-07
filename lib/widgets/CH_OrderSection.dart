@@ -111,19 +111,20 @@ class _OrderSectionState extends State<OrderSection> {
                 ),
                 TextButton(
                   style: CustomTextStyle.commandHubCommands,
-                  child: const Text("Pay"),
+                  child: const Text("Receipt"),
+                  onPressed: () {
+                  },
+                ),
+                TextButton(
+                  style: CustomTextStyle.commandHubCommands,
+                  child: const Text("Get Card"),
                   onPressed: () {
                     widget.payButtonClick(widget.currentOrder);
                   },
                 ),
                 TextButton(
                   style: CustomTextStyle.commandHubCommands,
-                  child: const Text("Receipt"),
-                  onPressed: () {},
-                ),
-                TextButton(
-                  style: CustomTextStyle.commandHubCommands,
-                  child: const Text("Edit"),
+                  child: const Text("Pay"),
                   onPressed: () {},
                 )
               ],

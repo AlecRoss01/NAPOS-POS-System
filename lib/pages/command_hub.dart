@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:square_in_app_payments/in_app_payments.dart';
-import 'package:square_in_app_payments/models.dart';
 import '../styles/styles.dart';
 import '../back_end/client.dart';
+import 'package:square_in_app_payments/models.dart';
+import 'package:square_in_app_payments/in_app_payments.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../classes/menu_item.dart' as menu_item;
 import '../classes/order.dart';
 import '../classes/category.dart';
@@ -32,10 +33,10 @@ class _CommandHub extends State<CommandHub> {
   final double orderSectionWidth = 200;
   final double categoriesSectionWidth = 150;
 
-  //// Start of payment.
+
 
   Future<void> _initSquarePayment() async {
-    await InAppPayments.setSquareApplicationId('APPLICATION_ID (from square website)');
+    await InAppPayments.setSquareApplicationId(dotenv.env['SQUARE_APPLICATION_SANDBOX_ID']!);
   }
 
   Future<void> _onStartCardEntryFlow() async {
@@ -53,6 +54,7 @@ class _CommandHub extends State<CommandHub> {
       // take payment with the card nonce details
       // you can take a charge
       // await chargeCard(result);
+      await chargeCard(result, currentOrder.getSubTotal());
 
       // payment finished successfully
       // you must call this method to close card entry
@@ -70,13 +72,15 @@ class _CommandHub extends State<CommandHub> {
     // Update UI to notify user that the payment flow is finished successfully
   }
 
+
+
   void payButtonClick(Order order) {
     setState(() {
-      //_onStartCardEntryFlow();
+      _onStartCardEntryFlow();
     });
   }
 
-  //// End of payment.
+
   
   void addToOrder(menu_item.MenuItem item) {
     setState(() {
@@ -107,6 +111,13 @@ class _CommandHub extends State<CommandHub> {
       // Add addition to list of additions on menu item
       return;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    dotenv.load(fileName: "../../.env");
+    _initSquarePayment();
   }
 
   @override
