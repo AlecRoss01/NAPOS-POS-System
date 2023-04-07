@@ -8,14 +8,18 @@ import 'customize_menu_item_entry.dart';
 // This widget is the home page of the POS application.
 class CustomizeAddition extends StatefulWidget {
   bool isBeingEdited;
+  bool isPopup;
   final ItemAddition addition;
 
   CustomizeAddition({
     super.key,
     required this.addition,
     isBeingEdited,
+    isPopup,
   })
-      : isBeingEdited = isBeingEdited ?? false
+  :
+  isBeingEdited = isBeingEdited ?? false,
+  isPopup = isPopup ?? false
   ;
 
   @override
@@ -41,7 +45,7 @@ class _CustomizeAddition extends State<CustomizeAddition> {
     controllerPrice = TextEditingController(text: widget.addition.getprice().toString());
     //controllerDescription = TextEditingController(text: widget.addition.description);
 
-    if(!widget.isBeingEdited) {
+    if(!widget.isBeingEdited && !widget.isPopup) {
       return GestureDetector(
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
@@ -77,62 +81,98 @@ class _CustomizeAddition extends State<CustomizeAddition> {
       return Card(
           child: Padding(
             padding: EdgeInsets.all(10),
-            child: Column(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                CustomizeMenuItemEntry(
-                  title: 'Item Name: ',
-                  controller: controllerItemName,
+                      CustomizePurchasableEntry(
+                        title: 'Item Name: ',
+                        controller: controllerItemName,
+                      ),
+
+                      SizedBox(height: 5),
+
+                      CustomizePurchasableEntry(
+                        title: 'Price (\$): ',
+                        controller: controllerPrice,
+                      ),
+
+                      SizedBox(height: 10),
+
+                      Row(
+                        children: [
+                          TextButton(
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text('Done'),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                widget.isBeingEdited = false;
+
+                                try {
+                                  if (controllerItemName.text == "" || controllerPrice.text == "") {
+                                    throw Exception("Missing a value.");
+                                  }
+                                  ItemAddition newAddition = ItemAddition(controllerItemName.text, 0, double.parse(controllerPrice.text));
+                                  replaceAdditionInMenu(widget.addition, newAddition);
+                                } catch (e) {
+                                  // Does nothing on a failed parse.
+                                }
+
+                                // If it's a popup, closes the popup.
+                                if (widget.isPopup) {
+                                  Navigator.of(context).pop();
+                                }
+                              });
+                            },
+                          ),
+
+                          TextButton(
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text('Cancel'),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                widget.isBeingEdited = false;
+
+                                // If it's a popup, closes the popup.
+                                if (widget.isPopup) {
+                                  Navigator.of(context).pop();
+                                }
+                              });
+                            },
+                          ),
+
+                        ],
+                      ),
+
+                    ],
+                  ),
                 ),
 
-                SizedBox(height: 5),
+                SizedBox(width: 10),
 
-                CustomizeMenuItemEntry(
-                  title: 'Price (\$): ',
-                  controller: controllerPrice,
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    if (widget.isPopup) {
+                      Navigator.of(context).pop();
+                      return;
+                    }
+                    removeAdditionInMenu(widget.addition);
+                  },
                 ),
 
-                SizedBox(height: 10),
-
-                Row(
-                  children: [
-                    TextButton(
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text('Done'),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          //TODO: Set changes
-                          widget.isBeingEdited = false;
-
-                          try {
-                            ItemAddition newAddition = ItemAddition(controllerItemName.text, 0, double.parse(controllerPrice.text));
-                            replaceAdditionInMenu(widget.addition, newAddition);
-                          } catch (e) {
-                            // Does nothing.
-                          }
-                        });
-                      },
-                    ),
-
-                    TextButton(
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text('Cancel'),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          widget.isBeingEdited = false;
-                        });
-                      },
-                    ),
-                  ],
-                )
+                SizedBox(width: 7),
 
               ],
-            ),
+            )
           )
       );
     }

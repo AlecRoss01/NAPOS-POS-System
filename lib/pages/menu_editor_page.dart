@@ -35,10 +35,38 @@ class _MenuEditor extends State<MenuEditor> {
               Expanded(
                 child: Padding(
                     padding: EdgeInsets.all(10),
-                    child: Text(
-                      'Menu: ',
-                      textAlign: TextAlign.left,
-                      style: CustomTextStyle.headerText,
+                    child: Row(
+                      children: [
+                        Text(
+                          'Menu: ',
+                          textAlign: TextAlign.left,
+                          style: CustomTextStyle.headerText,
+                        ),
+
+                        Spacer(),
+
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("Create new menu item:"),
+                                  content: Container(
+                                    width: 500,
+                                    height: 500,
+                                    child: CustomizeMenuItem(
+                                      menuItem: MenuItem("New Menu Item"),
+                                      isPopup: true,
+                                    ),
+                                  ),
+                                );
+                              }
+                            );
+                          },
+                        )
+                      ],
                     )
                 ),
               ),
@@ -48,10 +76,38 @@ class _MenuEditor extends State<MenuEditor> {
               Expanded(
                 child: Padding(
                     padding: EdgeInsets.all(10),
-                    child: Text(
-                      'Additions: ',
-                      textAlign: TextAlign.left,
-                      style: CustomTextStyle.headerText,
+                    child: Row(
+                      children: [
+                        Text(
+                          'Additions: ',
+                          textAlign: TextAlign.left,
+                          style: CustomTextStyle.headerText,
+                        ),
+
+                        Spacer(),
+
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text("Create new addition:"),
+                                    content: Container(
+                                      width: 500,
+                                      height: 500,
+                                      child: CustomizeAddition(
+                                        addition: ItemAddition("New Addition", 0, 0),
+                                        isPopup: true,
+                                      ),
+                                    ),
+                                  );
+                                }
+                            );
+                          },
+                        )
+                      ],
                     )
                 ),
               ),

@@ -7,14 +7,18 @@ import 'customize_menu_item_entry.dart';
 // This widget is the home page of the POS application.
 class CustomizeMenuItem extends StatefulWidget {
   bool isBeingEdited;
+  bool isPopup;
   final MenuItem menuItem;
 
   CustomizeMenuItem({
     super.key,
     required this.menuItem,
     isBeingEdited,
+    isPopup
   })
-  : isBeingEdited = isBeingEdited ?? false
+  :
+  isBeingEdited = isBeingEdited ?? false,
+  isPopup = isPopup ?? false
   ;
 
   @override
@@ -40,7 +44,7 @@ class _CustomizeMenuItem extends State<CustomizeMenuItem> {
     controllerPrice = TextEditingController(text: widget.menuItem.price.toString());
     controllerDescription = TextEditingController(text: widget.menuItem.description);
 
-    if(!widget.isBeingEdited) {
+    if(!widget.isBeingEdited && !widget.isPopup) {
       return GestureDetector(
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
@@ -81,72 +85,105 @@ class _CustomizeMenuItem extends State<CustomizeMenuItem> {
       return Card(
         child: Padding(
           padding: EdgeInsets.all(10),
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              CustomizeMenuItemEntry(
-                title: 'Item Name: ',
-                controller: controllerItemName,
-              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-              SizedBox(height: 5),
-
-              CustomizeMenuItemEntry(
-                title: 'Price (\$): ',
-                controller: controllerPrice,
-              ),
-
-              SizedBox(height: 5),
-
-              CustomizeMenuItemEntry(
-                title: 'Description: ',
-                controller: controllerDescription,
-              ),
-
-              SizedBox(height: 10),
-
-              Row(
-                children: [
-                  TextButton(
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text('Done'),
+                    CustomizePurchasableEntry(
+                      title: 'Item Name: ',
+                      controller: controllerItemName,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        //TODO: Set changes
-                        widget.isBeingEdited = false;
 
-                        try {
-                          MenuItem newItem = MenuItem(controllerItemName.text,
-                            price: double.parse(controllerPrice.text),
-                            description: controllerDescription.text,
-                          );
-                          replaceItemInMenu(widget.menuItem, newItem);
-                        } catch (e) {
-                          // Does nothing.
-                        }
-                      });
-                    },
-                  ),
+                    SizedBox(height: 5),
 
-                  TextButton(
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text('Cancel'),
+                    CustomizePurchasableEntry(
+                      title: 'Price (\$): ',
+                      controller: controllerPrice,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        widget.isBeingEdited = false;
-                      });
-                    },
-                  ),
-                ],
-              )
+
+                    SizedBox(height: 5),
+
+                    CustomizePurchasableEntry(
+                      title: 'Description: ',
+                      controller: controllerDescription,
+                    ),
+
+                    SizedBox(height: 10),
+
+                    Row(
+                      children: [
+                        TextButton(
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text('Done'),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              widget.isBeingEdited = false;
+
+                              try {
+                                MenuItem newItem = MenuItem(controllerItemName.text,
+                                  price: double.parse(controllerPrice.text),
+                                  description: controllerDescription.text,
+                                );
+                                replaceItemInMenu(widget.menuItem, newItem);
+                              } catch (e) {
+                                // Does nothing.
+                              }
+
+                              // If it's a popup, closes the popup.
+                              if (widget.isPopup) {
+                                Navigator.of(context).pop();
+                              }
+                            });
+                          },
+                        ),
+
+                        TextButton(
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text('Cancel'),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              widget.isBeingEdited = false;
+
+                              // If it's a popup, closes the popup.
+                              if (widget.isPopup) {
+                                Navigator.of(context).pop();
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    )
+
+                  ],
+                ),
+              ),
+
+              SizedBox(width: 10),
+
+              IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  if (widget.isPopup) {
+                    Navigator.of(context).pop();
+                    return;
+                  }
+                  removeItemInMenu(widget.menuItem);
+                },
+              ),
+
+              SizedBox(width: 7),
 
             ],
-          ),
+          )
         )
       );
     }
