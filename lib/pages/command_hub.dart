@@ -36,7 +36,7 @@ class _CommandHub extends State<CommandHub> {
 
 
   Future<void> _initSquarePayment() async {
-    await InAppPayments.setSquareApplicationId(dotenv.env['SQUARE_APPLICATION_SANDBOX_ID']!);
+    await InAppPayments.setSquareApplicationId("sandbox-sq0idb-5l8c2u8OdZQNh_t3Tk43QQ");
   }
 
   Future<void> _onStartCardEntryFlow() async {
@@ -116,7 +116,6 @@ class _CommandHub extends State<CommandHub> {
   @override
   void initState() {
     super.initState();
-    dotenv.load(fileName: "../../.env");
     _initSquarePayment();
   }
 
