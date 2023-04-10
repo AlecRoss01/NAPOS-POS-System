@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:napos/back_end/client.dart';
 import 'package:napos/classes/menu_item.dart';
 import 'package:napos/styles/styles.dart';
-import 'customize_menu_item_entry.dart';
+import 'display_menu_item_tags.dart';
+import 'customize_purchasable_entry.dart';
 
 // This widget is the home page of the POS application.
 class CustomizeMenuItem extends StatefulWidget {
@@ -112,6 +113,20 @@ class _CustomizeMenuItem extends State<CustomizeMenuItem> {
                       title: 'Description: ',
                       controller: controllerDescription,
                     ),
+
+                    SizedBox(height: 5),
+
+                    DisplayItemTags(
+                        menuItem : widget.menuItem
+                    ),
+
+                    /*
+                    Container(
+                      height: 100,
+                      alignment: Alignment.center,
+                      child: ,
+                    ),
+                     */
 
                     SizedBox(height: 10),
 

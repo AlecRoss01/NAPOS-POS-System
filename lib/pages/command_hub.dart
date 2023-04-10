@@ -3,7 +3,7 @@ import '../styles/styles.dart';
 import '../back_end/client.dart';
 import 'package:square_in_app_payments/models.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+//import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../classes/menu_item.dart' as menu_item;
 import '../classes/order.dart';
 import '../classes/category.dart';

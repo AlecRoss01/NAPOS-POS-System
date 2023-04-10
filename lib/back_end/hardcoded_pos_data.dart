@@ -75,6 +75,8 @@ buildMenu(POS_Category category) {
     menu[i].addCatTag("Merch");
   }
 
+  menu[3].addCatTag("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG");
+
   // Returns full menu.
   if (category.name == 'All') {
     return menu;
