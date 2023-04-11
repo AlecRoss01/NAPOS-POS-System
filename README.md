@@ -1,6 +1,13 @@
 # NAPOS
 
-The framework for a Flutter project.
+
+## Developers
+
+### Programmers
+Reece Cristea, Jacob Myers, Alec Ross.
+
+### Special Thanks
+Anis Syazana - App icon/logo.
 
 ## Install and Use
 
@@ -15,6 +22,7 @@ To use Flutter commands outside of a Flutter terminal, you will have to add the 
 - You can specify which device you want to run it on with `> flutter run -d [device name]`
 - You can specify which file to run as an entry point with `> flutter run -t lib/[file name]`
 - Once the program is running, pressing 'r' while focused on the terminal will hot reload the app, meaning you don't have to build it from scratch again. Variables stay the same value since the program is not restarted.
+- Pressing 'Shift+r' will hot restart the app. Meaning it will fully rebuild (much faster than manually).
 
 ## Development Help
 
@@ -42,3 +50,4 @@ Changing project name and icons:
 - [Text Buttons (And another multiple children solution)](https://api.flutter.dev/flutter/material/TextButton-class.html)
 - [Spacing elements](https://stackoverflow.com/questions/53141752/set-the-space-between-elements-in-row-flutter)
 - [How Expanded Works](https://www.flutterbeads.com/listview-inside-column-in-flutter/#1-using-expanded-recommended)
+

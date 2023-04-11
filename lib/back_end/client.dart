@@ -10,7 +10,11 @@ import '../classes/employee.dart';
 import '../classes/item_addition.dart';
 import 'hardcoded_pos_data.dart';
 
+// https://stackoverflow.com/questions/54481818/how-to-connect-flutter-app-to-tcp-socket-server
+// https://stackoverflow.com/questions/63323038/dart-return-data-from-a-stream-subscription-block
+
 const bool TESTING = false;
+const String connString = '';
 
 class JsonRequest {
   String requestType;
@@ -23,11 +27,6 @@ class JsonRequest {
         'RequestType': requestType,
       };
 }
-
-const String connString = '';
-
-// https://stackoverflow.com/questions/54481818/how-to-connect-flutter-app-to-tcp-socket-server
-// https://stackoverflow.com/questions/63323038/dart-return-data-from-a-stream-subscription-block
 
 /*
 main() async {
@@ -47,7 +46,11 @@ main() async {
 
 Future<int> addItemToMenu(MenuItem item) async {
   // TODO add menu item to database.
-  //print('Added item');
+
+  if (TESTING) {
+    return 0;
+  }
+
   Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   socket.add(utf8.encode(jsonEncode(JsonRequest("ADDMENITEM"))));
@@ -66,7 +69,11 @@ Future<int> addItemToMenu(MenuItem item) async {
 Future<int> removeItemInMenu(MenuItem item) async {
   // TODO remove menu item from database.
   // Note: Passed item may or may not exist in the database.
-  //print('Removed item');
+
+  if (TESTING) {
+    return 0;
+  }
+
   Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   socket.add(utf8.encode(jsonEncode(JsonRequest("REMOVEMENITEM"))));
@@ -90,7 +97,11 @@ void replaceItemInMenu(MenuItem oldItem, MenuItem newItem) {
 Future<int> addAdditionToMenu(ItemAddition addition) async {
   // TODO add addition to database.
   // TODO add json encoding to addition class
-  //print('Added addition');
+
+  if (TESTING) {
+    return 0;
+  }
+
   Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   socket.add(utf8.encode(jsonEncode(JsonRequest("ADDADDITION"))));
@@ -108,7 +119,11 @@ Future<int> addAdditionToMenu(ItemAddition addition) async {
 
 Future<int> removeAdditionInMenu(ItemAddition addition) async {
   // TODO remove addition from database.
-  //print('Removed addition');
+
+  if (TESTING) {
+    return 0;
+  }
+
   Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   socket.add(utf8.encode(jsonEncode(JsonRequest("REMOVEADDITION"))));
@@ -403,6 +418,7 @@ Future<List<ItemAddition>> recvItemAdditions() async {
 
   if (TESTING) {
     additions = buildItemAdditions();
+    return additions;
   }
 
   Socket socket = await Socket.connect(connString, 30000);

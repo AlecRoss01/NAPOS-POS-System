@@ -3,7 +3,7 @@ import 'package:napos/back_end/client.dart';
 import 'package:napos/classes/item_addition.dart';
 import 'package:napos/classes/menu_item.dart';
 import 'package:napos/styles/styles.dart';
-import 'customize_menu_item_entry.dart';
+import 'customize_purchasable_entry.dart';
 
 // This widget is the home page of the POS application.
 class CustomizeAddition extends StatefulWidget {

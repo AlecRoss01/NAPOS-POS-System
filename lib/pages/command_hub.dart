@@ -3,7 +3,7 @@ import '../styles/styles.dart';
 import '../back_end/client.dart';
 import 'package:square_in_app_payments/models.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+//import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../classes/menu_item.dart' as menu_item;
 import '../classes/order.dart';
 import '../classes/category.dart';
@@ -36,7 +36,7 @@ class _CommandHub extends State<CommandHub> {
 
 
   Future<void> _initSquarePayment() async {
-    await InAppPayments.setSquareApplicationId(dotenv.env['SQUARE_APPLICATION_SANDBOX_ID']!);
+    await InAppPayments.setSquareApplicationId("sandbox-sq0idb-5l8c2u8OdZQNh_t3Tk43QQ");
   }
 
   Future<void> _onStartCardEntryFlow() async {
@@ -116,7 +116,6 @@ class _CommandHub extends State<CommandHub> {
   @override
   void initState() {
     super.initState();
-    dotenv.load(fileName: "../../.env");
     _initSquarePayment();
   }
 

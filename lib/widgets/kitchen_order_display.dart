@@ -39,7 +39,7 @@ class _OrderDisplayWidget extends State<OrderDisplayWidget> {
                       style: CustomTextStyle.kitchenEndpointText,
                     ),
                     Text(
-                      'Placed At: \{Time placed\}',
+                      'Placed At: ${widget.order.dateTimeStr}',
                       textAlign: TextAlign.left,
                       style: CustomTextStyle.kitchenEndpointText,
                     ),

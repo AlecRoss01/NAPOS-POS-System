@@ -29,9 +29,10 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
   void initState() {
     const Duration oneSecond = Duration(seconds: 1);
     const Duration twoSeconds = Duration(seconds: 2);
+    const Duration fiveSeconds = Duration(seconds: 5);
     const Duration oneMinute = Duration(minutes: 1);
     myUpdater = Timer.periodic(
-        twoSeconds,
+        fiveSeconds,
         (Timer t) => setState(() {
           updateOrders();
         }));
