@@ -9,12 +9,13 @@ import '../classes/order.dart';
 import '../classes/employee.dart';
 import '../classes/item_addition.dart';
 import 'hardcoded_pos_data.dart';
+//import 'package:http/http.dart'
 
 // https://stackoverflow.com/questions/54481818/how-to-connect-flutter-app-to-tcp-socket-server
 // https://stackoverflow.com/questions/63323038/dart-return-data-from-a-stream-subscription-block
 
 const bool TESTING = false;
-const String connString = '';
+const String connString = '184.171.150.182';
 
 class JsonRequest {
   String requestType;
@@ -27,6 +28,9 @@ class JsonRequest {
         'RequestType': requestType,
       };
 }
+
+// https://stackoverflow.com/questions/54481818/how-to-connect-flutter-app-to-tcp-socket-server
+// https://stackoverflow.com/questions/63323038/dart-return-data-from-a-stream-subscription-block
 
 /*
 main() async {
@@ -65,6 +69,24 @@ Future<int> addItemToMenu(MenuItem item) async {
   socket.close();
   return 0;
 }
+
+//https://curlconverter.com/dart/
+// below code is based on above link, must edit it to conform to necesarry specifications
+/*void buildSquareCurl() {
+  var headers = {
+    'Square-Version': '2023-03-15',
+    'Authorization': 'Bearer ACCESS_TOKEN',
+    'Content-Type': 'application/json',
+  };
+
+  var data = '{\n    "amount_money": {\n      "amount": 1759,\n      "currency": "USD"\n    },\n    "idempotency_key": "4a3b536c-f68b-4549-bc46-f3eb92c81b8d",\n    "source_id": "cnon:card-nonce-ok"\n  }';
+
+  var url = Uri.parse('https://connect.squareupsandbox.com/v2/payments');
+  var res = await http.post(url, headers: headers, body: data);
+  if (res.statusCode != 200) throw Exception('http.post error: statusCode= ${res.statusCode}');
+  print(res.body);
+
+}*/
 
 Future<int> removeItemInMenu(MenuItem item) async {
   // TODO remove menu item from database.
@@ -412,6 +434,13 @@ Future<NAPOS_Employee> getEmployeeFromPin(int pin) async {
   throw ("No employee found with that pin");
 }
 
+Future<Socket> makeConnection(String request) async {
+  Socket socket = await Socket.connect(connString, 30000);
+  print('connected');
+  socket.add(utf8.encode(jsonEncode(JsonRequest(request))));
+  return socket;
+}
+
 Future<List<ItemAddition>> recvItemAdditions() async {
   // Receive all item additions
   var additions = <ItemAddition>[];
@@ -488,28 +517,26 @@ convertHashtoList(MenuItem m) {
   return tags;
 }
 
-/*void send() async {
-  Socket socket = await Socket.connect('127.0.0.1', 30000);
-  print('connected');
+Future<String> getData(Socket sock) async {
   var output = "";
-  var order = new Order(1);
-  var item = new MenuItem("pasta", 1, 14.95);
-  item.addCatTag("food");
-  item.addCatTag("drink");
-  print(convertHashtoList(item));
-  order.addItemToOrder(item);
-  order.addItemToOrder(item);
-  var orderList = List<String>.filled(1, "stuff");
-  var encodedOrder = jsonEncode(item);
-  socket.add(utf8.encode(jsonEncode(new JsonRequest("SENDMENU"))));
-  //var encodedOrder = {'OrderIDNullChar' : order.orderIDNullChar, 'OrderIDLength' : order.orderIDLength, 'OrderID' : order.orderID, 'OrderItems' : order.orderItems};
-  // issue seems to be because of vector, so I need a function to  convert the vector to a list, then I should be able to handle things normally
-  socket.add(utf8.encode(encodedOrder));
-  await for (var data in socket){
+  await for (var data in sock) {
     //print(utf8.decode(data));
     output = utf8.decode(data);
   }
-  socket.close();
-}*/
+  return output;
+}
 
-main() async {}
+updateCatTags(MenuItem m) async {
+  var sock = await makeConnection("UPDATECATTAGS");
+  sock.add(utf8.encode(jsonEncode(m)));
+  var data = await getData(sock);
+  sock.close();
+}
+
+// TODO test update cattags
+// TODO make it so that if a menuitem with id 0 is sent, make it a new menuitem
+// TODO make it so server and database account for OrderTaker in menuitem
+main() async {
+  var item = MenuItem("pasta", id: 2, price: 2.59);
+  updateCatTags(item);
+}
