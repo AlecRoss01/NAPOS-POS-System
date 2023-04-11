@@ -26,6 +26,8 @@ type Order struct {
 	OrderIDLength   int
 	OrderID         int
 	OrderItems      []MenuItem
+	OrderTaker      Employee
+	DateTime        string
 }
 
 type HistOrder struct {
@@ -41,6 +43,8 @@ type RecvOrder struct {
 	OrderIDLength   int
 	OrderID         int
 	OrderItems      string
+	OrderTaker      string
+	DateTime        string
 }
 
 type OrderItem struct {
@@ -185,19 +189,19 @@ func getCategories() ([]Categories, error) {
 	var items []Categories
 	rows, err := db.Query("SELECT * FROM categories")
 	if err != nil {
-		return nil, fmt.Errorf("getMenu %v", err)
+		return nil, fmt.Errorf("getCategories %v", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var item Categories
 		if err := rows.Scan(&item.MenuID, &item.CatTag); err != nil {
-			return nil, fmt.Errorf("getMenu %v", err)
+			return nil, fmt.Errorf("getCategories %v", err)
 		}
 		items = append(items, item)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("getMenu %v", err)
+		return nil, fmt.Errorf("getCategories %v", err)
 	}
 	return items, nil
 }
@@ -339,10 +343,12 @@ func BoolGetOrders(orderType bool) ([]Order, error) {
 
 	for rows.Next() {
 		var order Order
+		var empId int
 		var holder int
-		if err := rows.Scan(&order.OrderID, &order.OrderIDNullChar, &order.OrderIDLength, &holder); err != nil {
+		if err := rows.Scan(&order.OrderID, &order.OrderIDNullChar, &order.OrderIDLength, &holder, &empId, &order.DateTime); err != nil {
 			return nil, fmt.Errorf("getOrders %v", err)
 		}
+		order.OrderTaker, err = getEmployeeByID(empId)
 		orders = append(orders, order)
 	}
 	if err := rows.Err(); err != nil {
@@ -383,7 +389,7 @@ func insertOrderItems(order Order) (int64, error) {
 
 func insertOrder(order Order) (int64, error) {
 	//adds and order to the database
-	result, err := db.Exec("INSERT INTO orders (orderID, orderIDNullChar, orderIDLength) VALUES (?, ?, ?)", order.OrderID, order.OrderIDNullChar, order.OrderIDLength)
+	result, err := db.Exec("INSERT INTO orders (orderID, orderIDNullChar, orderIDLength, complete, orderTakerId, dateTime) VALUES (?, ?, ?, 0, ?, ?)", order.OrderID, order.OrderIDNullChar, order.OrderIDLength, order.OrderTaker.ID, order.DateTime)
 	if err != nil {
 		return 0, fmt.Errorf("insertOrder %v", err)
 	}
@@ -586,10 +592,16 @@ func recvOrder(c net.Conn) {
 	fmt.Println(msg, err)
 	c.Write([]byte("finish"))
 	fmt.Println(msg.OrderItems)
+	var emp Employee
+	err = json.Unmarshal([]byte(msg.OrderTaker), &emp)
+	if err != nil {
+		fmt.Printf("%x", err)
+	}
 	//currently does not like orders without menuitems in it, need to fix that at some point
-	conv := Order{msg.OrderIDNullChar, msg.OrderIDLength, msg.OrderID, convertStringtoList(msg.OrderItems)}
+	conv := Order{msg.OrderIDNullChar, msg.OrderIDLength, msg.OrderID, convertStringtoList(msg.OrderItems), emp, msg.DateTime}
+	fmt.Println("printing converge")
 	fmt.Println(conv)
-	//dbHandlerEntries(conv)
+	dbHandlerEntries(conv)
 	c.Close()
 }
 
@@ -674,6 +686,18 @@ func markComplete(c net.Conn) {
 	fmt.Println(result)
 }
 
+func getNextIdMenu() int {
+	menu := dbHandlerMenu()
+	var highest = 0
+	for _, item := range menu {
+		if item.Id > highest {
+			highest = item.Id
+		}
+	}
+	return highest + 1
+}
+
+// current, need to deprecate recvMenu at some point
 func addItemToMenu(c net.Conn) {
 	d := json.NewDecoder(c)
 
@@ -682,6 +706,9 @@ func addItemToMenu(c net.Conn) {
 	fmt.Println(msg, err)
 	c.Write([]byte("finish"))
 	fmt.Println(msg)
+	if msg.Id == 0 {
+		msg.Id = getNextIdMenu()
+	}
 	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
 		log.Fatal(err)
@@ -817,7 +844,7 @@ func getEmployees() ([]Employee, error) {
 	var employees []Employee
 	rows, err := db.Query("SELECT * FROM employees")
 	if err != nil {
-		return nil, fmt.Errorf("getMenu %v", err)
+		return nil, fmt.Errorf("getEmployees %v", err)
 	}
 
 	defer rows.Close()
@@ -825,15 +852,45 @@ func getEmployees() ([]Employee, error) {
 	for rows.Next() {
 		var employee Employee
 		if err := rows.Scan(&employee.Name, &employee.ID, &employee.PIN, &employee.Access); err != nil {
-			return nil, fmt.Errorf("getMenu %v", err)
+			return nil, fmt.Errorf("getEmployees %v", err)
 		}
 		employees = append(employees, employee)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("getMenu %v", err)
+		return nil, fmt.Errorf("getEmployees %v", err)
 	}
 	return employees, nil
+}
 
+func getEmployeeByID(id int) (Employee, error) {
+	db, err := initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+
+	fmt.Println("Connected!")
+	var employee Employee
+	rows, err := db.Query("SELECT * FROM employees WHERE id= ?", id)
+	if err != nil {
+		fmt.Printf("getEmployeeById %v", err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		if err := rows.Scan(&employee.Name, &employee.ID, &employee.PIN, &employee.Access); err != nil {
+			fmt.Printf("getEmployeeById %v", err)
+		}
+	}
+	if err := rows.Err(); err != nil {
+		fmt.Printf("getEmployeeById %v", err)
+	}
+	return employee, nil
 }
 
 func sendEmployees(c net.Conn) {
