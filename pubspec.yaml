@@ -93,6 +93,10 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
+# Using flutter_launcher_icons: https://instaflutter.com/flutter-tutorials/flutter-app-icons/
+# Replace generated data with better data: https://codewithflutter.com/how-to-change-application-launcher-icon-in-flutter/
+# Generate the better icon data: https://icon.kitchen
+
 flutter_icons:
   android: true
   ios: false
