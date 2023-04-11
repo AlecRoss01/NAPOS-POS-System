@@ -34,7 +34,9 @@ class MenuItem {
   // METHODS
 
   // Private variable, externally it will appear as 'categories'
-  Set<String> get categories { return _catTags; }
+  Set<String> get categories {
+    return _catTags;
+  }
 
   double get additionPrice {
     double additionSum = 0;
@@ -58,14 +60,20 @@ class MenuItem {
   }
 
   // Clears all category tags.
-  void clearCatTags() { _catTags = {}; }
+  void clearCatTags() {
+    _catTags = {};
+  }
 
   // Adds a single category tag.
-  void addCatTag (String tag) { _catTags.add(tag); }
+  void addCatTag (String tag) {
+    _catTags.add(tag);
+  }
 
   // Adds multiple category tags.
   void addCatTags(List<String> tags) {
-    for (var tag in tags) { addCatTag(tag); }
+    for (var tag in tags) {
+      addCatTag(tag);
+    }
   }
 
   // Set category tags to the given ones. Clears it first.
@@ -75,7 +83,9 @@ class MenuItem {
   }
 
   // Remove a given tag.
-  void removeCatTag(String tag) { _catTags.remove(tag); }
+  void removeCatTag(String tag) {
+    _catTags.remove(tag);
+  }
 
   void addAddition(ItemAddition addition) {
     additions.add(addition);
