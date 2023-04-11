@@ -12,7 +12,6 @@ Should we account for order numbers from before our system was implemented?
 // Parse int from string: https://stackoverflow.com/questions/15289447/is-there-a-better-way-to-parse-an-int-in-dart
 
 class Order {
-
   // MEMBERS
 
   String orderIDNullChar = '0';
@@ -25,43 +24,56 @@ class Order {
 
   // Initialization; takes an ID for now.
   Order(
-      this.orderTaker,
+    this.orderTaker,
 
-      // Optional parameters.
-      {
-        this.id = 0,
-        DateTime? dateTime,
-      }
-  )
-  : _dateTime = dateTime ?? DateTime.now();
+    // Optional parameters.
+    {
+    this.id = 0,
+    DateTime? dateTime,
+  }) : _dateTime = dateTime ?? DateTime.now();
 
   // METHODS
-
   Map<String, dynamic> toJson() => {
-    'OrderIDNullChar' : orderIDNullChar,
-    'OrderIDLength' : idLength,
-    'OrderID' : id,
-    'OrderItems' : jsonEncode(orderItems),
-  };
+        'OrderIDNullChar': orderIDNullChar,
+        'OrderIDLength': idLength,
+        'OrderID': id,
+        'OrderItems': jsonEncode(orderItems),
+        'OrderTaker': jsonEncode(orderTaker),
+        'DateTime': dateTimeStr,
+      };
 
-  List<MenuItem> getOrderItems() { return orderItems; }
+  List<MenuItem> getOrderItems() {
+    return orderItems;
+  }
 
-  MenuItem getItemAtIndex(int index) { return orderItems[index]; }
+  MenuItem getItemAtIndex(int index) {
+    return orderItems[index];
+  }
 
-  int getOrderLength() { return orderItems.length; }
+  int getOrderLength() {
+    return orderItems.length;
+  }
 
   // Clears all items in the order.
-  void clearOrderItems() { orderItems = <MenuItem>[]; }
+  void clearOrderItems() {
+    orderItems = <MenuItem>[];
+  }
 
   // Adds a single item to the order.
-  void addItemToOrder(MenuItem item) { orderItems.add(item); }
+  void addItemToOrder(MenuItem item) {
+    orderItems.add(item);
+  }
 
   //Remove a single item from the order
-  void removeItemFromOrder(MenuItem item) { orderItems.remove(item); }
+  void removeItemFromOrder(MenuItem item) {
+    orderItems.remove(item);
+  }
 
   //Adds multiple items to the order.
   void addItemsToOrder(List<MenuItem> items) {
-    for (var item in items) { addItemToOrder(item); }
+    for (var item in items) {
+      addItemToOrder(item);
+    }
   }
 
   // Clears order then adds the items.
@@ -71,7 +83,9 @@ class Order {
   }
 
   // Remove an item at an index. Cannot remove by name or ID, there can be duplicates.
-  void removeOrderItemAt(int index) { orderItems.removeAt(index); }
+  void removeOrderItemAt(int index) {
+    orderItems.removeAt(index);
+  }
 
   String get dateTimeStr {
     DateFormat formatterDate = DateFormat('MM-dd-yyyy');
@@ -87,7 +101,9 @@ class Order {
   // Sums the price of each menuItem
   double getSubTotal() {
     double sum = 0.0;
-    for (var element in orderItems) { sum += element.price; }
+    for (var element in orderItems) {
+      sum += element.price;
+    }
     return sum;
   }
 
@@ -103,7 +119,9 @@ class Order {
 
   // toString will return the string order ID.
   @override
-  String toString() { return strOrderID(); }
+  String toString() {
+    return strOrderID();
+  }
 
   // Override the == operator, if they have the same ID, they are equal.
   @override

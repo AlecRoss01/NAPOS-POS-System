@@ -17,19 +17,20 @@ class MenuItem {
   List<ItemAddition> additions = [];
 
   // Initializer; Sets members with parameter data.
-  MenuItem(this.name,
-      // Optional parameters.
-      // Curly braces mean their name must be used in initialization.
-      // Like: MenuItem('Hot Dog', price : 1.25)
-      {
-        int id = 0,
-        double price = 0,
-        String description = "",
-      }) {
-        this.id = id;
-        this._price = price;
-        this.description = description;
-      }
+  MenuItem(
+    this.name,
+    // Optional parameters.
+    // Curly braces mean their name must be used in initialization.
+    // Like: MenuItem('Hot Dog', price : 1.25)
+    {
+    int id = 0,
+    double price = 0,
+    String description = "",
+  }) {
+    this.id = id;
+    this._price = price;
+    this.description = description;
+  }
 
   // METHODS
 
@@ -41,7 +42,7 @@ class MenuItem {
   double get additionPrice {
     double additionSum = 0;
     for (int i = 0; i < additions.length; i++) {
-        additionSum += additions[i].getprice();
+      additionSum += additions[i].getprice();
     }
     return additionSum;
   }
@@ -65,7 +66,7 @@ class MenuItem {
   }
 
   // Adds a single category tag.
-  void addCatTag (String tag) {
+  void addCatTag(String tag) {
     _catTags.add(tag);
   }
 
@@ -104,16 +105,22 @@ class MenuItem {
   convertHashtoList(Set m) {
     var len = m.length;
     List<String> tags = List<String>.filled(len, "");
-    for( var i = 0 ; i < m.length ; i++) {
+    for (var i = 0; i < m.length; i++) {
       tags[i] = m.elementAt(i);
     }
     return tags;
   }
 
+  MenuItem.fromJson(Map<String, dynamic> json)
+      : id = json['Id'],
+        name = json['Name'],
+        _catTags = json['CatTags'],
+        _price = json['Price'];
+
   Map<String, dynamic> toJson() => {
-    'Id' : id,
-    'Name' : name,
-    'CatTags' : convertHashtoList(_catTags),
-    'Price' : _price,
-  };
+        'Id': id,
+        'Name': name,
+        'CatTags': convertHashtoList(_catTags),
+        'Price': _price,
+      };
 }
