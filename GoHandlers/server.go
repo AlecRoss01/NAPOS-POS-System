@@ -892,6 +892,53 @@ func sendAdditions(c net.Conn) {
 	c.Close()
 }
 
+func containsCatTag(cat Categories, cats []Categories) int {
+	for index, tag := range cats {
+		if tag == cat {
+			return index
+		}
+	}
+	return -1
+}
+
+func getCatTagsById(m MenuItem) []Categories {
+	cats, _ := getCategories()
+	var idCats []Categories
+	for _, tag := range cats {
+		if tag.MenuID == m.Id {
+			idCats = append(idCats, tag)
+		}
+	}
+	return idCats
+}
+
+func updateCatTags(c net.Conn) {
+	d := json.NewDecoder(c)
+
+	var msg MenuItem
+	err := d.Decode(&msg)
+	fmt.Println(msg, err)
+	//c.Write([]byte("finish"))
+	fmt.Println(msg)
+
+	db, err := initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+
+	fmt.Println("Connected!")
+	result, err := db.Exec("DELETE * FROM categories WHERE id=?", msg.Id)
+	if err != nil {
+		fmt.Printf("UpdateCatTags %v, %v\n", err, result)
+	}
+	addCatTagsToMenu(msg, db)
+}
+
 func handleServerConnection(c net.Conn) {
 
 	// we create a decoder that reads directly from the socket
@@ -935,6 +982,8 @@ func handleServerConnection(c net.Conn) {
 		go sendEmployees(c)
 	case "GETADDITIONS":
 		go sendAdditions(c)
+	case "UPDATECATTAGS":
+		go updateCatTags(c)
 	default:
 		fmt.Printf("reached default in request type, request was: %s", requestType)
 	}
