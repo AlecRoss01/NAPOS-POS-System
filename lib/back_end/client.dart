@@ -263,6 +263,7 @@ Future<List<Order>> recvOrders() async {
   var mapDecode = jsonDecode(output);
   for (var i = 0; i < mapDecode['Orders'].length; i++) {
     ordersList.add(parseOrder(mapDecode['Orders'][i]));
+    //ordersList.add(Order.fromJson(mapDecode['Orders'][i]));
   }
   socket.close();
   return ordersList;
@@ -290,6 +291,7 @@ Future<List<Order>> recvCompleteOrders() async {
   if (mapDecode['Orders'] != null) {
     for (var i = 0; i < mapDecode['Orders'].length; i++) {
       ordersList.add(parseOrder(mapDecode['Orders'][i]));
+      //ordersList.add(Order.fromJson(mapDecode['Orders'][i]));
     }
   }
   socket.close();
@@ -318,6 +320,7 @@ Future<List<Order>> recvIncompleteOrders() async {
   var mapDecode = jsonDecode(output);
   for (var i = 0; i < mapDecode['Orders'].length; i++) {
     ordersList.add(parseOrder(mapDecode['Orders'][i]));
+    //ordersList.add(Order.fromJson(mapDecode['Orders'][i]));
   }
   socket.close();
   return ordersList;
@@ -488,7 +491,8 @@ Future<void> chargeCard(CardDetails result, double chargeAmount) async {
 }
 
 Order parseOrder(Map m) {
-  var order = Order(m['OrderID']);
+  var order = Order(m['OrderTaker']);
+  order.id = m['OrderID'];
   order.orderIDNullChar = m['OrderIDNullChar'];
   order.idLength = m['OrderIDLength'];
   var items = <MenuItem>[];
@@ -536,6 +540,14 @@ updateCatTags(MenuItem m) async {
   sock.close();
 }
 
-// TODO make it so that if a menuitem with id 0 is sent, make it a new menuitem
-// TODO make it so server and database account for OrderTaker in menuitem
-main() async {}
+// TODO make it so that client side handles DateTime conversion from string cuz fuck me
+// for datetime above https://api.dart.dev/stable/2.19.6/dart-core/DateTime-class.html
+main() async {
+  var employee = NAPOS_Employee("Alec", 1, 1234, 4);
+  var order = Order(employee, id: 3);
+  var item = MenuItem("Fish Sticks", id: 0, price: 14.95);
+  item.addCatTag("Food");
+  order.addItemToOrder(item);
+  //sendOrder(order);
+  addItemToMenu(item);
+}
