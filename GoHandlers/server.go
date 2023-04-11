@@ -918,7 +918,7 @@ func updateCatTags(c net.Conn) {
 	var msg MenuItem
 	err := d.Decode(&msg)
 	fmt.Println(msg, err)
-	//c.Write([]byte("finish"))
+	c.Write([]byte("finish"))
 	fmt.Println(msg)
 
 	db, err := initDb(connString, "ca-certificate.crt")
@@ -932,7 +932,7 @@ func updateCatTags(c net.Conn) {
 	}
 
 	fmt.Println("Connected!")
-	result, err := db.Exec("DELETE * FROM categories WHERE id=?", msg.Id)
+	result, err := db.Exec("DELETE FROM categories WHERE MenuID=?", msg.Id)
 	if err != nil {
 		fmt.Printf("UpdateCatTags %v, %v\n", err, result)
 	}

@@ -522,6 +522,9 @@ Future<String> getData(Socket sock) async {
   await for (var data in sock) {
     //print(utf8.decode(data));
     output = utf8.decode(data);
+    if (output == "finish") {
+      return "finish";
+    }
   }
   return output;
 }
@@ -533,10 +536,6 @@ updateCatTags(MenuItem m) async {
   sock.close();
 }
 
-// TODO test update cattags
 // TODO make it so that if a menuitem with id 0 is sent, make it a new menuitem
 // TODO make it so server and database account for OrderTaker in menuitem
-main() async {
-  var item = MenuItem("pasta", id: 2, price: 2.59);
-  updateCatTags(item);
-}
+main() async {}
