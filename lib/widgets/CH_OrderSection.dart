@@ -83,7 +83,7 @@ class _OrderSectionState extends State<OrderSection> {
 
           // Command buttons (pay, receipt, etc).
           SizedBox(
-            height: 105,
+            height: 50,
             child: GridView(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 100,
@@ -111,21 +111,10 @@ class _OrderSectionState extends State<OrderSection> {
                 ),
                 TextButton(
                   style: CustomTextStyle.commandHubCommands,
-                  child: const Text("Receipt"),
-                  onPressed: () {
-                  },
-                ),
-                TextButton(
-                  style: CustomTextStyle.commandHubCommands,
-                  child: const Text("Get Card"),
+                  child: const Text("Pay"),
                   onPressed: () {
                     widget.payButtonClick(widget.currentOrder);
                   },
-                ),
-                TextButton(
-                  style: CustomTextStyle.commandHubCommands,
-                  child: const Text("Pay"),
-                  onPressed: () {},
                 )
               ],
             ),
