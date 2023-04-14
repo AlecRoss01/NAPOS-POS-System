@@ -19,21 +19,52 @@ class EditItemSidebar extends StatefulWidget {
 class _EditItemSidebarState extends State<EditItemSidebar> {
     var additionType = AdditionType.none;
     final listOfAdditions = <ItemAddition>[];
+    final ScrollController _scrollController = ScrollController();
+    bool _needsScroll = false;
+
+    _scrollToEnd() async {
+      _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 200),
+          curve: Curves.easeInOut
+      );
+    }
+
     @override
     Widget build(BuildContext context) {
+        if (_needsScroll){
+          WidgetsBinding.instance.addPostFrameCallback(
+                  (_) => _scrollToEnd());
+          _needsScroll = false;
+        }
         return Drawer(
             child: SingleChildScrollView(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget> [
+                      SizedBox(height: 30),
                         Text(
                             widget.editItem.toString(),
                             style: TextStyle(fontSize: 24)
                         ),
                         SizedBox(
-                            height: 200,
-                            /*child: have list view of all current available additions that you can remove when clicked on*/
+                            height: 100,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              controller: _scrollController,
+                              itemCount: listOfAdditions.length,
+                              padding: const EdgeInsets.only(top: 0, bottom: 0, left: 50.0, right: 50.0),
+                              itemBuilder: (context, index) =>
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: Colors.black12,),
+                                      child: Text(listOfAdditions[index].typeAndNameString()),
+                                      onPressed: () => setState(() {
+                                          listOfAdditions.remove(listOfAdditions[index]);
+                                        })
+                                    ),
+                                  )
                         ),
                         TextButton(
                             style: CustomTextStyle.commandHubCommands,
@@ -107,8 +138,11 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                                                                         )
                                                                     ),
                                                                     onTap: () {
-                                                                        snapshot.data![index].setAdditionType(additionType);
-                                                                        listOfAdditions.add(snapshot.data![index]);
+                                                                        setState(() {
+                                                                          snapshot.data![index].setAdditionType(additionType);
+                                                                          listOfAdditions.add(snapshot.data![index]);
+                                                                          _needsScroll = true;
+                                                                        });
                                                                     },
                                                                 );
                                                             

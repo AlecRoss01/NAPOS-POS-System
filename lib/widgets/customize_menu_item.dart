@@ -120,14 +120,6 @@ class _CustomizeMenuItem extends State<CustomizeMenuItem> {
                         menuItem : widget.menuItem
                     ),
 
-                    /*
-                    Container(
-                      height: 100,
-                      alignment: Alignment.center,
-                      child: ,
-                    ),
-                     */
-
                     SizedBox(height: 10),
 
                     Row(

@@ -29,6 +29,10 @@ class ItemAddition {
     return _name;
   }
 
+  String typeAndNameString() {
+    return "${getTypeAsString(_type)} $_name";
+  }
+
   String strPrice() {
     return "\$${_price.toStringAsFixed(2)}";
   }
