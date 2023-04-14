@@ -33,8 +33,6 @@ class _CommandHub extends State<CommandHub> {
   final double orderSectionWidth = 200;
   final double categoriesSectionWidth = 150;
 
-
-
   Future<void> _initSquarePayment() async {
     await InAppPayments.setSquareApplicationId("sandbox-sq0idb-5l8c2u8OdZQNh_t3Tk43QQ");
   }
@@ -72,15 +70,11 @@ class _CommandHub extends State<CommandHub> {
     // Update UI to notify user that the payment flow is finished successfully
   }
 
-
-
   void payButtonClick(Order order) {
     setState(() {
       _onStartCardEntryFlow();
     });
   }
-
-
   
   void addToOrder(menu_item.MenuItem item) {
     setState(() {
@@ -108,7 +102,8 @@ class _CommandHub extends State<CommandHub> {
 
   void addAdditionsToItem(menu_item.MenuItem item, List<ItemAddition> addition){
     setState(() {
-      // Add addition to list of additions on menu item
+      item.additions.addAll(addition);
+      item.additions = item.additions.toSet().toList();
       return;
     });
   }
