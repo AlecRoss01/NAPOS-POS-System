@@ -491,8 +491,9 @@ Future<void> chargeCard(CardDetails result, double chargeAmount) async {
 }
 
 Order parseOrder(Map m) {
+  //TODO fix this shit
   DateTime date = DateTime.fromMillisecondsSinceEpoch(m['DateTime']);
-  var order = Order(m['OrderTaker'], dateTime: date);
+  var order = Order(NAPOS_Employee.fromJson(m['OrderTaker']), dateTime: date);
   order.id = m['OrderID'];
   order.orderIDNullChar = m['OrderIDNullChar'];
   order.idLength = m['OrderIDLength'];
@@ -505,7 +506,6 @@ Order parseOrder(Map m) {
 }
 
 MenuItem parseItem(Map m) {
-  print(m);
   var item = MenuItem(m['Name'], id: m['Id'], price: m['Price'].toDouble());
   //item.setPrice();
   // got line below from https://stackoverflow.com/questions/60105956/how-to-cast-dynamic-to-liststring
@@ -551,6 +551,6 @@ main() async {
   //item.addCatTag("Food");
   //order.addItemToOrder(item);
   //sendOrder(order);
-  var menu = recvMenu();
+  var order = recvOrders();
   //addItemToMenu(item);
 }

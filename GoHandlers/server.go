@@ -426,7 +426,6 @@ func queryMenu(name string) ([]MenuItem, error) {
 func sendMenu(c net.Conn) {
 	msg := dbHandlerMenu()
 	menu := Menu{msg}
-	fmt.Println(menu)
 	//part above is where I would get the menu from the database
 	e := json.NewEncoder(c)
 	err := e.Encode(menu)
