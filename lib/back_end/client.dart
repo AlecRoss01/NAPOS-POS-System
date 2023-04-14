@@ -491,7 +491,8 @@ Future<void> chargeCard(CardDetails result, double chargeAmount) async {
 }
 
 Order parseOrder(Map m) {
-  var order = Order(m['OrderTaker']);
+  DateTime date = DateTime.fromMillisecondsSinceEpoch(m['DateTime']);
+  var order = Order(m['OrderTaker'], dateTime: date);
   order.id = m['OrderID'];
   order.orderIDNullChar = m['OrderIDNullChar'];
   order.idLength = m['OrderIDLength'];
@@ -504,11 +505,14 @@ Order parseOrder(Map m) {
 }
 
 MenuItem parseItem(Map m) {
+  print(m);
   var item = MenuItem(m['Name'], id: m['Id'], price: m['Price'].toDouble());
   //item.setPrice();
   // got line below from https://stackoverflow.com/questions/60105956/how-to-cast-dynamic-to-liststring
-  List<String> catTags = List<String>.from(m['CatTags'] as List);
-  item.addCatTags(catTags);
+  if (m['CatTags'] != null) {
+    List<String> catTags = List<String>.from(m['CatTags'] as List);
+    item.addCatTags(catTags);
+  }
   return item;
 }
 
@@ -540,14 +544,13 @@ updateCatTags(MenuItem m) async {
   sock.close();
 }
 
-// TODO make it so that client side handles DateTime conversion from string cuz fuck me
-// for datetime above https://api.dart.dev/stable/2.19.6/dart-core/DateTime-class.html
 main() async {
-  var employee = NAPOS_Employee("Alec", 1, 1234, 4);
-  var order = Order(employee, id: 3);
-  var item = MenuItem("Fish Sticks", id: 0, price: 14.95);
-  item.addCatTag("Food");
-  order.addItemToOrder(item);
+  //var employee = NAPOS_Employee("Alec", 1, 1234, 4);
+  //var order = Order(employee, id: 5);
+  //var item = MenuItem("Fish Sticks", id: 3, price: 14.95);
+  //item.addCatTag("Food");
+  //order.addItemToOrder(item);
   //sendOrder(order);
-  addItemToMenu(item);
+  var menu = recvMenu();
+  //addItemToMenu(item);
 }
