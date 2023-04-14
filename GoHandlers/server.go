@@ -27,7 +27,7 @@ type Order struct {
 	OrderID         int
 	OrderItems      []MenuItem
 	OrderTaker      Employee
-	DateTime        string
+	DateTime        int
 }
 
 type HistOrder struct {
@@ -44,7 +44,7 @@ type RecvOrder struct {
 	OrderID         int
 	OrderItems      string
 	OrderTaker      string
-	DateTime        string
+	DateTime        int
 }
 
 type OrderItem struct {
@@ -430,7 +430,7 @@ func sendMenu(c net.Conn) {
 	e := json.NewEncoder(c)
 	err := e.Encode(menu)
 	if err != nil {
-		fmt.Println("Error Occuered in sendMenu2")
+		fmt.Println("Error Occuered in sendMenu")
 	}
 	c.Close()
 }
@@ -584,6 +584,28 @@ func convertStringtoList(s string) []MenuItem {
 	return total
 }
 
+func getNewOrderId() int {
+	db, err := initDb(connString, "ca-certificate.crt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	orders, _ := getOrders()
+	fmt.Println("Connected!")
+	var highest = 0
+	for _, item := range orders {
+		if item.OrderID > highest {
+			highest = item.OrderID
+		}
+	}
+	return highest + 1
+
+}
+
 func recvOrder(c net.Conn) {
 	d := json.NewDecoder(c)
 
@@ -597,6 +619,7 @@ func recvOrder(c net.Conn) {
 	if err != nil {
 		fmt.Printf("%x", err)
 	}
+	fmt.Println(msg)
 	//currently does not like orders without menuitems in it, need to fix that at some point
 	conv := Order{msg.OrderIDNullChar, msg.OrderIDLength, msg.OrderID, convertStringtoList(msg.OrderItems), emp, msg.DateTime}
 	fmt.Println("printing converge")

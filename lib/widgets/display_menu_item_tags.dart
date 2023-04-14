@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:napos/back_end/client.dart';
 import 'package:napos/classes/menu_item.dart';
 import 'package:napos/styles/styles.dart';
+import 'add_tag_popup.dart';
 import 'customize_purchasable_entry.dart';
 
-// This widget is the home page of the POS application.
 class DisplayItemTags extends StatefulWidget {
 
   final MenuItem menuItem;
@@ -20,6 +20,12 @@ class DisplayItemTags extends StatefulWidget {
 
 // Implementation of home page
 class _DisplayItemTags extends State<DisplayItemTags> {
+
+  void addTagToMyItem(String tag) {
+    widget.menuItem.addCatTag(tag);
+    updateCatTags(widget.menuItem);
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -66,6 +72,8 @@ class _DisplayItemTags extends State<DisplayItemTags> {
                                 ),
                                 onTap: () {
                                   // TODO remove tag from menu item.
+                                  widget.menuItem.removeCatTag(widget.menuItem.categories.elementAt(index));
+                                  updateCatTags(widget.menuItem);
                                 },
                               ),
                             ],
@@ -99,6 +107,23 @@ class _DisplayItemTags extends State<DisplayItemTags> {
                         ),
                         onTap: () {
                           // TODO add new tag.
+                          //updateCatTags(widget.menuItem);
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("Create new menu item:"),
+                                  content: Container(
+                                    width: 500,
+                                    height: 200,
+                                    child: AddTagPopup(
+                                      menuItem: widget.menuItem,
+                                      addTagToMyItem: addTagToMyItem,
+                                    ),
+                                  ),
+                                );
+                              }
+                          );
                         },
                       ),
                     ],
