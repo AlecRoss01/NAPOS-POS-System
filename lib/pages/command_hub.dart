@@ -100,13 +100,6 @@ class _CommandHub extends State<CommandHub> {
     });
   }
 
-  void addAdditionsToItem(menu_item.MenuItem item, List<ItemAddition> addition){
-    setState(() {
-      item.additions.addAll(addition);
-      item.additions = item.additions.toSet().toList();
-      return;
-    });
-  }
 
   @override
   void initState() {
@@ -121,7 +114,7 @@ class _CommandHub extends State<CommandHub> {
     double contextHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder, addAdditionsToItem: addAdditionsToItem),
+      endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder),
       appBar: AppBar(
         title: const Text('Command Hub'),
         actions: <Widget>[

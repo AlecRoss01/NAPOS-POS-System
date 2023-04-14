@@ -11,8 +11,7 @@ import '../widgets/CH_AdditionType_Buttons.dart';
 class EditItemSidebar extends StatefulWidget {
     final menu_item.MenuItem editItem;
     final Function(menu_item.MenuItem) removeItemFromOrder;
-    final Function(menu_item.MenuItem, List<ItemAddition>) addAdditionsToItem;
-    const EditItemSidebar({super.key, required this.editItem, required this.removeItemFromOrder, required this.addAdditionsToItem});
+    const EditItemSidebar({super.key, required this.editItem, required this.removeItemFromOrder});
 
     @override
     State<EditItemSidebar> createState() => _EditItemSidebarState();
