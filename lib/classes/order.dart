@@ -39,9 +39,8 @@ class Order {
         'OrderID': id,
         'OrderItems': jsonEncode(orderItems),
         'OrderTaker': jsonEncode(orderTaker),
-        'DateTime': dateTimeStr,
+        'DateTime': dateTimeMilli,
       };
-
   List<MenuItem> getOrderItems() {
     return orderItems;
   }
