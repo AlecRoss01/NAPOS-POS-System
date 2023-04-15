@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:napos/classes/employee.dart';
+import 'package:napos/widgets/item_in_current_order_display.dart';
 import '../styles/styles.dart';
 import '../back_end/client.dart';
 import '../classes/menu_item.dart' as menu_item;
@@ -50,29 +51,16 @@ class _OrderSectionState extends State<OrderSection> {
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                constraints: BoxConstraints(
-                                    maxWidth: widget.width * 6/10,
-                                ),
-                                child: Text(widget.currentOrder.getItemAtIndex(index).toString()),
-                              ),
-                              Spacer(),
-                              Text(widget.currentOrder.getItemAtIndex(index).strPrice()),
-                            ],
-                          ),
-                        ],
+                      child: ItemInCurrentOrderDisplay(
+                        menuItem: widget.currentOrder.getItemAtIndex(index), 
+                        width: widget.width,
+                        
                       )
                     ),
                   ),
                   onTap: () {
                     widget.setEditItem(widget.currentOrder.getItemAtIndex(index));
                     Scaffold.of(context).openEndDrawer();
-
                   },
                 );
               })

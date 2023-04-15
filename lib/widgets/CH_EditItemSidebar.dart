@@ -11,7 +11,14 @@ import '../widgets/CH_AdditionType_Buttons.dart';
 class EditItemSidebar extends StatefulWidget {
     final menu_item.MenuItem editItem;
     final Function(menu_item.MenuItem) removeItemFromOrder;
-    const EditItemSidebar({super.key, required this.editItem, required this.removeItemFromOrder});
+    final Function() updateAdditions;
+
+    const EditItemSidebar({
+      super.key,
+      required this.editItem,
+      required this.removeItemFromOrder,
+      required this.updateAdditions
+    });
 
     @override
     State<EditItemSidebar> createState() => _EditItemSidebarState();
@@ -150,11 +157,10 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                                     style: CustomTextStyle.saveButton,
                                     child: const Text("Save"),
                                     onPressed: () {
-                                        // call add item additions to item and send list of additions
-                                        setState(() {
-                                          widget.editItem.additions = listOfAdditions;
-                                        });
-                                        Navigator.of(context).pop();
+                                      // call add item additions to item and send list of additions
+                                      widget.editItem.additions = listOfAdditions;
+                                      widget.updateAdditions();
+                                      Navigator.of(context).pop();
                                     },
                                 ),
                                 SizedBox(width: 10),

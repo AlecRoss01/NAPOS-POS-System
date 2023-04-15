@@ -100,6 +100,11 @@ class _CommandHub extends State<CommandHub> {
     });
   }
 
+  // Is called when additions are changed in the sidebar.
+  void updateAdditions() {
+    setState(() {});
+  }
+
 
   @override
   void initState() {
@@ -114,7 +119,11 @@ class _CommandHub extends State<CommandHub> {
     double contextHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder),
+      endDrawer: EditItemSidebar(
+          editItem: itemToEdit,
+          removeItemFromOrder: removeItemFromOrder,
+          updateAdditions: updateAdditions,
+      ),
       appBar: AppBar(
         title: const Text('Command Hub'),
         actions: <Widget>[
