@@ -713,8 +713,11 @@ func markComplete(c net.Conn) {
 	fmt.Println(result)
 }
 
-func getNextIdMenu() int {
-	menu := dbHandlerMenu()
+func getNextIdMenu(db *sql.DB) int {
+	menu, err := getTotalMenu(db)
+	if err != nil {
+		fmt.Println("error in getNextIdmNeu")
+	}
 	var highest = 0
 	for _, item := range menu {
 		if item.Id > highest {
@@ -722,6 +725,39 @@ func getNextIdMenu() int {
 		}
 	}
 	return highest + 1
+}
+
+func getTotalMenu(db *sql.DB) ([]MenuItem, error) {
+	//returns a list containing all of the menu items
+	var menuitems []MenuItem
+	rows, err := db.Query("SELECT * FROM menu")
+	if err != nil {
+		return nil, fmt.Errorf("getMenu %v", err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var menu MenuItem
+		var add int
+		if err := rows.Scan(&menu.Id, &menu.Name, &menu.Price, &add); err != nil {
+			return nil, fmt.Errorf("getMenu %v", err)
+		}
+		menuitems = append(menuitems, menu)
+
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("getMenu %v", err)
+	}
+	cats, err := getCategories()
+	for i := 0; i < len(menuitems); i++ {
+		for y := 0; y < len(cats); y++ {
+			if menuitems[i].Id == cats[y].MenuID {
+				menuitems[i].CatTags = append(menuitems[i].CatTags, cats[y].CatTag)
+			}
+		}
+	}
+	return menuitems, nil
 }
 
 // current, need to deprecate recvMenu at some point
@@ -733,9 +769,7 @@ func addItemToMenu(c net.Conn) {
 	fmt.Println(msg, err)
 	c.Write([]byte("finish"))
 	fmt.Println(msg)
-	if msg.Id == 0 {
-		msg.Id = getNextIdMenu()
-	}
+
 	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
 		log.Fatal(err)
@@ -747,6 +781,7 @@ func addItemToMenu(c net.Conn) {
 	}
 
 	fmt.Println("Connected!")
+	msg.Id = getNextIdMenu(db)
 	result, err := db.Exec("INSERT INTO menu (id, name, Price) VALUES (?, ?, ?)", msg.Id, msg.Name, msg.Price)
 	addCatTagsToMenu(msg, db)
 	//INSERT INTO orders (orderID, orderIDNullChar, orderIDLength) VALUES (?, ?, ?)"
