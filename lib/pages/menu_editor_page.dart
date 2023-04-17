@@ -19,6 +19,12 @@ class MenuEditor extends StatefulWidget {
 // Implementation of home page
 class _MenuEditor extends State<MenuEditor> {
 
+  // Scuffed as shit.
+  void refresh() async {
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +64,7 @@ class _MenuEditor extends State<MenuEditor> {
                                     height: 500,
                                     child: CustomizeMenuItem(
                                       menuItem: MenuItem("New Menu Item"),
+                                      refresh: refresh,
                                       isPopup: true,
                                     ),
                                   ),
@@ -99,6 +106,7 @@ class _MenuEditor extends State<MenuEditor> {
                                       height: 500,
                                       child: CustomizeAddition(
                                         addition: ItemAddition("New Addition", 0, 0),
+                                        refresh: refresh,
                                         isPopup: true,
                                       ),
                                     ),
@@ -131,7 +139,8 @@ class _MenuEditor extends State<MenuEditor> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return CustomizeMenuItem(
-                                menuItem: snapshot.data![index]
+                              menuItem: snapshot.data![index],
+                              refresh: refresh,
                             );
                           },
                           separatorBuilder: (context, index) {
@@ -159,7 +168,8 @@ class _MenuEditor extends State<MenuEditor> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return CustomizeAddition(
-                                addition: snapshot.data![index]
+                              addition: snapshot.data![index],
+                              refresh: refresh,
                             );
                           },
                           separatorBuilder: (context, index) {
