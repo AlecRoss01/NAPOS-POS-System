@@ -31,8 +31,9 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
     const Duration twoSeconds = Duration(seconds: 2);
     const Duration fiveSeconds = Duration(seconds: 5);
     const Duration oneMinute = Duration(minutes: 1);
+
     myUpdater = Timer.periodic(
-        fiveSeconds,
+        oneMinute,
         (Timer t) => setState(() {
           updateOrders();
         }));
@@ -50,12 +51,13 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
     });
   }
 
-  void updateOrders() async {
+  Future<int> updateOrders() async {
     completeOrders = await recvCompleteOrders();
     inCompleteOrders = await recvIncompleteOrders();
+    return 0;
     // Call to rebuild.
     // Todo I think we can keep this in, but if there is an issue, this is probably the source.
-    setState(() {});
+    //setState(() {});
 
     //orders = newOrders;
     // Remove all
@@ -68,6 +70,7 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
 
   Future<List<Order>> getOrders() async {
     //print(orders);
+    await updateOrders();
     if (widget.todo) {
       return completeOrders;
     } else {
@@ -77,7 +80,7 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
 
   @override
   Widget build(BuildContext context) {
-    updateOrders();
+    //updateOrders();
 
     return Scaffold(
         appBar: AppBar(
