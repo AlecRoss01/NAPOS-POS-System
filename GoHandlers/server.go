@@ -625,7 +625,7 @@ func recvOrder(c net.Conn) {
 	}
 	fmt.Println(msg)
 	//currently does not like orders without menuitems in it, need to fix that at some point
-	conv := Order{msg.OrderIDNullChar, msg.OrderIDLength, msg.OrderID, convertStringtoList(msg.OrderItems), emp, msg.DateTime}
+	conv := Order{msg.OrderIDNullChar, msg.OrderIDLength, getNewOrderId(), convertStringtoList(msg.OrderItems), emp, msg.DateTime}
 	fmt.Println("printing converge")
 	fmt.Println(conv)
 	dbHandlerEntries(conv)
