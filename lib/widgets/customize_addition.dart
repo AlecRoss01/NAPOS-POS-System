@@ -10,10 +10,12 @@ class CustomizeAddition extends StatefulWidget {
   bool isBeingEdited;
   bool isPopup;
   final ItemAddition addition;
+  final Function refresh;
 
   CustomizeAddition({
     super.key,
     required this.addition,
+    required this.refresh,
     isBeingEdited,
     isPopup,
   })
@@ -120,6 +122,7 @@ class _CustomizeAddition extends State<CustomizeAddition> {
                                   }
                                   ItemAddition newAddition = ItemAddition(controllerItemName.text, 0, double.parse(controllerPrice.text));
                                   replaceAdditionInMenu(widget.addition, newAddition);
+                                  widget.refresh();
                                 } catch (e) {
                                   // Does nothing on a failed parse.
                                 }

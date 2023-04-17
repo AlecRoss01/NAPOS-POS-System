@@ -10,10 +10,12 @@ class CustomizeMenuItem extends StatefulWidget {
   bool isBeingEdited;
   bool isPopup;
   final MenuItem menuItem;
+  final Function refresh;
 
   CustomizeMenuItem({
     super.key,
     required this.menuItem,
+    required this.refresh,
     isBeingEdited,
     isPopup
   })
@@ -139,6 +141,7 @@ class _CustomizeMenuItem extends State<CustomizeMenuItem> {
                                   description: controllerDescription.text,
                                 );
                                 replaceItemInMenu(widget.menuItem, newItem);
+                                widget.refresh();
                               } catch (e) {
                                 // Does nothing.
                               }
