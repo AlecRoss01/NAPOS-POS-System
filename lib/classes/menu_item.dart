@@ -1,5 +1,4 @@
 import 'dart:convert';
-//import 'dart:js_util';
 import 'item_addition.dart';
 
 class MenuItem {
@@ -58,6 +57,11 @@ class MenuItem {
   // String of price with USD sign and to two decimals.
   String strPrice() {
     return "\$${defaultPrice.toStringAsFixed(2)}";
+  }
+
+  // String of price + additions price with USD sign and to two decimals.
+  String strPriceWithAdditions() {
+    return "\$${price.toStringAsFixed(2)}";
   }
 
   // Clears all category tags.

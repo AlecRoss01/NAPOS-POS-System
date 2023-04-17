@@ -101,12 +101,9 @@ class _CommandHub extends State<CommandHub> {
     });
   }
 
-  void addAdditionsToItem(
-      menu_item.MenuItem item, List<ItemAddition> addition) {
-    setState(() {
-      // Add addition to list of additions on menu item
-      return;
-    });
+  // Is called when additions are changed in the sidebar.
+  void updateAdditions() {
+    setState(() {});
   }
 
   @override
@@ -123,9 +120,10 @@ class _CommandHub extends State<CommandHub> {
 
     return Scaffold(
         endDrawer: EditItemSidebar(
-            editItem: itemToEdit,
-            removeItemFromOrder: removeItemFromOrder,
-            addAdditionsToItem: addAdditionsToItem),
+          editItem: itemToEdit,
+          removeItemFromOrder: removeItemFromOrder,
+          updateAdditions: updateAdditions,
+        ),
         appBar: AppBar(
           title: const Text('Command Hub'),
           actions: <Widget>[

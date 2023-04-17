@@ -3,6 +3,7 @@ import 'package:napos/classes/order.dart';
 import 'package:napos/back_end/client.dart';
 
 import '../styles/styles.dart';
+import 'kitchen_order_display_item.dart';
 
 class OrderDisplayWidget extends StatefulWidget {
   Order order;
@@ -70,9 +71,8 @@ class _OrderDisplayWidget extends State<OrderDisplayWidget> {
                     scrollDirection: Axis.vertical,
                     itemCount: widget.order.orderItems.length,
                     itemBuilder: (context, index) {
-                      return Text(
-                        widget.order.orderItems[index].toString(),
-                        style: CustomTextStyle.kitchenEndpointText,
+                      return OrderDisplayItem(
+                        menuItem: widget.order.orderItems[index]
                       );
                     },
                     separatorBuilder: (context, index) {

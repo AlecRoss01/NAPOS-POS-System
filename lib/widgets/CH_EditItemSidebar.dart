@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:napos/widgets/CH_AdditionType_Buttons.dart';
 import '../styles/styles.dart';
 import '../back_end/client.dart';
 import '../classes/menu_item.dart' as menu_item;
 import '../classes/order.dart';
 import '../classes/category.dart';
-import '../classes/item_addition.dart'; 
+import '../classes/item_addition.dart';
+import '../widgets/CH_AdditionType_Buttons.dart';
 
 class EditItemSidebar extends StatefulWidget {
     final menu_item.MenuItem editItem;
     final Function(menu_item.MenuItem) removeItemFromOrder;
-    final Function(menu_item.MenuItem, List<ItemAddition>) addAdditionsToItem;
-    const EditItemSidebar({super.key, required this.editItem, required this.removeItemFromOrder, required this.addAdditionsToItem});
+    final Function() updateAdditions;
+
+    const EditItemSidebar({
+      super.key,
+      required this.editItem,
+      required this.removeItemFromOrder,
+      required this.updateAdditions
+    });
 
     @override
     State<EditItemSidebar> createState() => _EditItemSidebarState();
@@ -18,7 +26,7 @@ class EditItemSidebar extends StatefulWidget {
 
 class _EditItemSidebarState extends State<EditItemSidebar> {
     var additionType = AdditionType.none;
-    final listOfAdditions = <ItemAddition>[];
+    List<ItemAddition> listOfAdditions = [];
     final ScrollController _scrollController = ScrollController();
     bool _needsScroll = false;
 
@@ -30,6 +38,12 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
       );
     }
 
+    void setAdditionType(AdditionType type){
+      setState(() {
+        additionType = type;
+      });
+    }
+
     @override
     Widget build(BuildContext context) {
         if (_needsScroll){
@@ -37,6 +51,7 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                   (_) => _scrollToEnd());
           _needsScroll = false;
         }
+        listOfAdditions = widget.editItem.additions;
         return Drawer(
             child: SingleChildScrollView(
                 child: Column(
@@ -61,7 +76,7 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                                         backgroundColor: Colors.black12,),
                                       child: Text(listOfAdditions[index].typeAndNameString()),
                                       onPressed: () => setState(() {
-                                          listOfAdditions.remove(listOfAdditions[index]);
+                                        listOfAdditions.remove(listOfAdditions[index]);
                                         })
                                     ),
                                   )
@@ -79,34 +94,7 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget> [
                                 /*add way to highlight addition type button when clicked so user know what type they are adding*/
-                                OutlinedButton(
-                                    style: CustomTextStyle.editItemButton,
-                                    child: const Text("Remove"),
-                                    onPressed: () {
-                                        additionType = AdditionType.remove;
-                                    },
-                                ),
-                                OutlinedButton(
-                                    style: CustomTextStyle.editItemButton,
-                                    child: const Text("Add"),
-                                    onPressed: () {
-                                        additionType = AdditionType.add;
-                                    },
-                                ),
-                                OutlinedButton(
-                                    style: CustomTextStyle.editItemButton,
-                                    child: const Text("Light"),
-                                    onPressed: () {
-                                        additionType = AdditionType.light;
-                                    },
-                                ),
-                                OutlinedButton(
-                                    style: CustomTextStyle.editItemButton,
-                                    child: const Text("Extra"),
-                                    onPressed: () {
-                                        additionType = AdditionType.extra;
-                                    },
-                                )
+                              AdditionTypeToggleButtons(setAdditionType: setAdditionType)
                             ]
                         ),
                         Flexible(
@@ -139,6 +127,9 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                                                                     ),
                                                                     onTap: () {
                                                                         setState(() {
+                                                                          if (additionType == AdditionType.none){
+                                                                            additionType = AdditionType.add;
+                                                                          }
                                                                           snapshot.data![index].setAdditionType(additionType);
                                                                           listOfAdditions.add(snapshot.data![index]);
                                                                           _needsScroll = true;
@@ -166,7 +157,10 @@ class _EditItemSidebarState extends State<EditItemSidebar> {
                                     style: CustomTextStyle.saveButton,
                                     child: const Text("Save"),
                                     onPressed: () {
-                                        // call add item additions to item and send list of additions
+                                      // call add item additions to item and send list of additions
+                                      widget.editItem.additions = listOfAdditions;
+                                      widget.updateAdditions();
+                                      Navigator.of(context).pop();
                                     },
                                 ),
                                 SizedBox(width: 10),
