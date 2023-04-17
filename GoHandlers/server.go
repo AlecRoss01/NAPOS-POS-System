@@ -864,6 +864,20 @@ func removeAddition(c net.Conn) {
 	fmt.Println(result)
 }
 
+func getNextIdAddition() int {
+	menu, err := getAdditions()
+	if err != nil {
+		fmt.Println("error in getNextIdmNeu")
+	}
+	var highest = 0
+	for _, item := range menu {
+		if item.Id > highest {
+			highest = item.Id
+		}
+	}
+	return highest + 1
+}
+
 func addAddition(c net.Conn) {
 	d := json.NewDecoder(c)
 
@@ -872,6 +886,7 @@ func addAddition(c net.Conn) {
 	fmt.Println(msg, err)
 	c.Write([]byte("finish"))
 	fmt.Println(msg)
+	msg.Id = getNextIdAddition()
 	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
 		log.Fatal(err)
