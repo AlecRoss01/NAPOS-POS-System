@@ -27,16 +27,15 @@ class CommandHub extends StatefulWidget {
 }
 
 class _CommandHub extends State<CommandHub> {
-  late var currentOrder = new Order(widget.employee, id : 1);
+  late var currentOrder = new Order(widget.employee, id: 1);
   POS_Category currentCategory = new POS_Category("All");
   menu_item.MenuItem itemToEdit = new menu_item.MenuItem("default");
   final double orderSectionWidth = 200;
   final double categoriesSectionWidth = 150;
 
-
-
   Future<void> _initSquarePayment() async {
-    await InAppPayments.setSquareApplicationId("sandbox-sq0idb-5l8c2u8OdZQNh_t3Tk43QQ");
+    await InAppPayments.setSquareApplicationId(
+        "sandbox-sq0idb-VW7u7iB55ZYYzrKURZTGAg");
   }
 
   Future<void> _onStartCardEntryFlow() async {
@@ -72,16 +71,12 @@ class _CommandHub extends State<CommandHub> {
     // Update UI to notify user that the payment flow is finished successfully
   }
 
-
-
   void payButtonClick(Order order) {
     setState(() {
       _onStartCardEntryFlow();
     });
   }
 
-
-  
   void addToOrder(menu_item.MenuItem item) {
     setState(() {
       currentOrder.addItemToOrder(item);
@@ -89,7 +84,7 @@ class _CommandHub extends State<CommandHub> {
   }
 
   void changeCurrentCategory(POS_Category newCat) {
-    setState(() { 
+    setState(() {
       currentCategory = newCat;
     });
   }
@@ -106,7 +101,8 @@ class _CommandHub extends State<CommandHub> {
     });
   }
 
-  void addAdditionsToItem(menu_item.MenuItem item, List<ItemAddition> addition){
+  void addAdditionsToItem(
+      menu_item.MenuItem item, List<ItemAddition> addition) {
     setState(() {
       // Add addition to list of additions on menu item
       return;
@@ -126,17 +122,19 @@ class _CommandHub extends State<CommandHub> {
     double contextHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      endDrawer: EditItemSidebar(editItem: itemToEdit, removeItemFromOrder: removeItemFromOrder, addAdditionsToItem: addAdditionsToItem),
-      appBar: AppBar(
-        title: const Text('Command Hub'),
-        actions: <Widget>[
-          new Container(),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: <Widget>[
+        endDrawer: EditItemSidebar(
+            editItem: itemToEdit,
+            removeItemFromOrder: removeItemFromOrder,
+            addAdditionsToItem: addAdditionsToItem),
+        appBar: AppBar(
+          title: const Text('Command Hub'),
+          actions: <Widget>[
+            new Container(),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(children: <Widget>[
             // 1st section, section that holds buttons for each of the categories on the menu.
             // Uses categories list.
             CategorySection(
@@ -147,7 +145,9 @@ class _CommandHub extends State<CommandHub> {
             // 2nd section, section that holds item buttons according to whichever button was pressed in 1st section.
             // Uses menu list.
             //width: contextWidth * 0.6, // <-- Old
-            MenuItemSection(addItemToOrder: addToOrder, categoryToBeDisplayed: currentCategory),
+            MenuItemSection(
+                addItemToOrder: addToOrder,
+                categoryToBeDisplayed: currentCategory),
 
             // 3rd section, section that contains order information and buttons that apply to order.
             OrderSection(
@@ -157,9 +157,7 @@ class _CommandHub extends State<CommandHub> {
               width: orderSectionWidth,
               employee: widget.employee,
             )
-          ]
-        ),
-      )
-    );
+          ]),
+        ));
   }
 }

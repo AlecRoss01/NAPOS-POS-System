@@ -9,6 +9,7 @@ import '../classes/order.dart';
 import '../classes/employee.dart';
 import '../classes/item_addition.dart';
 import 'hardcoded_pos_data.dart';
+import 'package:http/http.dart' as http;
 //import 'package:http/http.dart'
 
 // https://stackoverflow.com/questions/54481818/how-to-connect-flutter-app-to-tcp-socket-server
@@ -72,6 +73,14 @@ Future<int> addItemToMenu(MenuItem item) async {
 
 //https://curlconverter.com/dart/
 // below code is based on above link, must edit it to conform to necesarry specifications
+String buildSquareCurl() {
+  var headers = {
+    'Square-Version': '2023-03-15',
+    'Authorization': 'Bearer ACCESS_TOKEN',
+    'Content-Type': 'application/json',
+  };
+  return "";
+}
 /*void buildSquareCurl() {
   var headers = {
     'Square-Version': '2023-03-15',
@@ -89,7 +98,6 @@ Future<int> addItemToMenu(MenuItem item) async {
 }*/
 
 Future<int> removeItemInMenu(MenuItem item) async {
-  // TODO remove menu item from database.
   // Note: Passed item may or may not exist in the database.
 
   if (TESTING) {
@@ -117,9 +125,6 @@ void replaceItemInMenu(MenuItem oldItem, MenuItem newItem) {
 }
 
 Future<int> addAdditionToMenu(ItemAddition addition) async {
-  // TODO add addition to database.
-  // TODO add json encoding to addition class
-
   if (TESTING) {
     return 0;
   }
@@ -140,8 +145,6 @@ Future<int> addAdditionToMenu(ItemAddition addition) async {
 }
 
 Future<int> removeAdditionInMenu(ItemAddition addition) async {
-  // TODO remove addition from database.
-
   if (TESTING) {
     return 0;
   }
@@ -179,7 +182,7 @@ Future<List<MenuItem>> recvMenu() async {
   Socket socket = await Socket.connect(connString, 30000);
   print('connected');
   var output = "";
-  socket.add(utf8.encode(jsonEncode(new JsonRequest("MENU"))));
+  socket.add(utf8.encode(jsonEncode(JsonRequest("MENU"))));
   await for (var data in socket) {
     //print(utf8.decode(data));
     output = utf8.decode(data);
@@ -299,9 +302,7 @@ Future<List<Order>> recvCompleteOrders() async {
 }
 
 Future<List<Order>> recvIncompleteOrders() async {
-  // TODO receive all incomplete orders from the db.
   // TODO possibly restrict timeframe of orders in future (like past 24 hours).
-  //return await recvOrders();
 
   if (TESTING) {
     return await recvOrders();
@@ -327,9 +328,6 @@ Future<List<Order>> recvIncompleteOrders() async {
 }
 
 Future<int> markOrderAsComplete(Order order, bool complete) async {
-  // TODO update an order as completed or uncompleted.
-  // TODO bool complete is true if order should be marked as complete. False if it should be marked as incomplete.
-
   if (TESTING) {
     return 0;
   }
@@ -407,7 +405,6 @@ Future<List<NAPOS_Employee>> recvEmployees() async {
     return buildEmployees();
   }
 
-  //TODO: get employees from server
   var employees = <NAPOS_Employee>[];
   Socket socket = await Socket.connect(connString, 30000);
   print('connected');
@@ -485,13 +482,41 @@ Future<List<ItemAddition>> recvItemAdditions() async {
   socket.close();
 }*/
 
+const String squareApplicationId = "sandbox-sq0idb-VW7u7iB55ZYYzrKURZTGAg";
+const String squareLocationId = "LKHJBQ2DPCJA7";
+String chargeServerHost = "http://184.171.150.182:8000/chargeForNapos";
+String accessToken =
+    "EAAAEAcydw0WAP9TtI7Cv_MXItCe2EPzXzPmpjoQWCkK3rEd6MkEwM7TRDK8ahdq";
+Uri chargeUrl = Uri.parse(chargeServerHost);
+
+class ChargeException implements Exception {
+  String errorMessage;
+  ChargeException(this.errorMessage);
+}
+
 Future<void> chargeCard(CardDetails result, double chargeAmount) async {
   // use result.nonce to get nonce
-  var nonce = result.nonce;
+  var body = jsonEncode({"nonce": result.nonce, "charge": chargeAmount});
+  http.Response response;
+  try {
+    response = await http.post(chargeUrl, body: body, headers: {
+      "Accept": "application/json",
+      "content-type": "application/json"
+    });
+  } on SocketException catch (ex) {
+    throw ChargeException(ex.message);
+  }
+
+  print("I am about to retrieve a responsecode");
+  var responseBody = json.decode(response.body);
+  if (response.statusCode == 200) {
+    return;
+  } else {
+    throw ChargeException(responseBody["errorMessage"]);
+  }
 }
 
 Order parseOrder(Map m) {
-  //TODO fix this shit
   DateTime date = DateTime.fromMillisecondsSinceEpoch(m['DateTime']);
   var order = Order(NAPOS_Employee.fromJson(m['OrderTaker']), dateTime: date);
   order.id = m['OrderID'];
@@ -551,6 +576,6 @@ main() async {
   //item.addCatTag("Food");
   //order.addItemToOrder(item);
   //sendOrder(order);
-  var order = recvOrders();
+  //var order = recvOrders();
   //addItemToMenu(item);
 }
