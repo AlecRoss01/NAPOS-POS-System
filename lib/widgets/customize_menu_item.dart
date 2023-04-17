@@ -140,6 +140,7 @@ class _CustomizeMenuItem extends State<CustomizeMenuItem> {
                                   price: double.parse(controllerPrice.text),
                                   description: controllerDescription.text,
                                 );
+                                newItem.addCatTags(widget.menuItem.categories.toList());
                                 replaceItemInMenu(widget.menuItem, newItem);
                                 widget.refresh();
                               } catch (e) {
