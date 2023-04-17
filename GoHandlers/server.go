@@ -109,6 +109,7 @@ func dbHandlerMenu() []MenuItem {
 	}
 	fmt.Println("Connected!")
 	menu, err := getMenu()
+	fmt.Println(menu)
 	return menu
 }
 
@@ -216,7 +217,8 @@ func getMenuItem(id string) ([]MenuItem, error) {
 
 	for rows.Next() {
 		var item MenuItem
-		if err := rows.Scan(&item.Id, &item.Name, &item.Price); err != nil {
+		var add int
+		if err := rows.Scan(&item.Id, &item.Name, &item.Price, &add); err != nil {
 			return nil, fmt.Errorf("getMenu %v", err)
 		}
 		items = append(items, item)
@@ -247,10 +249,13 @@ func getMenu() ([]MenuItem, error) {
 
 	for rows.Next() {
 		var menu MenuItem
-		if err := rows.Scan(&menu.Id, &menu.Name, &menu.Price); err != nil {
+		var add int
+		if err := rows.Scan(&menu.Id, &menu.Name, &menu.Price, &add); err != nil {
 			return nil, fmt.Errorf("getMenu %v", err)
 		}
-		menuitems = append(menuitems, menu)
+		if add == 1 {
+			menuitems = append(menuitems, menu)
+		}
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("getMenu %v", err)
@@ -263,7 +268,6 @@ func getMenu() ([]MenuItem, error) {
 			}
 		}
 	}
-
 	return menuitems, nil
 }
 
@@ -789,7 +793,7 @@ func removeItemFromMenu(c net.Conn) {
 	}
 
 	fmt.Println("Connected!")
-	result, err := db.Exec("DELETE FROM menu WHERE id = ?", msg.Id)
+	result, err := db.Exec("UPDATE menu SET onMenu = 0 WHERE id = ?", msg.Id)
 	removeCatTagsFromMenu(msg, db)
 	//INSERT INTO orders (orderID, orderIDNullChar, orderIDLength) VALUES (?, ?, ?)"
 	if err != nil {
