@@ -44,7 +44,7 @@ class ItemAddition {
   ItemAddition.fromJson(Map<String, dynamic> json)
       : _name = json['Name'],
         _id = json['Id'],
-        _price = json['Price'],
+        _price = json['Price'].toDouble(),
         _type = getStringAsType(json['AdditionType']);
 
   Map<String, dynamic> toJson() => {

@@ -119,7 +119,7 @@ class MenuItem {
       : id = json['Id'],
         name = json['Name'],
         _catTags = json['CatTags'],
-        _price = json['Price'];
+        _price = json['Price'].toDouble();
 
   Map<String, dynamic> toJson() => {
         'Id': id,
