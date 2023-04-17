@@ -459,8 +459,10 @@ Future<List<ItemAddition>> recvItemAdditions() async {
     output = utf8.decode(data);
   }
   var mapDecode = jsonDecode(output);
+  print(output);
   if (mapDecode['All'] != null) {
     for (var i = 0; i < mapDecode['All'].length; i++) {
+      print(mapDecode['All'][i]);
       additions.add(ItemAddition.fromJson(mapDecode['All'][i]));
     }
   }
@@ -578,4 +580,5 @@ main() async {
   //sendOrder(order);
   //var order = recvOrders();
   //addItemToMenu(item);
+  var adds = await recvItemAdditions();
 }
