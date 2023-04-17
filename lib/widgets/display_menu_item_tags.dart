@@ -22,8 +22,10 @@ class DisplayItemTags extends StatefulWidget {
 class _DisplayItemTags extends State<DisplayItemTags> {
 
   void addTagToMyItem(String tag) {
-    widget.menuItem.addCatTag(tag);
-    updateCatTags(widget.menuItem);
+    setState(() {
+      widget.menuItem.addCatTag(tag);
+      updateCatTags(widget.menuItem);
+    });
   }
 
   @override
@@ -72,8 +74,11 @@ class _DisplayItemTags extends State<DisplayItemTags> {
                                 ),
                                 onTap: () {
                                   // TODO remove tag from menu item.
-                                  widget.menuItem.removeCatTag(widget.menuItem.categories.elementAt(index));
-                                  updateCatTags(widget.menuItem);
+                                  setState(() {
+                                    widget.menuItem.removeCatTag(widget.menuItem.categories.elementAt(index));
+                                  });
+
+                                  //updateCatTags(widget.menuItem);
                                 },
                               ),
                             ],
