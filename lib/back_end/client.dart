@@ -222,7 +222,6 @@ Future<List<MenuItem>> recvMenuCat(POS_Category p) async {
 
 Future<int> sendOrder(Order order) async {
   //Sends order and adds it to order db
-
   // Use hardcoded values.
   if (TESTING) {
     return 0;
