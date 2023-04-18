@@ -170,7 +170,10 @@ func dbHandlerEntries(entry Order) {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected!")
+	fmt.Println("boutta insert into order")
+	fmt.Println(entry.OrderID)
 	insertOrder(entry)
+	fmt.Println("inserted into order")
 }
 
 // need to find a way to make a "getTable()" function
@@ -296,6 +299,7 @@ func getOrderItems() ([]OrderItem, error) {
 // deprecated, will be removed at some point
 func getOrders() ([]Order, error) {
 	//returns a list containing all of the orders
+	fmt.Println("getting orders")
 	var orders []Order
 	rows, err := db.Query("SELECT * FROM orders")
 	if err != nil {
@@ -305,28 +309,20 @@ func getOrders() ([]Order, error) {
 	defer rows.Close()
 
 	for rows.Next() {
+		fmt.Println("going to try and get an order")
 		var order Order
-		if err := rows.Scan(&order.OrderID, &order.OrderIDNullChar, &order.OrderIDLength); err != nil {
+		var complete int
+		var takerId int
+		if err := rows.Scan(&order.OrderID, &order.OrderIDNullChar, &order.OrderIDLength, &complete, &takerId, &order.DateTime); err != nil {
 			return nil, fmt.Errorf("getOrders %v", err)
 		}
+		fmt.Println(order)
 		orders = append(orders, order)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("getOrders %v", err)
 	}
-	items, err := getOrderItems()
-	for i := 0; i < len(orders); i++ {
-		for y := 0; y < len(items); y++ {
-			if orders[i].OrderID == items[y].OrderID {
-				item, err := getMenuItem(strconv.Itoa(items[y].OrderItemID))
-				if err != nil {
-					log.Fatal(err)
-				}
-				orders[i].OrderItems = append(orders[i].OrderItems, item[0])
-			}
-		}
-	}
-
+	fmt.Println("gotOrders")
 	return orders, nil
 }
 
@@ -599,13 +595,16 @@ func getNewOrderId() int {
 		log.Fatal(pingErr)
 	}
 	orders, _ := getOrders()
+	fmt.Println(len(orders))
 	fmt.Println("Connected!")
+	fmt.Println("gonnaGoGetHighest")
 	var highest = 0
 	for _, item := range orders {
 		if item.OrderID > highest {
 			highest = item.OrderID
 		}
 	}
+	fmt.Println("gotHighest")
 	return highest + 1
 
 }
@@ -624,8 +623,10 @@ func recvOrder(c net.Conn) {
 		fmt.Printf("%x", err)
 	}
 	fmt.Println(msg)
+	var newId = getNewOrderId()
+	fmt.Printf("New Id %d", newId)
 	//currently does not like orders without menuitems in it, need to fix that at some point
-	conv := Order{msg.OrderIDNullChar, msg.OrderIDLength, msg.OrderID, convertStringtoList(msg.OrderItems), emp, msg.DateTime}
+	conv := Order{msg.OrderIDNullChar, msg.OrderIDLength, newId, convertStringtoList(msg.OrderItems), emp, msg.DateTime}
 	fmt.Println("printing converge")
 	fmt.Println(conv)
 	dbHandlerEntries(conv)

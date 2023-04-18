@@ -222,7 +222,6 @@ Future<List<MenuItem>> recvMenuCat(POS_Category p) async {
 
 Future<int> sendOrder(Order order) async {
   //Sends order and adds it to order db
-
   // Use hardcoded values.
   if (TESTING) {
     return 0;
@@ -365,7 +364,7 @@ Future<List<String>> recvCats() async {
   }
   var mapDecode = jsonDecode(output);
   socket.close();
-  var catList = <String>[];
+  var catList = <String>["All"];
   for (var i = 0; i < mapDecode['Categories'].length; i++) {
     catList.add(mapDecode['Categories'][i]);
   }
@@ -459,10 +458,8 @@ Future<List<ItemAddition>> recvItemAdditions() async {
     output = utf8.decode(data);
   }
   var mapDecode = jsonDecode(output);
-  print(output);
   if (mapDecode['All'] != null) {
     for (var i = 0; i < mapDecode['All'].length; i++) {
-      print(mapDecode['All'][i]);
       additions.add(ItemAddition.fromJson(mapDecode['All'][i]));
     }
   }
@@ -580,5 +577,5 @@ main() async {
   //sendOrder(order);
   //var order = recvOrders();
   //addItemToMenu(item);
-  var adds = await recvItemAdditions();
+  //var adds = await recvItemAdditions();
 }
