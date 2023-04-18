@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:napos/classes/menu_item.dart';
-import 'package:napos/classes/order.dart';
-import 'package:napos/back_end/client.dart';
 
 import '../styles/styles.dart';
 

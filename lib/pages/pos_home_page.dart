@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:napos/classes/employee.dart';
 import 'package:napos/widgets/home_page_button.dart';
-import '../styles/styles.dart';
 import 'command_hub.dart';
 import 'analytics_hub.dart';
 import 'kitchen_endpoint.dart';

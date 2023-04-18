@@ -3,10 +3,7 @@ import 'package:napos/widgets/CH_AdditionType_Buttons.dart';
 import '../styles/styles.dart';
 import '../back_end/client.dart';
 import '../classes/menu_item.dart' as menu_item;
-import '../classes/order.dart';
-import '../classes/category.dart';
 import '../classes/item_addition.dart';
-import '../widgets/CH_AdditionType_Buttons.dart';
 
 class EditItemSidebar extends StatefulWidget {
     final menu_item.MenuItem editItem;

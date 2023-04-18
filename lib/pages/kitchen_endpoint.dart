@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:napos/classes/order.dart';
 
-import '../back_end/client.dart';
-import '../styles/styles.dart';
-import '../widgets/kitchen_order_display.dart';
+import 'package:napos/back_end/client.dart';
+import 'package:napos/styles/styles.dart';
+import 'package:napos/widgets/kitchen_order_display.dart';
 
 class KitchenEndpointPage extends StatefulWidget {
   bool todo;
@@ -27,9 +27,9 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
 
   @override
   void initState() {
-    const Duration oneSecond = Duration(seconds: 1);
-    const Duration twoSeconds = Duration(seconds: 2);
-    const Duration fiveSeconds = Duration(seconds: 5);
+    //const Duration oneSecond = Duration(seconds: 1);
+    //const Duration twoSeconds = Duration(seconds: 2);
+    //const Duration fiveSeconds = Duration(seconds: 5);
     const Duration oneMinute = Duration(minutes: 1);
 
     myUpdater = Timer.periodic(
@@ -58,14 +58,6 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
     // Call to rebuild.
     // Todo I think we can keep this in, but if there is an issue, this is probably the source.
     //setState(() {});
-
-    //orders = newOrders;
-    // Remove all
-    /*
-      for (int i = 0; i < orders.length; i++) {
-        newOrders.removeWhere((element) => element == orders[i]);
-      }
-    */
   }
 
   Future<List<Order>> getOrders() async {

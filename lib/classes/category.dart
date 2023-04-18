@@ -1,5 +1,3 @@
-import "menu_item.dart";
-
 class POS_Category {
     String _name;
     //int id;
