@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import '../styles/styles.dart';
 import '../back_end/client.dart';
 import 'package:square_in_app_payments/models.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
-//import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../classes/menu_item.dart' as menu_item;
 import '../classes/order.dart';
 import '../classes/category.dart';
 import '../classes/employee.dart';
-import '../classes/item_addition.dart';
 import '../widgets/CH_MenuSection.dart';
 import '../widgets/CH_CategorySection.dart';
 import '../widgets/CH_OrderSection.dart';
 import '../widgets/CH_EditItemSidebar.dart';
+
+//import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CommandHub extends StatefulWidget {
   NAPOS_Employee employee;

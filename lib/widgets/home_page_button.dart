@@ -14,7 +14,7 @@ class HomePageButton extends StatefulWidget {
     required this.targetPage,
     TextStyle? style,
   })
-      : _style = style ?? CustomTextStyle.homeButtons;
+  : _style = style ?? CustomTextStyle.homeButtons;
 
   @override
   State<HomePageButton> createState() => _HomePageButton();
@@ -31,8 +31,8 @@ class _HomePageButton extends State<HomePageButton> {
         child: Text(widget.text, style:widget._style, textAlign: TextAlign.center,),
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => widget.targetPage())
+            context,
+            MaterialPageRoute(builder: (context) => widget.targetPage())
           );
         },
       ),

@@ -1,12 +1,9 @@
-import 'dart:convert';
 import 'item_addition.dart';
 
 class MenuItem {
   /*
   Represents one item on the menu.
   */
-
-  // MEMBERS
 
   int id = 0;
   String name = "";
@@ -15,29 +12,25 @@ class MenuItem {
   double _price = 0.0;
   List<ItemAddition> additions = [];
 
-  // Initializer; Sets members with parameter data.
   MenuItem(
     this.name,
     // Optional parameters.
     // Curly braces mean their name must be used in initialization.
     // Like: MenuItem('Hot Dog', price : 1.25)
     {
-    int id = 0,
+    this.id = 0,
     double price = 0,
-    String description = "",
+    this.description = "",
   }) {
-    this.id = id;
-    this._price = price;
-    this.description = description;
+    _price = price;
   }
 
-  // METHODS
-
-  // Private variable, externally it will appear as 'categories'
+  // _catTags is a private variable, externally it will appear as 'categories'
   Set<String> get categories {
     return _catTags;
   }
 
+  // Sum of prices of all item additions.
   double get additionPrice {
     double additionSum = 0;
     for (int i = 0; i < additions.length; i++) {
@@ -64,30 +57,25 @@ class MenuItem {
     return "\$${price.toStringAsFixed(2)}";
   }
 
-  // Clears all category tags.
   void clearCatTags() {
     _catTags = {};
   }
 
-  // Adds a single category tag.
   void addCatTag(String tag) {
     _catTags.add(tag);
   }
 
-  // Adds multiple category tags.
   void addCatTags(List<String> tags) {
     for (var tag in tags) {
       addCatTag(tag);
     }
   }
 
-  // Set category tags to the given ones. Clears it first.
   void setCatTags(List<String> tags) {
     clearCatTags();
     addCatTags(tags);
   }
 
-  // Remove a given tag.
   void removeCatTag(String tag) {
     _catTags.remove(tag);
   }
@@ -100,7 +88,6 @@ class MenuItem {
     additions.remove(addition);
   }
 
-  // toString will return the string order ID.
   @override
   String toString() {
     return name;
@@ -116,15 +103,15 @@ class MenuItem {
   }
 
   MenuItem.fromJson(Map<String, dynamic> json)
-      : id = json['Id'],
-        name = json['Name'],
-        _catTags = json['CatTags'],
-        _price = json['Price'].toDouble();
+    : id = json['Id'],
+      name = json['Name'],
+      _catTags = json['CatTags'],
+      _price = json['Price'].toDouble();
 
   Map<String, dynamic> toJson() => {
-        'Id': id,
-        'Name': name,
-        'CatTags': convertHashtoList(_catTags),
-        'Price': _price,
-      };
+    'Id': id,
+    'Name': name,
+    'CatTags': convertHashtoList(_catTags),
+    'Price': _price,
+  };
 }

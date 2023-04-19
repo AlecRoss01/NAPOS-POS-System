@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:napos/pages/login_page.dart';
-import 'styles/styles.dart';
-import 'pages/command_hub.dart';
-import 'pages/analytics_hub.dart';
-import 'pages/pos_home_page.dart';
-import 'back_end/client.dart';
 
 // Runs the app.
 void main() async {

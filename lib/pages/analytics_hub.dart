@@ -3,6 +3,7 @@ import 'package:napos/pages/order_details.dart';
 import '../classes/order.dart';
 import '../styles/styles.dart';
 import '../back_end/client.dart';
+import '../widgets/analytics_hub_order_display.dart';
 
 // Card widget: https://www.geeksforgeeks.org/flutter-card-widget/
 // Using InkWell for onTap: https://stackoverflow.com/questions/44317188/flutter-ontap-method-for-containers
@@ -50,53 +51,11 @@ class _AnalyticsHub extends State<AnalyticsHub> {
                     future: recvOrders(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        return
-
-                          ListView(
-                              children: List.generate(snapshot.data!.length, (index) {
-                                return InkWell(
-                                  child: Card(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          // Order info.
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text('ID: ${snapshot.data![index]}'),
-                                              Text('Taken by: ${snapshot.data![index].orderTaker.name}'),
-                                              Text('Placed on: ${snapshot.data![index].dateTimeStr}'),
-                                              Text('Subtotal: ${snapshot.data![index].strSubTotal()}'),
-                                            ],
-                                          ),
-
-                                          Spacer(),
-
-                                          // Order items.
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            // Absolutely hideous, I know. Makes a list of each item in the order (displayed beneath order ID).
-                                            children: List.generate(snapshot.data![index].getOrderItems().length, (indexOfOrder) {
-                                              return Text(snapshot.data![index].getOrderItems()[indexOfOrder].toString());
-                                            })
-                                          )
-                                        ],
-
-                                      ),
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => OrderDetailsPage(order: snapshot.data![index]))
-                                    );
-                                  },
-                                );
-                              })
-                          );
-                        
+                        return ListView(
+                          children: List.generate(snapshot.data!.length, (index) {
+                            return AnalyticsHubOrderDisplay(order:snapshot.data![index]);
+                          })
+                        );
                       }
                       else {
                         return ListView();

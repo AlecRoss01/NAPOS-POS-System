@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import '../styles/styles.dart';
-import '../back_end/client.dart';
-import '../classes/menu_item.dart' as menu_item;
-import '../classes/order.dart';
-import '../classes/category.dart';
 import '../classes/item_addition.dart';
 
 class AdditionTypeToggleButtons extends StatefulWidget {

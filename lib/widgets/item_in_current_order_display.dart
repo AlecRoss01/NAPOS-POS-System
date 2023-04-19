@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:napos/classes/employee.dart';
-import '../styles/styles.dart';
-import '../back_end/client.dart';
 import '../classes/menu_item.dart' as menu_item;
-import '../classes/order.dart';
-import '../classes/category.dart';
-import 'CH_EditItemSidebar.dart';
 
 class ItemInCurrentOrderDisplay extends StatefulWidget {
   final menu_item.MenuItem menuItem;

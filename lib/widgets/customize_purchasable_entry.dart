@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:napos/classes/menu_item.dart';
 
 import 'package:napos/styles/styles.dart';
 
