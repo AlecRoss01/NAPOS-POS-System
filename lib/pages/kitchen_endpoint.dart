@@ -32,10 +32,10 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
     const Duration fiveSeconds = Duration(seconds: 5);
     const Duration oneMinute = Duration(minutes: 1);
     myUpdater = Timer.periodic(
-        fiveSeconds,
+        oneMinute,
         (Timer t) => setState(() {
-          updateOrders();
-        }));
+              updateOrders();
+            }));
   }
 
   @override
@@ -55,7 +55,7 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
     inCompleteOrders = await recvIncompleteOrders();
     // Call to rebuild.
     // Todo I think we can keep this in, but if there is an issue, this is probably the source.
-    setState(() {});
+    //setState(() {});
 
     //orders = newOrders;
     // Remove all
@@ -129,29 +129,28 @@ class _KitchenEndpointPage extends State<KitchenEndpointPage> {
                 child: Column(
                   children: [
                     Expanded(
-                      child: FutureBuilder<List<Order>>(
-                        //TODO: HERE, WE NEED TO DISTINGUISH BETWEEN TODO, AND FINISHED ORDERS.
-                        future: getOrders(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.separated(
-                              scrollDirection: Axis.vertical,
-                              //shrinkWrap: true,
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                return OrderDisplayWidget(
-                                    order: snapshot.data![index]);
-                              },
-                              separatorBuilder: (context, index) {
-                                return Divider();
-                              },
-                            );
-                          } else {
-                            return Text('No data');
-                          }
-                        },
-                      )
-                    )
+                        child: FutureBuilder<List<Order>>(
+                      //TODO: HERE, WE NEED TO DISTINGUISH BETWEEN TODO, AND FINISHED ORDERS.
+                      future: getOrders(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.separated(
+                            scrollDirection: Axis.vertical,
+                            //shrinkWrap: true,
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              return OrderDisplayWidget(
+                                  order: snapshot.data![index]);
+                            },
+                            separatorBuilder: (context, index) {
+                              return Divider();
+                            },
+                          );
+                        } else {
+                          return Text('No data');
+                        }
+                      },
+                    ))
                   ],
                 ),
               )
