@@ -8,6 +8,7 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type MenuItem struct {
@@ -210,7 +211,7 @@ func getCategories() ([]Categories, error) {
 	return items, nil
 }
 
-func getMenuItem(id string) ([]MenuItem, error) {
+func getMenuItem(id string, db *sql.DB) ([]MenuItem, error) {
 	var items []MenuItem
 	rows, err := db.Query("SELECT * FROM menu WHERE id = ?", id)
 	if err != nil {
@@ -326,6 +327,24 @@ func getOrders() ([]Order, error) {
 	return orders, nil
 }
 
+func getEmployeeGetOrdHelper(id int, emp []Employee) Employee {
+	for _, element := range emp {
+		if element.ID == id {
+			return element
+		}
+	}
+	return Employee{}
+}
+
+func boolGetOrdersGetMenuHelper(id int, menu []MenuItem) MenuItem {
+	for _, item := range menu {
+		if item.Id == id {
+			return item
+		}
+	}
+	return MenuItem{}
+}
+
 // "SELECT * FROM menu WHERE id = ?"
 func BoolGetOrders(orderType bool) ([]Order, error) {
 	//returns a list containing all of the orders
@@ -333,12 +352,14 @@ func BoolGetOrders(orderType bool) ([]Order, error) {
 	if orderType {
 		orderState = 1
 	}
+	var employees, _ = getEmployees()
+	var menu, _ = getMenu()
 	var orders []Order
 	rows, err := db.Query("SELECT * FROM orders WHERE complete = ?", orderState)
 	if err != nil {
 		return nil, fmt.Errorf("getOrders %v", err)
 	}
-
+	fmt.Println("I am about to loop a bunch")
 	defer rows.Close()
 
 	for rows.Next() {
@@ -348,24 +369,30 @@ func BoolGetOrders(orderType bool) ([]Order, error) {
 		if err := rows.Scan(&order.OrderID, &order.OrderIDNullChar, &order.OrderIDLength, &holder, &empId, &order.DateTime); err != nil {
 			return nil, fmt.Errorf("getOrders %v", err)
 		}
-		order.OrderTaker, err = getEmployeeByID(empId)
+		order.OrderTaker = getEmployeeGetOrdHelper(empId, employees)
+		//fmt.Println(order)
 		orders = append(orders, order)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("getOrders %v", err)
 	}
+
 	items, err := getOrderItems()
+	fmt.Println("got pastGetOrderItems")
+	time.Sleep(2 * time.Second)
 	for i := 0; i < len(orders); i++ {
 		for y := 0; y < len(items); y++ {
 			if orders[i].OrderID == items[y].OrderID {
-				item, err := getMenuItem(strconv.Itoa(items[y].OrderItemID))
-				if err != nil {
-					log.Fatal(err)
-				}
-				orders[i].OrderItems = append(orders[i].OrderItems, item[0])
+				//item, err := getMenuItem(strconv.Itoa(items[y].OrderItemID), db)
+				//if err != nil {
+				//	log.Fatal(err)
+				//}
+				item := boolGetOrdersGetMenuHelper(items[y].OrderItemID, menu)
+				orders[i].OrderItems = append(orders[i].OrderItems, item)
 			}
 		}
 	}
+	fmt.Println("I survived")
 	fmt.Println(orders)
 	return orders, nil
 }
