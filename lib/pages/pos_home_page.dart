@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:napos/back_end/client.dart';
 import 'package:napos/classes/employee.dart';
+import 'package:napos/pages/settings_page.dart';
 import 'package:napos/widgets/home_page_button.dart';
 import 'command_hub.dart';
 import 'analytics_hub.dart';
@@ -35,12 +37,22 @@ class _POSHomePage extends State<POSHomePage> {
         title: Text(widget.title),
         actions: [
           IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage(ip: connString))
+              );
+            }, 
+          ),
+          SizedBox(width: 10),
+          IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
-          SizedBox(width: 10,),
+          SizedBox(width: 10),
         ],
       ),
       body: Column(
