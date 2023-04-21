@@ -25,7 +25,6 @@ func removeAddition(c net.Conn) {
 	err := d.Decode(&msg)
 	fmt.Println(msg, err)
 	c.Write([]byte("finish"))
-	fmt.Println(msg)
 	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
 		log.Fatal(err)
@@ -66,7 +65,6 @@ func addAddition(c net.Conn) {
 	err := d.Decode(&msg)
 	fmt.Println(msg, err)
 	c.Write([]byte("finish"))
-	fmt.Println(msg)
 	msg.Id = getNextIdAddition()
 	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
@@ -122,7 +120,6 @@ func getAdditions() ([]Addition, error) {
 
 func sendAdditions(c net.Conn) {
 	additions, err := getAdditions()
-	fmt.Println(additions)
 	msg := Additions{additions}
 	e := json.NewEncoder(c)
 	err = e.Encode(msg)

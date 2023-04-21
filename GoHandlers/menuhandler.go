@@ -38,7 +38,6 @@ func dbHandlerMenu() []MenuItem {
 	}
 	fmt.Println("Connected!")
 	menu, err := getMenu()
-	fmt.Println(menu)
 	return menu
 }
 
@@ -141,7 +140,6 @@ func sendMenu(c net.Conn) {
 }
 
 func convergeItems(s []string) MenuItem {
-	fmt.Println(s[0])
 	intId, err := strconv.Atoi(s[0])
 	if err != nil {
 		fmt.Println("int error in convergeItems")
@@ -284,7 +282,6 @@ func addItemToMenu(c net.Conn) {
 	err := d.Decode(&msg)
 	fmt.Println(msg, err)
 	c.Write([]byte("finish"))
-	fmt.Println(msg)
 
 	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
@@ -314,7 +311,6 @@ func removeItemFromMenu(c net.Conn) {
 	err := d.Decode(&msg)
 	fmt.Println(msg, err)
 	c.Write([]byte("finish"))
-	fmt.Println(msg)
 	db, err = initDb(connString, "ca-certificate.crt")
 	if err != nil {
 		log.Fatal(err)

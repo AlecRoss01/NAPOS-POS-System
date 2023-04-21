@@ -73,7 +73,6 @@ func dbHandlerEntries(entry Order) {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected!")
-	fmt.Println(entry.OrderID)
 	insertOrder(entry)
 }
 
@@ -110,14 +109,12 @@ func getOrders() ([]Order, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		fmt.Println("going to try and get an order")
 		var order Order
 		var complete int
 		var takerId int
 		if err := rows.Scan(&order.OrderID, &order.OrderIDNullChar, &order.OrderIDLength, &complete, &takerId, &order.DateTime); err != nil {
 			return nil, fmt.Errorf("getOrders %v", err)
 		}
-		fmt.Println(order)
 		orders = append(orders, order)
 	}
 	if err := rows.Err(); err != nil {
@@ -190,7 +187,6 @@ func BoolGetOrders(orderType bool) ([]Order, error) {
 			}
 		}
 	}
-	fmt.Println(orders)
 	return orders, nil
 }
 
@@ -244,19 +240,14 @@ func recvOrder(c net.Conn) {
 	err := d.Decode(&msg)
 	fmt.Println(msg, err)
 	c.Write([]byte("finish"))
-	fmt.Println(msg.OrderItems)
 	var emp Employee
 	err = json.Unmarshal([]byte(msg.OrderTaker), &emp)
 	if err != nil {
 		fmt.Printf("%x", err)
 	}
-	fmt.Println(msg)
 	var newId = getNewOrderId()
-	fmt.Printf("New Id %d", newId)
 	//currently does not like orders without menuitems in it, need to fix that at some point
 	conv := Order{msg.OrderIDNullChar, msg.OrderIDLength, newId, convertStringtoList(msg.OrderItems), emp, msg.DateTime}
-	fmt.Println("printing converge")
-	fmt.Println(conv)
 	dbHandlerEntries(conv)
 	c.Close()
 }
@@ -298,16 +289,13 @@ func getNewOrderId() int {
 		log.Fatal(pingErr)
 	}
 	orders, _ := getOrders()
-	fmt.Println(len(orders))
 	fmt.Println("Connected!")
-	fmt.Println("gonnaGoGetHighest")
 	var highest = 0
 	for _, item := range orders {
 		if item.OrderID > highest {
 			highest = item.OrderID
 		}
 	}
-	fmt.Println("gotHighest")
 	return highest + 1
 
 }

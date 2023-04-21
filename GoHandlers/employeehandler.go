@@ -49,7 +49,6 @@ func checkPIN(c net.Conn) (int64, error) {
 			return 0, fmt.Errorf("checkPIN %q: %v", msg.PIN, err)
 		}
 		if check.PIN == msg.PIN {
-			fmt.Println(check)
 			e.Encode(Pin{check.PIN})
 			return 1, nil
 		}
