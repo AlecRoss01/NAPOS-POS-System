@@ -61,14 +61,12 @@ class _ItemInCurrentOrderDisplayState extends State<ItemInCurrentOrderDisplay> {
           children: List.generate(widget.menuItem.additions.length, (index) {
             return Row(
               children: [
-                SizedBox(
-                  width: 10,
-                ),
+                SizedBox(width: 10),
                 Container(
                   constraints: BoxConstraints(
                     maxWidth: widget.width * 6/10,
                   ),
-                  child: Text(widget.menuItem.additions[index].name),
+                  child: Text(widget.menuItem.additions[index].typeAndNameString()),
                 ),
                 Spacer(),
                 Text(widget.menuItem.additions[index].strPrice()),

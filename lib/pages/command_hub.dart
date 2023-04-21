@@ -29,7 +29,7 @@ class _CommandHub extends State<CommandHub> {
   late var currentOrder = new Order(widget.employee, id: 1);
   POS_Category currentCategory = new POS_Category("All");
   menu_item.MenuItem itemToEdit = new menu_item.MenuItem("default");
-  final double orderSectionWidth = 200;
+  final double orderSectionWidth = 300;
   final double categoriesSectionWidth = 150;
 
   Future<void> _initSquarePayment() async {
