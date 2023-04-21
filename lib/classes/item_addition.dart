@@ -32,7 +32,7 @@ class ItemAddition {
   }
 
   String strPrice() {
-    return "\$${_price.toStringAsFixed(2)}";
+    return "\$${getprice().toStringAsFixed(2)}";
   }
 
   void setAdditionType(AdditionType type) {
