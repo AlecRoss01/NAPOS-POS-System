@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:napos/pages/pos_home_page.dart';
+import 'package:napos/pages/settings_page.dart';
 import 'package:napos/styles/styles.dart';
 import 'package:napos/back_end/client.dart';
 import 'package:napos/widgets/pin_number_button.dart';
@@ -107,6 +108,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   PinNumberButton(number: "0", addNumberToPIN: addNumToPIN),
                   SizedBox(width: 10),
                   DeleteNumberButton(delSymbol: "DEL", removeLastNum: delLastPINNumber),
+                  SizedBox(width: 10),
+                  InkWell(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(14, 6, 14, 6),
+                      child: Icon(Icons.settings),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SettingsPage(ip: connString))
+                      );
+                    },
+                  )
                 ]
               ),
               SizedBox(height: 10),

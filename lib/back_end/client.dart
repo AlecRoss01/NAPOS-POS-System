@@ -16,7 +16,11 @@ import 'package:http/http.dart' as http;
 // https://stackoverflow.com/questions/63323038/dart-return-data-from-a-stream-subscription-block
 
 const bool TESTING = false;
-const String connString = '184.171.150.182';
+String connString = '184.171.150.182';
+
+void setNewIP (String ip) {
+  connString = ip;
+}
 
 class JsonRequest {
   String requestType;
