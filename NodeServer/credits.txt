@@ -1,0 +1,1 @@
+credit for the starter code for the NodeServer folder goes to https://github.com/square/in-app-payments-server-quickstart
