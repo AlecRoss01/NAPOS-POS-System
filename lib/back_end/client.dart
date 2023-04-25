@@ -485,11 +485,10 @@ Future<List<ItemAddition>> recvItemAdditions() async {
   socket.close();
 }*/
 
-const String squareApplicationId = "sandbox-sq0idb-VW7u7iB55ZYYzrKURZTGAg";
-const String squareLocationId = "LKHJBQ2DPCJA7";
-String chargeServerHost = "http://184.171.150.182:8000/chargeForNapos";
-String accessToken =
-    "EAAAEAcydw0WAP9TtI7Cv_MXItCe2EPzXzPmpjoQWCkK3rEd6MkEwM7TRDK8ahdq";
+const String squareApplicationId = "your appId";
+const String squareLocationId = "your locId";
+String chargeServerHost = "http://yourserveraddress";
+String accessToken ="your accesstoken";
 Uri chargeUrl = Uri.parse(chargeServerHost);
 
 class ChargeException implements Exception {
