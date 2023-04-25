@@ -34,7 +34,7 @@ class _CommandHub extends State<CommandHub> {
 
   Future<void> _initSquarePayment() async {
     await InAppPayments.setSquareApplicationId(
-        "sandbox-sq0idb-VW7u7iB55ZYYzrKURZTGAg");
+        "your appId");
   }
 
   Future<void> _onStartCardEntryFlow() async {
