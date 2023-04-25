@@ -11,12 +11,9 @@ app.use(bodyParser.json());
 //   Set environment
 //   Set access token
 process.env.ENVIROMENT = "SANDBOX"
-process.env.ACCESS_TOKEN = "EAAAEAcydw0WAP9TtI7Cv_MXItCe2EPzXzPmpjoQWCkK3rEd6MkEwM7TRDK8ahdq"
+process.env.ACCESS_TOKEN = "your token here"
 process.env.PORT = 8000
-process.env.LOCATION_ID = "LKHJBQ2DPCJA7"
-//ACCESS_TOKEN = "EAAAEAcydw0WAP9TtI7Cv_MXItCe2EPzXzPmpjoQWCkK3rEd6MkEwM7TRDK8ahdq"
-//APPLICATION_ID = "sandbox-sq0idb-VW7u7iB55ZYYzrKURZTGAg"
-//LOCATION_ID = "LKHJBQ2DPCJA7"
+process.env.LOCATION_ID = "your location id here"
 
 const defaultClient = new Client({
   environment: Environment.Sandbox,
